@@ -6,6 +6,17 @@ import { ChevronRight, CheckCircle2, Wrench, Sparkles, ArrowRight } from 'lucide
 
 export const dynamic = 'force-dynamic';
 
+export const metadata = {
+  title: 'All Software, Mobile App, Web & SEO Services | Innovateria',
+  description: 'Explore Innovateria’s full suite of technology services: Android & iOS app development, custom software engineering, Next.js web applications, logo design, SEO, and digital marketing.',
+  alternates: { canonical: 'https://innovateria.in/services' },
+  openGraph: {
+    title: 'All Software & Digital Growth Services | Innovateria',
+    description: 'Explore Innovateria’s full suite of technology services: Android & iOS app development, custom software, Next.js web applications, and SEO.',
+    url: 'https://innovateria.in/services',
+  },
+};
+
 export default function AllServicesPage() {
   const services = getServicesCMS();
 

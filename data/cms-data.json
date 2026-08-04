@@ -1470,6 +1470,14 @@
   ],
   "techStack": [
     {
+      "id": "tech-0",
+      "name": "Next.js",
+      "category": "Fullstack Framework",
+      "image": "/assets/img/teckstack/nextjs.png",
+      "description": "React framework for production-grade full-stack web applications & APIs",
+      "status": "active"
+    },
+    {
       "id": "tech-1",
       "name": "Flutter",
       "category": "Mobile Framework",
@@ -1595,14 +1603,6 @@
       "category": "E-Commerce Platform",
       "image": "/assets/img/teckstack/magento.png",
       "description": "Enterprise-grade open-source e-commerce platform",
-      "status": "active"
-    },
-    {
-      "id": "tech-17",
-      "name": "Drupal",
-      "category": "CMS Platform",
-      "image": "/assets/img/teckstack/drupal.png",
-      "description": "Flexible enterprise content management framework",
       "status": "active"
     },
     {

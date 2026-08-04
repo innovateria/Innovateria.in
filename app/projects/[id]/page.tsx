@@ -1,3 +1,5 @@
+import type { Metadata } from 'next';
+import Script from 'next/script';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getProjectById, getProjects, getOpenSourceProjectsCMS } from '@/lib/crm-store';
@@ -18,6 +20,55 @@ import {
 } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const project = getProjectById(id);
+  const openSourceItem = !project ? getOpenSourceProjectsCMS().find(os => os.id === id) : null;
+
+  if (!project && !openSourceItem) {
+    return {
+      title: 'Project Not Found | Innovateria',
+      description: 'The requested project case study could not be found.',
+    };
+  }
+
+  const title = project?.title || openSourceItem?.title || 'Project Case Study';
+  const category = project?.category || openSourceItem?.category || 'Software Engineering';
+  const rawDesc = project?.desc || openSourceItem?.description || '';
+  const desc = `${title} — ${category} case study engineered by Innovateria. ${rawDesc}`.slice(0, 160);
+  const canonicalUrl = `https://innovateria.in/projects/${id}`;
+  const image = project?.image || '/assets/img/services/soft.png';
+  const imageUrl = image.startsWith('http') ? image : `https://innovateria.in${image}`;
+
+  return {
+    title: `${title} | Innovateria Project Case Study`,
+    description: desc,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title: `${title} (${category}) — Innovateria Engineering`,
+      description: desc,
+      url: canonicalUrl,
+      type: 'article',
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${title} | Innovateria Case Study`,
+      description: desc,
+      images: [imageUrl],
+    },
+  };
+}
 
 export async function generateStaticParams() {
   const projects = getProjects();
@@ -60,8 +111,27 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
 
   const otherProjects = getProjects().filter(p => p.id !== id).slice(0, 3);
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: title,
+    applicationCategory: category,
+    description: desc,
+    operatingSystem: 'Cross-platform, Web, Android',
+    author: {
+      '@type': 'Organization',
+      name: 'Innovateria',
+      url: 'https://innovateria.in',
+    },
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-12 sm:space-y-16">
+      <Script
+        id={`project-schema-${id}`}
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       
       {/* Back Button */}
       <div>
