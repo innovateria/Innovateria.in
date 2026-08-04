@@ -833,155 +833,138 @@
   "openSourceProjects": [
     {
       "id": "os-1",
-      "title": "Innovateria UI Kit & Glassmorphism Tokens",
-      "description": "Open-source React & Tailwind CSS component system featuring dark-mode glassmorphism tokens, accessible modals, and fluid micro-animations.",
-      "category": "Developer Tools & UI",
+      "title": "WorkerPass – Digital Gate Pass & Attendance System",
+      "description": "Professional digital gate pass and attendance management system built with Flutter. Replaces paper registers with real-time mobile tracking for contract workers, security personnel, and site visitors.",
+      "category": "Mobile & Security System",
       "tags": [
-        "React",
-        "TailwindCSS",
-        "TypeScript",
-        "Design System"
+        "Flutter",
+        "Dart",
+        "GatePass",
+        "Firebase"
       ],
-      "githubUrl": "https://github.com/Vnjvibhash/innovateria-glass-ui",
-      "liveDemoUrl": "https://github.com/Vnjvibhash/innovateria-glass-ui",
-      "stars": 142,
-      "forks": 38,
+      "githubUrl": "https://github.com/Vnjvibhash/WorkerPass",
+      "liveDemoUrl": "https://github.com/Vnjvibhash/WorkerPass",
+      "stars": 45,
+      "forks": 12,
       "featured": true
     },
     {
       "id": "os-2",
-      "title": "FastAPI Async UPI & Webhook Gateway",
-      "description": "High-throughput Python microservice boilerplate for Razorpay, Paytm, and UPI intent payment orchestration with automated signature verification.",
-      "category": "Backend Systems",
+      "title": "Print-Hub – Instant Printing & Plotting Platform",
+      "description": "Digital web application for Suvir Printing & Copy Solutions providing online document uploading, CAD blueprint plotting, custom binding options, and corporate order fulfillment.",
+      "category": "Web Engineering & E-Commerce",
       "tags": [
-        "Python",
-        "FastAPI",
-        "UPI",
-        "PostgreSQL"
+        "Next.js",
+        "TypeScript",
+        "TailwindCSS",
+        "Vercel"
       ],
-      "githubUrl": "https://github.com/Vnjvibhash/fastapi-upi-gateway",
-      "liveDemoUrl": "https://github.com/Vnjvibhash/fastapi-upi-gateway",
-      "stars": 98,
-      "forks": 27,
+      "githubUrl": "https://github.com/Vnjvibhash/Print-Hub",
+      "liveDemoUrl": "https://suvir-printing.vercel.app",
+      "stars": 88,
+      "forks": 24,
       "featured": true
     },
     {
       "id": "os-3",
-      "title": "Flutter FCM Real-time Messaging Core",
-      "description": "Decoupled Flutter chat engine with Firebase Firestore real-time synchronization, end-to-end payload encryption, and background push handlers.",
-      "category": "Mobile Frameworks",
+      "title": "WhisperWind – Offline Bluetooth Mesh Chat App",
+      "description": "Seamless offline peer-to-peer messaging application operating over Bluetooth mesh connectivity for fast, encrypted, and internet-independent communication.",
+      "category": "Mobile & Mesh Networking",
       "tags": [
         "Flutter",
         "Dart",
-        "Firebase",
-        "WebSockets"
+        "Bluetooth Mesh",
+        "P2P"
       ],
-      "githubUrl": "https://github.com/Vnjvibhash/flutter-chat-core",
-      "liveDemoUrl": "https://github.com/Vnjvibhash/flutter-chat-core",
-      "stars": 115,
-      "forks": 34,
+      "githubUrl": "https://github.com/Vnjvibhash/WhisperWind",
+      "liveDemoUrl": "https://github.com/Vnjvibhash/WhisperWind",
+      "stars": 62,
+      "forks": 18,
       "featured": true
     },
     {
       "id": "os-4",
-      "title": "Next.js 16 Production Starter Kit",
-      "description": "Production-ready Next.js 16 App Router boilerplate pre-configured with Server Actions, TypeScript, Tailwind CSS v4, SEO schema, and Docker specs.",
-      "category": "Web Engineering",
+      "title": "ObjectScan (LensForge) – Mobile 3D Scanner & Mesh Viewer",
+      "description": "Mobile 3D photogrammetry app that captures real-world objects via smartphone cameras, generates 3D models, and supports interactive multi-angle model viewing and export.",
+      "category": "3D Graphics & Computer Vision",
       "tags": [
-        "Next.js",
-        "React 19",
-        "TypeScript",
-        "Docker"
+        "Flutter",
+        "C++",
+        "OpenGL",
+        "3D Mesh"
       ],
-      "githubUrl": "https://github.com/Vnjvibhash/nextjs-starter-kit",
-      "liveDemoUrl": "https://github.com/Vnjvibhash/nextjs-starter-kit",
-      "stars": 230,
-      "forks": 62,
+      "githubUrl": "https://github.com/Vnjvibhash/ObjectScan",
+      "liveDemoUrl": "https://github.com/Vnjvibhash/ObjectScan",
+      "stars": 74,
+      "forks": 19,
       "featured": true
     },
     {
       "id": "os-5",
-      "title": "React Native Biometric Keychain Engine",
-      "description": "Native iOS FaceID & Android Fingerprint biometric security module featuring hardware-backed AES-256 keychain encryption for mobile apps.",
-      "category": "Mobile Security",
+      "title": "QuickOrder – Scalable React Native Ordering Architecture",
+      "description": "High-performance React Native application engineered for ultra-fast, intuitive order placement, modular component structure, and optimized list rendering.",
+      "category": "Mobile E-Commerce Engine",
       "tags": [
         "React Native",
-        "Swift",
-        "Kotlin",
-        "Biometrics"
+        "TypeScript",
+        "Redux Toolkit",
+        "Mobile UI"
       ],
-      "githubUrl": "https://github.com/Vnjvibhash/react-native-biometrics-keychain",
-      "liveDemoUrl": "https://github.com/Vnjvibhash/react-native-biometrics-keychain",
-      "stars": 86,
-      "forks": 21,
+      "githubUrl": "https://github.com/Vnjvibhash/QuickOrder",
+      "liveDemoUrl": "https://github.com/Vnjvibhash/QuickOrder",
+      "stars": 53,
+      "forks": 15,
       "featured": true
     },
     {
       "id": "os-6",
-      "title": "Resilient Redis BullMQ Task Worker",
-      "description": "Scalable Node.js background queue processing worker with exponential backoff retries, dead-letter monitoring, and Prometheus telemetry metrics.",
-      "category": "DevOps & Infrastructure",
+      "title": "StrangersChat – Real-time Anonymous Matchmaker",
+      "description": "Real-time stranger chat application built with Flutter featuring random peer matchmaking, instant WebSockets messaging, and Firestore presence sync.",
+      "category": "Real-time Mobile Applications",
       "tags": [
-        "Node.js",
-        "Redis",
-        "BullMQ",
-        "Prometheus"
+        "Flutter",
+        "Firebase",
+        "WebSockets",
+        "Dart"
       ],
-      "githubUrl": "https://github.com/Vnjvibhash/redis-bullmq-worker",
-      "liveDemoUrl": "https://github.com/Vnjvibhash/redis-bullmq-worker",
-      "stars": 64,
-      "forks": 16,
+      "githubUrl": "https://github.com/Vnjvibhash/StrangersChat",
+      "liveDemoUrl": "https://github.com/Vnjvibhash/StrangersChat",
+      "stars": 49,
+      "forks": 14,
       "featured": true
     },
     {
       "id": "os-7",
-      "title": "GraphQL Multi-Tenant Realtime Engine",
-      "description": "High-performance Hasura & PostgreSQL GraphQL API engine supporting real-time subscriptions, JWT authorization, and dynamic rate limiting.",
-      "category": "Database Systems",
+      "title": "DSA With Java – Comprehensive Data Structures & Algorithms",
+      "description": "Clean Java implementation repository covering fundamental data structures, graph traversals, dynamic programming patterns, and algorithmic problem solving.",
+      "category": "Computer Science & Algorithms",
       "tags": [
-        "GraphQL",
-        "Hasura",
-        "PostgreSQL",
-        "Docker"
+        "Java",
+        "Data Structures",
+        "Algorithms",
+        "LeetCode"
       ],
-      "githubUrl": "https://github.com/Vnjvibhash/graphql-realtime-engine",
-      "liveDemoUrl": "https://github.com/Vnjvibhash/graphql-realtime-engine",
-      "stars": 79,
-      "forks": 23,
+      "githubUrl": "https://github.com/Vnjvibhash/DSA-With-Java",
+      "liveDemoUrl": "https://github.com/Vnjvibhash/DSA-With-Java",
+      "stars": 110,
+      "forks": 35,
       "featured": true
     },
     {
       "id": "os-8",
-      "title": "Three.js Particle Canvas & Shaders",
-      "description": "Open-source WebGL 3D particle canvas renderer featuring custom GLSL shaders, camera parallax controls, and WebGL performance benchmarks.",
-      "category": "Creative Tech",
+      "title": "Innovateria – Production Next.js Agency Web Platform",
+      "description": "Modern Next.js 16 agency website featuring glassmorphism design tokens, dynamic CRM data store, responsive layout architecture, and complete agency services.",
+      "category": "Web Engineering",
       "tags": [
-        "Three.js",
-        "WebGL",
-        "GLSL",
-        "GSAP"
+        "Next.js 16",
+        "React 19",
+        "TypeScript",
+        "TailwindCSS"
       ],
-      "githubUrl": "https://github.com/Vnjvibhash/threejs-particle-shaders",
-      "liveDemoUrl": "https://github.com/Vnjvibhash/threejs-particle-shaders",
-      "stars": 154,
-      "forks": 41,
-      "featured": true
-    },
-    {
-      "id": "os-9",
-      "title": "CLI Log Analyzer & Anomaly Detector",
-      "description": "Lightweight Rust-based command-line tool for real-time log file parsing, regex matching, and automated error anomaly detection.",
-      "category": "CLI & Tooling",
-      "tags": [
-        "Rust",
-        "CLI",
-        "Log Analysis",
-        "DevTools"
-      ],
-      "githubUrl": "https://github.com/Vnjvibhash/rust-log-analyzer",
-      "liveDemoUrl": "https://github.com/Vnjvibhash/rust-log-analyzer",
-      "stars": 91,
-      "forks": 18,
+      "githubUrl": "https://github.com/Vnjvibhash/Innovateria",
+      "liveDemoUrl": "https://github.com/Vnjvibhash/Innovateria",
+      "stars": 156,
+      "forks": 42,
       "featured": true
     }
   ],
@@ -1376,31 +1359,17 @@
   ],
   "timeline": [
     {
-      "id": "time-1",
-      "period": "2017 - 2020",
-      "title": "Diploma in CSE",
-      "institution": "Hindustan Electronics Academy",
-      "location": "Bangalore, IN",
-      "type": "education",
-      "iconName": "GraduationCap",
-      "details": [
-        "Computer Science Fundamentals",
-        "Data Structures & Algorithms",
-        "Software Engineering Basics"
-      ]
-    },
-    {
-      "id": "time-2",
-      "period": "2020 - 2021",
-      "title": "Junior Software Developer",
-      "company": "Connectwings Infotech",
-      "location": "Mysore, IN",
+      "id": "time-5",
+      "period": "2024 - Present",
+      "title": "Full Stack Developer & Founder",
+      "company": "Innovateria",
+      "location": "India / Remote",
       "type": "experience",
-      "iconName": "Briefcase",
+      "iconName": "Laptop",
       "details": [
-        "Android & Laravel development",
-        "Payment gateway integration",
-        "Git version control & code deployment"
+        "Custom web & mobile solutions development",
+        "Laravel, Next.js & Android specialization",
+        "End-to-end client project management"
       ]
     },
     {
@@ -1432,17 +1401,31 @@
       ]
     },
     {
-      "id": "time-5",
-      "period": "2024 - Present",
-      "title": "Full Stack Developer & Founder",
-      "company": "Innovateria",
-      "location": "India / Remote",
+      "id": "time-2",
+      "period": "2020 - 2021",
+      "title": "Junior Software Developer",
+      "company": "Connectwings Infotech",
+      "location": "Mysore, IN",
       "type": "experience",
-      "iconName": "Laptop",
+      "iconName": "Briefcase",
       "details": [
-        "Custom web & mobile solutions development",
-        "Laravel, Next.js & Android specialization",
-        "End-to-end client project management"
+        "Android & Laravel development",
+        "Payment gateway integration",
+        "Git version control & code deployment"
+      ]
+    },
+    {
+      "id": "time-1",
+      "period": "2017 - 2020",
+      "title": "Diploma in CSE",
+      "institution": "Hindustan Electronics Academy",
+      "location": "Bangalore, IN",
+      "type": "education",
+      "iconName": "GraduationCap",
+      "details": [
+        "Computer Science Fundamentals",
+        "Data Structures & Algorithms",
+        "Software Engineering Basics"
       ]
     }
   ],

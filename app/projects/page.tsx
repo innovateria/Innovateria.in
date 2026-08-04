@@ -43,13 +43,13 @@ export default function ProjectsPage() {
             >
               <div>
                 {/* Project Cover Image */}
-                <div className="relative w-full h-60 sm:h-64 bg-[#0B0F17] overflow-hidden border-b border-white/10">
+                <div className="relative w-full h-52 sm:h-56 bg-[var(--card-inner-bg)] overflow-hidden border-b border-[var(--border-color)]">
                   <img 
                     src={project.image || '/assets/img/services/soft.png'} 
                     alt={project.title}
-                    className="w-full h-full object-cover object-center min-w-full min-h-full group-hover:scale-105 transition-transform duration-700 ease-out" 
+                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out" 
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F17] via-transparent to-black/40"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-[var(--card-bg)] via-transparent to-black/30 pointer-events-none"></div>
 
                   <div className="absolute top-3 left-3">
                     <span className="text-[10px] font-bold text-brand-300 uppercase tracking-wider bg-black/80 backdrop-blur-md border border-brand-500/30 px-3 py-1 rounded-xl">
