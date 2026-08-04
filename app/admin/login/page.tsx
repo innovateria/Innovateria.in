@@ -52,7 +52,8 @@ export default function AdminLoginPage() {
           </div>
 
           <div className="flex justify-center pt-2">
-            <img src="/assets/img/logo.png" alt="Innovateria" className="h-10 w-auto object-contain" />
+            <img src="/assets/img/logo_white.png" alt="Innovateria" className="logo-dark-theme h-10 w-auto object-contain" />
+            <img src="/assets/img/logo_black.png" alt="Innovateria" className="logo-light-theme h-10 w-auto object-contain" />
           </div>
 
           <h1 className="text-2xl font-bold text-white tracking-tight">Admin Authentication</h1>

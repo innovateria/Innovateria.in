@@ -8,17 +8,17 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          50: '#fff5f3',
-          100: '#ffe8e4',
-          200: '#ffd5cd',
-          300: '#ffb5a6',
-          400: '#ff846c',
-          500: '#ff4e2e', // Innovateria primary red/orange
-          600: '#ea3110',
-          700: '#c52408',
-          800: '#a2210d',
-          900: '#862112',
-          glow: '#ff6b4a',
+          50: '#fff1f2',
+          100: '#ffe1e3',
+          200: '#ffc7ca',
+          300: '#ff9da2',
+          400: '#ff5c6a',
+          500: '#e10a1a', // Exact Innovateria Logo Primary Red
+          600: '#c20815',
+          700: '#a20611',
+          800: '#860812',
+          900: '#700c14',
+          glow: '#ff3b4c',
         },
         dark: {
           bg: '#0B0F17',

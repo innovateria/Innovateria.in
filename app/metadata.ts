@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 
 export const viewport: Viewport = {
-  themeColor: '#FF4E2E',
+  themeColor: '#E10A1A',
   width: 'device-width',
   initialScale: 1,
 };
@@ -79,5 +79,13 @@ export const metadata: Metadata = {
     description: 'Custom mobile app engineering, web development, enterprise software, and organic SEO growth strategies.',
     creator: '@Vnjvibhash',
     images: ['https://innovateria.in/assets/img/logo.png'],
+  },
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/assets/img/favicon.png', type: 'image/png' },
+    ],
+    shortcut: '/favicon.ico',
+    apple: '/assets/img/icon.png',
   },
 };

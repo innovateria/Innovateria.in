@@ -16,7 +16,7 @@
     --bg-secondary: #111827;
     --surface: rgba(19, 26, 41, 0.75);
     --surface-strong: rgba(255, 255, 255, 0.96);
-    --border-color: rgba(255, 255, 255, 0.1);
+    --border-color: rgba(255, 255, 255, 0.05);
     --text-primary: #F8FAFC;
     --text-secondary: #E2E8F0;
     --text-muted: #94A3B8;
@@ -142,18 +142,18 @@
 }
 
 .text-gradient-brand {
-  background: linear-gradient(135deg, #FF6B4A 0%, #FF4E2E 50%, #FF846C 100%);
+  background: linear-gradient(135deg, #FF5C6A 0%, #E10A1A 50%, #FF3B4C 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .bg-gradient-brand {
-  background: linear-gradient(135deg, #FF4E2E 0%, #EA3110 100%);
+  background: linear-gradient(135deg, #E10A1A 0%, #C20815 100%);
 }
 
 .bg-radial-glow {
-  background: radial-gradient(circle at 50% 0%, rgba(255, 78, 46, 0.15) 0%, rgba(11, 15, 23, 0) 70%);
+  background: radial-gradient(circle at 50% 0%, rgba(225, 10, 26, 0.18) 0%, rgba(11, 15, 23, 0) 70%);
 }
 
 .bg-grid-pattern {
@@ -166,7 +166,6 @@
 header {
   background-color: var(--header-bg) !important;
   color: var(--text-primary);
-  border-color: var(--border-color) !important;
 }
 
 footer {
@@ -211,6 +210,22 @@ body .glass-card .text-gray-200,
 body .glass-card .text-gray-300,
 body .glass-card .text-gray-400 {
   color: var(--text-primary) !important;
+}
+
+/* ==========================================
+   Theme-Aware Logo Switching
+   ========================================== */
+:root[data-theme='light'] .logo-dark-theme {
+  display: none !important;
+}
+:root[data-theme='light'] .logo-light-theme {
+  display: block !important;
+}
+:root:not([data-theme='light']) .logo-dark-theme {
+  display: block !important;
+}
+:root:not([data-theme='light']) .logo-light-theme {
+  display: none !important;
 }
 
 /* ==========================================

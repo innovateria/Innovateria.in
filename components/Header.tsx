@@ -167,12 +167,12 @@ export default function Header() {
     <header
       style={{ backgroundColor: 'var(--header-bg)' }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'backdrop-blur-md border-b border-[color:var(--border-color)] shadow-2xl py-2' : 'backdrop-blur-sm border-b border-[color:var(--border-color)] py-3'
+        isScrolled ? 'backdrop-blur-md border-b border-white/[0.06] shadow-2xl py-1' : 'backdrop-blur-sm border-b border-white/[0.04] py-1.5'
       }`}
     >
       {/* Dynamic Top Info Bar */}
       <div className={`hidden md:block transition-all duration-300 overflow-hidden ${
-        isScrolled ? 'max-h-0 opacity-0 pb-0 mb-0 border-b-0 pointer-events-none' : 'max-h-12 opacity-100 pb-2 mb-2 border-b border-[color:var(--border-color)]'
+        isScrolled ? 'max-h-0 opacity-0 py-0 my-0 border-b-0 pointer-events-none' : 'max-h-10 opacity-100 py-1 mb-1.5 border-b border-white/[0.08]'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center text-xs text-gray-300">
           <div className="flex items-center space-x-6">
@@ -191,7 +191,7 @@ export default function Header() {
               href={headerInfo.portfolioUrl} 
               target="_blank" 
               rel="noopener noreferrer"
-              className="inline-flex items-center space-x-1 bg-gradient-brand text-white px-2.5 py-1 rounded text-xs font-medium transition-all hover:shadow-md hover:shadow-brand-500/20"
+              className="inline-flex items-center space-x-1 bg-gradient-brand text-white px-2.5 py-0.5 rounded text-xs font-medium transition-all hover:shadow-md hover:shadow-brand-500/20"
               title="Visit Personal 3D Portfolio"
             >
               <Globe size={12} />
@@ -204,12 +204,17 @@ export default function Header() {
       {/* Main Navbar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
         {/* Brand Logo */}
-        <Link href="/" className="flex items-center space-x-3 group">
-          <div className="relative w-28 sm:w-36 h-10 transition-transform group-hover:scale-105">
+        <Link href="/" className="flex items-center space-x-3 group py-0.5">
+          <div className="relative w-32 sm:w-44 md:w-52 h-9 sm:h-11 md:h-12 flex items-center transition-transform group-hover:scale-105">
             <img
-              src="/assets/img/logo.png"
+              src="/assets/img/logo_white.png"
               alt={`${headerInfo.agencyName} Logo`}
-              className="h-10 w-auto object-contain"
+              className="logo-dark-theme h-8 sm:h-10 md:h-11 w-auto object-contain max-w-full"
+            />
+            <img
+              src="/assets/img/logo_black.png"
+              alt={`${headerInfo.agencyName} Logo`}
+              className="logo-light-theme h-8 sm:h-10 md:h-11 w-auto object-contain max-w-full"
             />
           </div>
         </Link>

@@ -18,11 +18,16 @@ export default function Footer() {
           
           {/* Column 1: Info & Brand */}
           <div className="space-y-4">
-            <Link href="/" className="inline-block">
+            <Link href="/" className="inline-block py-1">
               <img 
-                src="/assets/img/logo.png" 
+                src="/assets/img/logo_white.png" 
                 alt="Innovateria Logo" 
-                className="h-10 w-auto object-contain" 
+                className="logo-dark-theme h-12 sm:h-14 md:h-16 w-auto object-contain max-w-full" 
+              />
+              <img 
+                src="/assets/img/logo_black.png" 
+                alt="Innovateria Logo" 
+                className="logo-light-theme h-12 sm:h-14 md:h-16 w-auto object-contain max-w-full" 
               />
             </Link>
             <p className="text-xs text-gray-400 leading-relaxed">

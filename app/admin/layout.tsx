@@ -144,7 +144,8 @@ export default function AdminLayout({
       {/* Mobile Top Header */}
       <div className="md:hidden shrink-0 glass-card border-b border-white/10 p-4 flex justify-between items-center z-40 bg-[#0B0F17]/90 backdrop-blur-md">
         <div className="flex items-center space-x-3">
-          <img src="/assets/img/logo.png" alt="Innovateria" className="h-8 w-auto" />
+          <img src="/assets/img/logo_white.png" alt="Innovateria" className="logo-dark-theme h-8 w-auto object-contain" />
+          <img src="/assets/img/logo_black.png" alt="Innovateria" className="logo-light-theme h-8 w-auto object-contain" />
           <span className="text-xs font-bold uppercase tracking-wider text-brand-500 bg-brand-500/10 px-2 py-0.5 rounded border border-brand-500/20">CRM Admin</span>
         </div>
         <div className="flex items-center space-x-2">
@@ -179,7 +180,8 @@ export default function AdminLayout({
           {/* Logo Brand Header */}
           <div className="flex items-center justify-between px-2 pt-2">
             <Link href="/" className="flex items-center space-x-3">
-              <img src="/assets/img/logo.png" alt="Innovateria" className="h-9 w-auto object-contain" />
+              <img src="/assets/img/logo_white.png" alt="Innovateria" className="logo-dark-theme h-9 w-auto object-contain" />
+              <img src="/assets/img/logo_black.png" alt="Innovateria" className="logo-light-theme h-9 w-auto object-contain" />
             </Link>
             <span className="text-[10px] font-bold text-brand-500 uppercase tracking-wider bg-brand-500/15 border border-brand-500/30 px-2 py-0.5 rounded-full">
               CRM v1.0
