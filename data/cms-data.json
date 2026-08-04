@@ -331,25 +331,26 @@
   "team": [
     {
       "id": "team-1",
-      "name": "Vivek Kumar",
-      "role": "Founder & Full Stack Developer",
+      "name": "Vivek Kumar (Viveka Jee)",
+      "role": "Founder & Lead Software Engineer",
       "company": "Innovateria",
-      "location": "Bangalore, IN",
-      "bio": "Software engineer specializing in Flutter, React, Next.js, and Laravel cloud solutions with a passion for building user-first digital products.",
+      "location": "Bangalore, IN / Remote",
+      "bio": "Full-stack software engineer & founder specializing in Flutter, React, Next.js, Android (Java/Kotlin), and Laravel APIs. Gold Medalist at Chandigarh University & 1st Runner-Up at Rajasthan IT Day Hackathon 2023.",
       "image": "/assets/img/team/vivekajee.png",
       "skills": [
-        "Java",
         "Flutter",
         "Next.js",
-        "Laravel",
         "React",
-        "ReactNative",
+        "React Native",
+        "Android (Java/Kotlin)",
+        "Laravel",
+        "Node.js",
         "Firebase",
-        "Android SDK",
-        "RazorPay"
+        "MongoDB",
+        "RESTful APIs"
       ],
-      "github": "https://github.com/VnjVibhash",
-      "linkedin": "https://linkedin.com/in/Vivekajee",
+      "github": "https://github.com/Vnjvibhash",
+      "linkedin": "https://www.linkedin.com/in/vivekajee",
       "twitter": "https://twitter.com/Vnjvibhash",
       "website": "https://vivekajee.in"
     }
