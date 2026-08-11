@@ -4,6 +4,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SocialBar from '@/components/SocialBar';
 import BackToTop from '@/components/BackToTop';
+import FirebaseAnalytics from '@/components/FirebaseAnalytics';
 import { metadata, viewport } from './metadata';
 
 export { metadata, viewport };
@@ -148,6 +149,7 @@ export default function RootLayout({
         </MainContentShell>
         <Footer />
         <BackToTop />
+        <FirebaseAnalytics />
       </body>
     </html>
   );
