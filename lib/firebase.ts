@@ -23,25 +23,55 @@ const firebaseConfig = {
 // Initialize Firebase using singleton pattern (safe for Next.js SSR and client)
 const app: FirebaseApp = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 
-// Initialize Firebase Auth
-const auth: Auth = getAuth(app);
+// Initialize Firebase Auth with singleton safety
+let auth: Auth;
+try {
+  auth = getAuth(app);
+} catch (e) {
+  auth = getAuth();
+}
+
 const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({
   prompt: 'select_account'
 });
 
-let analytics: Analytics | null = null;
+let analyticsInstance: Analytics | null = null;
+let analyticsPromise: Promise<Analytics | null> | null = null;
 
-// Initialize Analytics on client-side safely
+// Initialize Analytics on client-side safely with IndexedDB protection
 export const initAnalytics = async (): Promise<Analytics | null> => {
-  if (typeof window !== 'undefined' && !analytics) {
-    const supported = await isSupported();
-    if (supported) {
-      analytics = getAnalytics(app);
-      return analytics;
+  if (typeof window === 'undefined') return null;
+  if (analyticsInstance) return analyticsInstance;
+  if (analyticsPromise) return analyticsPromise;
+
+  analyticsPromise = (async () => {
+    try {
+      // Ensure indexedDB is available and document is not hidden during init
+      if (typeof window.indexedDB === 'undefined') {
+        return null;
+      }
+
+      const supported = await isSupported().catch(() => false);
+      if (supported) {
+        analyticsInstance = getAnalytics(app);
+        return analyticsInstance;
+      }
+    } catch (err: any) {
+      // Suppress transient IndexedDB "Database is closing/hidden" errors during Fast Refresh/HMR
+      if (
+        err?.message?.includes('Database is closing') ||
+        err?.message?.includes('closing/hidden') ||
+        err?.name === 'InvalidStateError'
+      ) {
+        return null;
+      }
+      console.warn('Firebase Analytics notice:', err?.message || err);
     }
-  }
-  return analytics;
+    return null;
+  })();
+
+  return analyticsPromise;
 };
 
 export { 
@@ -52,7 +82,7 @@ export {
   signOut, 
   onAuthStateChanged,
   GoogleAuthProvider,
-  analytics 
+  analyticsInstance as analytics 
 };
 export type { User };
 export default app;
