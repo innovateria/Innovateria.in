@@ -22,8 +22,18 @@ import {
   Cpu,
   Bell,
   Mail,
-  ArrowRight
+  ArrowRight,
+  ShieldCheck,
+  ExternalLink
 } from 'lucide-react';
+import { auth, signOut } from '@/lib/firebase';
+
+interface AdminProfile {
+  name: string;
+  email: string;
+  role: string;
+  photoURL?: string;
+}
 
 export default function AdminLayout({
   children,
@@ -34,6 +44,11 @@ export default function AdminLayout({
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [currentAdmin, setCurrentAdmin] = useState<AdminProfile>({
+    name: 'Innovateria Admin',
+    email: 'innovateria.in@gmail.com',
+    role: 'admin'
+  });
   const [unreadLeadsCount, setUnreadLeadsCount] = useState(0);
   const [notifOpen, setNotifOpen] = useState(false);
   const [recentLeads, setRecentLeads] = useState<any[]>([]);
@@ -61,7 +76,7 @@ export default function AdminLayout({
     }
   };
 
-  // Check auth session & setup real-time notification polling / listener
+  // Check auth session & verify admin role
   useEffect(() => {
     if (pathname === '/admin/login') {
       setIsAuthenticated(true);
@@ -70,9 +85,24 @@ export default function AdminLayout({
 
     const checkSession = async () => {
       try {
-        const statsRes = await fetch('/api/admin/stats');
-        if (statsRes.ok) {
-          setIsAuthenticated(true);
+        const authRes = await fetch('/api/admin/auth');
+        if (authRes.ok) {
+          const authData = await authRes.json();
+          if (authData.authenticated) {
+            setIsAuthenticated(true);
+            if (authData.admin) {
+              setCurrentAdmin({
+                name: authData.admin.displayName || authData.admin.name || 'Admin',
+                email: authData.admin.email || 'innovateria.in@gmail.com',
+                role: authData.admin.role || 'admin',
+                photoURL: authData.admin.photoURL
+              });
+            }
+          } else {
+            setIsAuthenticated(false);
+            router.push('/admin/login');
+            return;
+          }
         } else {
           setIsAuthenticated(false);
           router.push('/admin/login');
@@ -88,10 +118,10 @@ export default function AdminLayout({
 
     checkSession();
 
-    // Setup 3-second real-time polling
+    // Setup 3-second real-time notification polling
     const intervalId = setInterval(fetchNotifications, 3000);
 
-    // Setup event listeners for instant local updates
+    // Event listeners for instant local updates
     const handleUpdate = () => fetchNotifications();
     window.addEventListener('crm_leads_updated', handleUpdate);
     window.addEventListener('focus', handleUpdate);
@@ -113,7 +143,7 @@ export default function AdminLayout({
       <div className="h-screen w-screen bg-[#0B0F17] flex items-center justify-center text-white">
         <div className="flex flex-col items-center space-y-4">
           <div className="w-10 h-10 border-4 border-brand-500 border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">Verifying Admin Session...</p>
+          <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">Verifying Admin Permissions...</p>
         </div>
       </div>
     );
@@ -133,9 +163,25 @@ export default function AdminLayout({
     { href: '/admin/settings', label: 'CMS Settings', icon: Settings },
   ];
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/admin/auth', { method: 'DELETE' });
+      await signOut(auth).catch(() => {});
+    } catch (err) {
+      console.error('Logout error:', err);
+    }
     document.cookie = 'crm_admin_token=; Max-Age=0; path=/';
+    document.cookie = 'crm_admin_email=; Max-Age=0; path=/';
     router.push('/admin/login');
+  };
+
+  const getInitials = (name: string) => {
+    if (!name) return 'AD';
+    const parts = name.trim().split(' ');
+    if (parts.length >= 2) {
+      return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+    }
+    return name.slice(0, 2).toUpperCase();
   };
 
   return (
@@ -183,8 +229,9 @@ export default function AdminLayout({
               <img src="/assets/img/logo_white.png" alt="Innovateria" className="logo-dark-theme h-9 w-auto object-contain" />
               <img src="/assets/img/logo_black.png" alt="Innovateria" className="logo-light-theme h-9 w-auto object-contain" />
             </Link>
-            <span className="text-[10px] font-bold text-brand-500 uppercase tracking-wider bg-brand-500/15 border border-brand-500/30 px-2 py-0.5 rounded-full">
-              CRM v1.0
+            <span className="text-[10px] font-bold text-brand-500 uppercase tracking-wider bg-brand-500/15 border border-brand-500/30 px-2 py-0.5 rounded-full flex items-center space-x-1">
+              <ShieldCheck size={10} />
+              <span>Admin</span>
             </span>
           </div>
 
@@ -220,24 +267,37 @@ export default function AdminLayout({
           </nav>
         </div>
 
-        {/* Sidebar Footer User Info & Logout */}
+        {/* Sidebar Footer: Google Authenticated User Profile & Logout */}
         <div className="pt-4 border-t border-white/10 space-y-3">
-          <div className="glass-card p-3 rounded-xl flex items-center space-x-3">
-            <div className="w-8 h-8 rounded-full bg-brand-500/20 border border-brand-500/40 flex items-center justify-center text-brand-500 font-bold text-xs">
-              VK
-            </div>
-            <div className="overflow-hidden">
-              <h4 className="text-xs font-bold text-white truncate">Vivek Kumar</h4>
-              <p className="text-[10px] text-gray-400 truncate">innovateria.in@gmail.com</p>
+          <div className="glass-card p-3 rounded-2xl flex items-center space-x-3 border border-white/10">
+            {currentAdmin.photoURL ? (
+              <img
+                src={currentAdmin.photoURL}
+                alt={currentAdmin.name}
+                className="w-9 h-9 rounded-full object-cover border border-brand-500/40 shrink-0"
+              />
+            ) : (
+              <div className="w-9 h-9 rounded-full bg-brand-500/20 border border-brand-500/40 flex items-center justify-center text-brand-500 font-bold text-xs shrink-0">
+                {getInitials(currentAdmin.name)}
+              </div>
+            )}
+            <div className="overflow-hidden min-w-0">
+              <div className="flex items-center space-x-1.5">
+                <h4 className="text-xs font-bold text-white truncate">{currentAdmin.name}</h4>
+                <span className="text-[9px] bg-brand-500/20 text-brand-400 border border-brand-500/30 px-1 py-0.2 rounded font-semibold uppercase">
+                  {currentAdmin.role}
+                </span>
+              </div>
+              <p className="text-[10px] text-gray-400 truncate">{currentAdmin.email}</p>
             </div>
           </div>
 
           <button
             onClick={handleLogout}
-            className="w-full flex items-center justify-center space-x-2 glass-card hover:bg-red-500/20 text-red-400 hover:text-red-300 py-2.5 rounded-xl text-xs font-medium transition-colors border border-red-500/20"
+            className="w-full flex items-center justify-center space-x-2 glass-card hover:bg-red-500/20 text-red-400 hover:text-red-300 py-2.5 rounded-xl text-xs font-medium transition-colors border border-red-500/20 cursor-pointer"
           >
-            <LogOut size={16} />
-            <span>Sign Out Admin</span>
+            <LogOut size={15} />
+            <span>Sign Out</span>
           </button>
         </div>
       </aside>
@@ -258,7 +318,7 @@ export default function AdminLayout({
             <div className="relative">
               <button
                 onClick={() => setNotifOpen(!notifOpen)}
-                className={`relative p-2.5 rounded-xl glass-card border transition-all flex items-center justify-center ${
+                className={`relative p-2.5 rounded-xl glass-card border transition-all flex items-center justify-center cursor-pointer ${
                   notifOpen 
                     ? 'border-brand-500/60 bg-brand-500/20 text-white shadow-lg shadow-brand-500/20' 
                     : 'border-white/10 text-gray-300 hover:text-white hover:bg-white/10'
@@ -347,9 +407,10 @@ export default function AdminLayout({
             <Link
               href="/"
               target="_blank"
-              className="glass-card hover:bg-white/10 text-gray-300 hover:text-white px-3.5 py-2 rounded-xl text-xs font-medium border border-white/10 transition-colors"
+              className="glass-card hover:bg-white/10 text-gray-300 hover:text-white px-3.5 py-2 rounded-xl text-xs font-medium border border-white/10 transition-colors flex items-center space-x-1.5"
             >
-              View Public Website
+              <span>View Public Website</span>
+              <ExternalLink size={13} className="text-brand-500" />
             </Link>
           </div>
         </header>

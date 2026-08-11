@@ -176,6 +176,17 @@ export interface OpenSourceProjectCMS {
   featured?: boolean;
 }
 
+export interface AdminUserCMS {
+  id: string;
+  uid?: string;
+  email: string;
+  displayName?: string;
+  photoURL?: string;
+  role: 'admin' | 'user';
+  createdAt: string;
+  lastLoginAt: string;
+}
+
 export interface CMSJSONDatabase {
   services: ServiceCMS[];
   team: TeamMemberCMS[];
@@ -192,6 +203,7 @@ export interface CMSJSONDatabase {
   values: CoreValueCMS[];
   processSteps: ProcessStepCMS[];
   settings: AgencySettingsCMS;
+  adminUsers?: AdminUserCMS[];
 }
 
 const JSON_FILE_PATH = path.join(process.cwd(), 'data', 'cms-data.json');
@@ -217,6 +229,26 @@ function loadJSONData(): CMSJSONDatabase {
           techStack: Array.isArray(parsed.techStack) ? parsed.techStack : [],
           values: Array.isArray(parsed.values) ? parsed.values : [],
           processSteps: Array.isArray(parsed.processSteps) ? parsed.processSteps : [],
+          adminUsers: Array.isArray(parsed.adminUsers) ? parsed.adminUsers : [
+            {
+              id: 'admin-1',
+              uid: '',
+              email: 'innovateria.in@gmail.com',
+              displayName: 'Innovateria Admin',
+              role: 'admin',
+              createdAt: '2026-08-01T00:00:00.000Z',
+              lastLoginAt: '2026-08-11T00:00:00.000Z'
+            },
+            {
+              id: 'admin-2',
+              uid: '',
+              email: 'vivekajee@gmail.com',
+              displayName: 'Vivek Kumar',
+              role: 'admin',
+              createdAt: '2026-08-01T00:00:00.000Z',
+              lastLoginAt: '2026-08-11T00:00:00.000Z'
+            }
+          ],
           settings: parsed.settings || {
             agencyName: 'Innovateria Software Solutions',
             adminEmail: 'innovateria.in@gmail.com',
@@ -719,4 +751,82 @@ export function getCRMStats() {
     totalProjects: projects.length,
     projectedRevenue: '₹12,40,000'
   };
+}
+
+export function getAdminUsersCMS(): AdminUserCMS[] {
+  syncFromDisk();
+  return Array.isArray(crmStore.adminUsers) ? crmStore.adminUsers : [];
+}
+
+export function findOrRegisterAdminUser(userData: {
+  uid?: string;
+  email: string;
+  displayName?: string;
+  photoURL?: string;
+}): { user: AdminUserCMS; isAdmin: boolean } {
+  syncFromDisk();
+  if (!Array.isArray(crmStore.adminUsers)) {
+    crmStore.adminUsers = [];
+  }
+
+  const normalizedEmail = (userData.email || '').trim().toLowerCase();
+  
+  // Check known superadmin emails
+  const defaultAdminEmails = [
+    'innovateria.in@gmail.com',
+    'vivekajee@gmail.com',
+    'vnjvibhash@gmail.com'
+  ];
+
+  let user = crmStore.adminUsers.find(
+    u => u.email.trim().toLowerCase() === normalizedEmail
+  );
+
+  const isDefaultAdmin = defaultAdminEmails.includes(normalizedEmail);
+
+  if (user) {
+    // Update existing user login and profile info
+    user.lastLoginAt = new Date().toISOString();
+    if (userData.uid) user.uid = userData.uid;
+    if (userData.displayName) user.displayName = userData.displayName;
+    if (userData.photoURL) user.photoURL = userData.photoURL;
+    if (isDefaultAdmin && user.role !== 'admin') {
+      user.role = 'admin';
+    }
+  } else {
+    // Register new user
+    user = {
+      id: `usr-${Date.now()}`,
+      uid: userData.uid || '',
+      email: userData.email,
+      displayName: userData.displayName || 'Google User',
+      photoURL: userData.photoURL || '',
+      role: isDefaultAdmin ? 'admin' : 'user',
+      createdAt: new Date().toISOString(),
+      lastLoginAt: new Date().toISOString()
+    };
+    crmStore.adminUsers.push(user);
+  }
+
+  persistState();
+  return {
+    user,
+    isAdmin: user.role === 'admin'
+  };
+}
+
+export function updateAdminUserRole(emailOrId: string, role: 'admin' | 'user'): boolean {
+  syncFromDisk();
+  if (!Array.isArray(crmStore.adminUsers)) return false;
+
+  const target = emailOrId.trim().toLowerCase();
+  const user = crmStore.adminUsers.find(
+    u => u.id === emailOrId || u.email.trim().toLowerCase() === target
+  );
+
+  if (!user) return false;
+
+  user.role = role;
+  persistState();
+  return true;
 }

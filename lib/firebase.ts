@@ -1,5 +1,14 @@
 import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
 import { getAnalytics, isSupported, Analytics } from 'firebase/analytics';
+import { 
+  getAuth, 
+  GoogleAuthProvider, 
+  signInWithPopup, 
+  signOut, 
+  onAuthStateChanged, 
+  Auth,
+  User 
+} from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyDhYUgOMEgmt1wENGNrQ4c0gvPVKJrTNaI",
@@ -13,6 +22,13 @@ const firebaseConfig = {
 
 // Initialize Firebase using singleton pattern (safe for Next.js SSR and client)
 const app: FirebaseApp = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
+
+// Initialize Firebase Auth
+const auth: Auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({
+  prompt: 'select_account'
+});
 
 let analytics: Analytics | null = null;
 
@@ -28,5 +44,15 @@ export const initAnalytics = async (): Promise<Analytics | null> => {
   return analytics;
 };
 
-export { app, analytics };
+export { 
+  app, 
+  auth, 
+  googleProvider, 
+  signInWithPopup, 
+  signOut, 
+  onAuthStateChanged,
+  GoogleAuthProvider,
+  analytics 
+};
+export type { User };
 export default app;
