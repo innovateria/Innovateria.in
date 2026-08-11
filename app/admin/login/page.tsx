@@ -32,13 +32,18 @@ export default function AdminLoginPage() {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
 
-      // Ensure user document is created/updated in Firestore 'users' collection for first-time users
-      await syncUserToFirestore(user).catch((err) => {
-        console.warn('Firestore sync note:', err);
-      });
+      setStatusMessage(`Syncing ${user.email} with Firestore users collection...`);
+
+      // 1. Create or update user document in Firestore 'users' collection
+      const syncResult = await syncUserToFirestore(user);
+      const firestoreUser = syncResult?.user;
+      const userRole = firestoreUser?.role || (
+        user.email === 'innovateria.in@gmail.com' || user.email === 'vivekajee@gmail.com' ? 'admin' : 'user'
+      );
 
       setStatusMessage(`Verifying permissions for ${user.email}...`);
 
+      // 2. Authenticate session with backend
       const res = await fetch('/api/admin/auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -47,7 +52,8 @@ export default function AdminLoginPage() {
             uid: user.uid,
             email: user.email,
             displayName: user.displayName,
-            photoURL: user.photoURL
+            photoURL: user.photoURL,
+            role: userRole
           }
         })
       });
@@ -56,7 +62,7 @@ export default function AdminLoginPage() {
 
       if (res.ok && data.authorized) {
         setStatus('success');
-        setStatusMessage(`Welcome, ${data.admin?.displayName || user.displayName || 'Admin'}! Access granted.`);
+        setStatusMessage(`Welcome, ${firestoreUser?.displayName || user.displayName || 'Admin'}! Access granted.`);
         setTimeout(() => {
           router.push('/admin');
         }, 1200);
@@ -64,11 +70,11 @@ export default function AdminLoginPage() {
         // Not authorized (non-admin role)
         setStatus('denied');
         setStatusMessage(
-          data.error || `Access Denied: ${user.email} is registered but not assigned the Admin role. Redirecting to Home page...`
+          data.error || `Access Denied: ${user.email} is registered in the Firestore Users collection with role '${userRole}'. An Administrator must assign you the 'admin' role before you can access the CRM. Redirecting to Home page...`
         );
         setTimeout(() => {
           router.push('/');
-        }, 3000);
+        }, 3500);
       }
     } catch (err: any) {
       console.warn('Google Sign-in status note:', err);

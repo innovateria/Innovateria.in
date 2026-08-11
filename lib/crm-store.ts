@@ -229,26 +229,7 @@ function loadJSONData(): CMSJSONDatabase {
           techStack: Array.isArray(parsed.techStack) ? parsed.techStack : [],
           values: Array.isArray(parsed.values) ? parsed.values : [],
           processSteps: Array.isArray(parsed.processSteps) ? parsed.processSteps : [],
-          adminUsers: Array.isArray(parsed.adminUsers) ? parsed.adminUsers : [
-            {
-              id: 'admin-1',
-              uid: '',
-              email: 'innovateria.in@gmail.com',
-              displayName: 'Innovateria Admin',
-              role: 'admin',
-              createdAt: '2026-08-01T00:00:00.000Z',
-              lastLoginAt: '2026-08-11T00:00:00.000Z'
-            },
-            {
-              id: 'admin-2',
-              uid: '',
-              email: 'vivekajee@gmail.com',
-              displayName: 'Vivek Kumar',
-              role: 'admin',
-              createdAt: '2026-08-01T00:00:00.000Z',
-              lastLoginAt: '2026-08-11T00:00:00.000Z'
-            }
-          ],
+          adminUsers: Array.isArray(parsed.adminUsers) ? parsed.adminUsers : [],
           settings: parsed.settings || {
             agencyName: 'Innovateria Software Solutions',
             adminEmail: 'innovateria.in@gmail.com',

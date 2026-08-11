@@ -14,38 +14,36 @@ import {
   UserPlus, 
   RefreshCw,
   Mail,
-  Calendar
+  Calendar,
+  Cloud
 } from 'lucide-react';
 import FirebaseSyncButton from '@/components/FirebaseSyncButton';
-
-interface AdminUserItem {
-  id: string;
-  uid?: string;
-  email: string;
-  displayName?: string;
-  photoURL?: string;
-  role: 'admin' | 'user';
-  createdAt: string;
-  lastLoginAt: string;
-}
+import { getFirestoreUsers, updateFirestoreUserRole, FirestoreUser } from '@/lib/firebase';
 
 export default function AdminSettingsPage() {
   const [passcode, setPasscode] = useState('123456');
   const [agencyName, setAgencyName] = useState('Innovateria Software Solutions');
   const [adminEmail, setAdminEmail] = useState('innovateria.in@gmail.com');
   const [savedMsg, setSavedMsg] = useState('');
-  const [users, setUsers] = useState<AdminUserItem[]>([]);
+  const [users, setUsers] = useState<FirestoreUser[]>([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
-  const [updatingUserEmail, setUpdatingUserEmail] = useState<string | null>(null);
+  const [updatingUserUid, setUpdatingUserUid] = useState<string | null>(null);
 
   const fetchUsers = async () => {
     setLoadingUsers(true);
     try {
-      const res = await fetch('/api/admin/users');
-      if (res.ok) {
-        const data = await res.json();
-        if (Array.isArray(data.users)) {
-          setUsers(data.users);
+      // 1. Fetch directly from Cloud Firestore 'users' collection
+      const firestoreUsers = await getFirestoreUsers();
+      if (firestoreUsers && firestoreUsers.length > 0) {
+        setUsers(firestoreUsers);
+      } else {
+        // Fallback to API endpoint
+        const res = await fetch('/api/admin/users');
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data.users)) {
+            setUsers(data.users);
+          }
         }
       }
     } catch (err) {
@@ -65,31 +63,34 @@ export default function AdminSettingsPage() {
     setTimeout(() => setSavedMsg(''), 4000);
   };
 
-  const handleRoleToggle = async (user: AdminUserItem) => {
-    const newRole = user.role === 'admin' ? 'user' : 'admin';
-    setUpdatingUserEmail(user.email);
-    try {
-      const res = await fetch('/api/admin/users', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          emailOrId: user.id || user.email,
-          role: newRole
-        })
-      });
+  const handleRoleToggle = async (user: FirestoreUser) => {
+    const newRole: 'admin' | 'user' = user.role === 'admin' ? 'user' : 'admin';
+    setUpdatingUserUid(user.uid);
 
-      if (res.ok) {
-        const data = await res.json();
-        if (Array.isArray(data.users)) {
-          setUsers(data.users);
-        }
-        setSavedMsg(`Role for ${user.email} updated to '${newRole}'.`);
-        setTimeout(() => setSavedMsg(''), 4000);
-      }
+    try {
+      // 1. Update directly in Firestore 'users' collection
+      let success = await updateFirestoreUserRole(user.uid, newRole);
+
+      // 2. Also notify backend API
+      try {
+        await fetch('/api/admin/users', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            emailOrId: user.uid || user.email,
+            role: newRole
+          })
+        });
+      } catch (e) {}
+
+      // 3. Update local state
+      setUsers(prev => prev.map(u => u.uid === user.uid ? { ...u, role: newRole } : u));
+      setSavedMsg(`Role for ${user.email} updated to '${newRole}' in Firestore!`);
+      setTimeout(() => setSavedMsg(''), 4000);
     } catch (err) {
-      console.error('Error updating role:', err);
+      console.error('Error updating role in Firestore:', err);
     } finally {
-      setUpdatingUserEmail(null);
+      setUpdatingUserUid(null);
     }
   };
 
@@ -101,10 +102,10 @@ export default function AdminSettingsPage() {
         <div>
           <h1 className="text-2xl font-bold text-white tracking-tight flex items-center space-x-2">
             <Settings size={24} className="text-brand-500" />
-            <span>CRM Security & Access Settings</span>
+            <span>CRM Security & Cloud Access Settings</span>
           </h1>
           <p className="text-xs text-gray-400 mt-1">
-            Manage authorized Google (Gmail) administrator roles, security passcode, and agency credentials.
+            Manage authorized Google (Gmail) administrator roles in Firestore, security passcode, and agency credentials.
           </p>
         </div>
 
@@ -120,25 +121,25 @@ export default function AdminSettingsPage() {
       <div className="flex-1 min-h-0 overflow-y-auto p-2 pb-12 pr-2 space-y-6">
 
         {/* Section 0: Firebase Firestore Cloud Database Sync */}
-        <FirebaseSyncButton variant="card" />
+        <FirebaseSyncButton variant="card" onSyncComplete={fetchUsers} />
 
-        {/* Section 1: Google (Gmail) User & Role Management */}
+        {/* Section 1: Google (Gmail) User & Role Management from Firestore */}
         <div className="glass-card rounded-3xl p-6 sm:p-8 border border-white/10 space-y-5">
           <div className="flex items-center justify-between border-b border-white/10 pb-4">
             <div>
               <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center space-x-2">
                 <ShieldCheck size={18} className="text-brand-500" />
-                <span>Google (Gmail) User Role Management</span>
+                <span>Firestore Users Collection & Role Assignment</span>
               </h3>
               <p className="text-xs text-gray-400 mt-0.5">
-                Users authenticate with Gmail. Only users with the <span className="text-brand-400 font-semibold">admin</span> role can access this portal; non-admins are redirected to the Home page.
+                Each registered user is stored in the Firestore <code className="text-brand-400 font-mono">users</code> collection. Assign the <span className="text-brand-400 font-semibold">admin</span> role to grant CRM access.
               </p>
             </div>
             <button
               onClick={fetchUsers}
               disabled={loadingUsers}
               className="p-2 rounded-xl glass-card border border-white/10 text-gray-300 hover:text-white transition-colors cursor-pointer"
-              title="Refresh User List"
+              title="Refresh User List from Firestore"
             >
               <RefreshCw size={15} className={loadingUsers ? 'animate-spin text-brand-500' : ''} />
             </button>
@@ -149,11 +150,12 @@ export default function AdminSettingsPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {users.map((u) => {
                   const isAdmin = u.role === 'admin';
-                  const isUpdating = updatingUserEmail === u.email;
+                  const isUpdating = updatingUserUid === u.uid;
+                  const isPrimaryOwner = u.email === 'innovateria.in@gmail.com' || u.email === 'vivekajee@gmail.com';
 
                   return (
                     <div
-                      key={u.id || u.email}
+                      key={u.uid || u.email}
                       className={`p-4 rounded-2xl border transition-all flex flex-col justify-between space-y-3 ${
                         isAdmin 
                           ? 'bg-brand-500/5 border-brand-500/30' 
@@ -201,7 +203,7 @@ export default function AdminSettingsPage() {
                         <button
                           type="button"
                           onClick={() => handleRoleToggle(u)}
-                          disabled={isUpdating || u.email === 'innovateria.in@gmail.com'}
+                          disabled={isUpdating || isPrimaryOwner}
                           className={`text-xs px-3 py-1.5 rounded-xl font-semibold transition-all cursor-pointer disabled:opacity-40 ${
                             isAdmin 
                               ? 'bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-500/30' 
@@ -209,10 +211,10 @@ export default function AdminSettingsPage() {
                           }`}
                         >
                           {isUpdating 
-                            ? 'Updating...' 
+                            ? 'Updating Firestore...' 
                             : isAdmin 
                             ? 'Demote to User' 
-                            : 'Promote to Admin'}
+                            : 'Assign Admin Role'}
                         </button>
                       </div>
                     </div>
@@ -220,8 +222,10 @@ export default function AdminSettingsPage() {
                 })}
               </div>
             ) : (
-              <div className="p-8 text-center text-xs text-gray-400 glass-card rounded-2xl">
-                No registered Google users found yet. Once a user signs in via Google, they will appear here.
+              <div className="p-8 text-center text-xs text-gray-400 glass-card rounded-2xl space-y-2">
+                <Cloud size={24} className="mx-auto text-brand-500 opacity-60" />
+                <p>No registered Google users found yet in Firestore.</p>
+                <p className="text-[11px] text-gray-500">When users sign in via Google, their profile is automatically created in the Firestore <code className="text-brand-400">users</code> collection and will appear here.</p>
               </div>
             )}
           </div>

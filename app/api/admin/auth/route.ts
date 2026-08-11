@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { crmStore, findOrRegisterAdminUser, getAdminUsersCMS } from '@/lib/crm-store';
+import { crmStore } from '@/lib/crm-store';
 import { cookies } from 'next/headers';
 
 export async function GET() {
@@ -12,14 +12,16 @@ export async function GET() {
     }
 
     const adminEmail = cookieStore.get('crm_admin_email')?.value || 'innovateria.in@gmail.com';
-    const users = getAdminUsersCMS();
-    const user = users.find(u => u.email.toLowerCase() === adminEmail.toLowerCase());
+    const adminName = cookieStore.get('crm_admin_name')?.value || 'Admin User';
+    const adminPhoto = cookieStore.get('crm_admin_photo')?.value || '';
 
     return NextResponse.json({
       authenticated: true,
-      admin: user || {
-        name: 'Innovateria Admin',
+      admin: {
+        name: adminName,
+        displayName: adminName,
         email: adminEmail,
+        photoURL: adminPhoto,
         role: 'admin'
       }
     });
@@ -33,23 +35,26 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { googleUser, passcode, email } = body;
 
-    // 1. Google (Gmail) Authentication Flow
+    // 1. Google (Gmail) Firebase Authentication Flow
     if (googleUser && googleUser.email) {
-      const { user, isAdmin } = findOrRegisterAdminUser({
-        uid: googleUser.uid,
-        email: googleUser.email,
-        displayName: googleUser.displayName || 'Google User',
-        photoURL: googleUser.photoURL || ''
-      });
+      const normalizedEmail = (googleUser.email || '').trim().toLowerCase();
+      const defaultAdminEmails = [
+        'innovateria.in@gmail.com',
+        'vivekajee@gmail.com',
+        'vnjvibhash@gmail.com'
+      ];
+      
+      const isSuperAdmin = defaultAdminEmails.includes(normalizedEmail);
+      const isGrantedAdmin = googleUser.role === 'admin' || isSuperAdmin;
 
-      if (!isAdmin) {
-        // Registered as normal user, but not authorized for admin panel
+      if (!isGrantedAdmin) {
+        // User registered in Firestore with 'user' role, but not granted admin privileges
         return NextResponse.json(
           {
             success: false,
             authorized: false,
-            role: user.role,
-            error: `Access Denied: ${user.email} is registered with role '${user.role}'. Only authorized Admins can access the CRM. Redirecting to Home...`
+            role: 'user',
+            error: `Access Denied: ${googleUser.email} is registered in Firestore as 'user'. Admin assignment required. Redirecting to Home...`
           },
           { status: 403 }
         );
@@ -60,40 +65,65 @@ export async function POST(request: Request) {
         success: true,
         authorized: true,
         message: 'Google Admin authentication successful',
-        admin: user
+        admin: {
+          uid: googleUser.uid,
+          name: googleUser.displayName || 'Admin',
+          displayName: googleUser.displayName || 'Admin',
+          email: googleUser.email,
+          photoURL: googleUser.photoURL || '',
+          role: 'admin'
+        }
       });
 
-      response.cookies.set('crm_admin_token', `session_google_${user.id}_${Date.now()}`, {
+      response.cookies.set('crm_admin_token', `session_google_${googleUser.uid || Date.now()}`, {
         httpOnly: true,
         path: '/',
         maxAge: 86400 * 7, // 7 days
         sameSite: 'lax'
       });
 
-      response.cookies.set('crm_admin_email', user.email, {
+      response.cookies.set('crm_admin_email', googleUser.email, {
         httpOnly: false,
         path: '/',
         maxAge: 86400 * 7,
         sameSite: 'lax'
       });
 
+      if (googleUser.displayName) {
+        response.cookies.set('crm_admin_name', googleUser.displayName, {
+          httpOnly: false,
+          path: '/',
+          maxAge: 86400 * 7,
+          sameSite: 'lax'
+        });
+      }
+
+      if (googleUser.photoURL) {
+        response.cookies.set('crm_admin_photo', googleUser.photoURL, {
+          httpOnly: false,
+          path: '/',
+          maxAge: 86400 * 7,
+          sameSite: 'lax'
+        });
+      }
+
       return response;
     }
 
-    // 2. Passcode Fallback Flow (for emergency access)
+    // 2. Passcode Fallback Flow (for emergency offline access)
     if (passcode) {
       if (passcode === crmStore.adminPasscode || passcode === '123456') {
         const adminEmail = email || 'innovateria.in@gmail.com';
-        const { user } = findOrRegisterAdminUser({
-          email: adminEmail,
-          displayName: 'Super Admin'
-        });
 
         const response = NextResponse.json({
           success: true,
           authorized: true,
           message: 'Passcode authentication successful',
-          admin: user
+          admin: {
+            name: 'Super Admin',
+            email: adminEmail,
+            role: 'admin'
+          }
         });
 
         response.cookies.set('crm_admin_token', `session_passcode_${Date.now()}`, {
@@ -143,6 +173,18 @@ export async function DELETE() {
     });
 
     response.cookies.set('crm_admin_email', '', {
+      httpOnly: false,
+      path: '/',
+      maxAge: 0
+    });
+
+    response.cookies.set('crm_admin_name', '', {
+      httpOnly: false,
+      path: '/',
+      maxAge: 0
+    });
+
+    response.cookies.set('crm_admin_photo', '', {
       httpOnly: false,
       path: '/',
       maxAge: 0

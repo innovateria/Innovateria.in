@@ -18,11 +18,14 @@ import {
   getFirestore,
   doc,
   getDoc,
+  getDocs,
   setDoc,
   updateDoc,
   serverTimestamp,
   Firestore,
   collection,
+  query,
+  orderBy,
   writeBatch
 } from 'firebase/firestore';
 
@@ -118,10 +121,24 @@ export const initAnalytics = async (): Promise<Analytics | null> => {
   return analyticsPromise;
 };
 
+export interface FirestoreUser {
+  uid: string;
+  email: string;
+  displayName: string;
+  photoURL?: string;
+  phoneNumber?: string | null;
+  role: 'admin' | 'user';
+  status: string;
+  provider: string;
+  createdAt?: any;
+  lastLoginAt?: any;
+}
+
 /**
  * Creates or updates a user document in the Firestore 'users' collection for first-time / returning users.
+ * Returns the latest user record with their current assigned role directly from Firestore.
  */
-export const syncUserToFirestore = async (user: User) => {
+export const syncUserToFirestore = async (user: User): Promise<{ isNewUser: boolean; user: FirestoreUser } | null> => {
   if (!user?.uid) return null;
 
   try {
@@ -141,7 +158,7 @@ export const syncUserToFirestore = async (user: User) => {
 
     if (!userSnap || !userSnap.exists()) {
       // First-time user: Create new user document in 'users' collection
-      const newUserData = {
+      const newUserData: FirestoreUser = {
         uid: user.uid,
         email: user.email || '',
         displayName: user.displayName || 'Google User',
@@ -157,26 +174,87 @@ export const syncUserToFirestore = async (user: User) => {
       await setDoc(userRef, newUserData).catch((err) => {
         console.warn('Firestore setDoc notice:', err?.message || err);
       });
-      return { isNewUser: true, data: newUserData };
+      return { isNewUser: true, user: newUserData };
     } else {
-      // Returning user: Update lastLoginAt and latest profile details
-      const existingData = userSnap.data();
-      const updates: any = {
-        lastLoginAt: serverTimestamp(),
-        displayName: user.displayName || existingData.displayName,
-        photoURL: user.photoURL || existingData.photoURL
-      };
+      // Returning user: Update lastLoginAt and profile details, but preserve assigned role
+      const existingData = userSnap.data() as FirestoreUser;
+      let effectiveRole: 'admin' | 'user' = existingData.role || 'user';
 
-      if (isDefaultAdmin && existingData.role !== 'admin') {
-        updates.role = 'admin';
+      if (isDefaultAdmin) {
+        effectiveRole = 'admin';
       }
 
+      const updates: any = {
+        lastLoginAt: serverTimestamp(),
+        displayName: user.displayName || existingData.displayName || 'Google User',
+        photoURL: user.photoURL || existingData.photoURL || '',
+        role: effectiveRole
+      };
+
       await updateDoc(userRef, updates).catch(() => {});
-      return { isNewUser: false, data: { ...existingData, ...updates } };
+      return { 
+        isNewUser: false, 
+        user: { 
+          ...existingData, 
+          ...updates,
+          uid: user.uid,
+          email: user.email || existingData.email
+        } 
+      };
     }
   } catch (error: any) {
     console.warn('Firestore user sync note:', error?.message || error);
     return null;
+  }
+};
+
+/**
+ * Fetches all registered users from the Firestore 'users' collection.
+ */
+export const getFirestoreUsers = async (): Promise<FirestoreUser[]> => {
+  const db = getFirestoreDb();
+  if (!db) return [];
+
+  try {
+    const usersCol = collection(db, 'users');
+    const q = query(usersCol, orderBy('lastLoginAt', 'desc'));
+    const snapshot = await getDocs(q).catch(() => getDocs(usersCol));
+
+    const usersList: FirestoreUser[] = [];
+    snapshot.forEach((d) => {
+      const data = d.data() as FirestoreUser;
+      usersList.push({
+        ...data,
+        uid: d.id,
+        createdAt: data.createdAt?.toDate ? data.createdAt.toDate().toISOString() : data.createdAt,
+        lastLoginAt: data.lastLoginAt?.toDate ? data.lastLoginAt.toDate().toISOString() : data.lastLoginAt
+      });
+    });
+
+    return usersList;
+  } catch (err: any) {
+    console.warn('Error reading users from Firestore:', err?.message || err);
+    return [];
+  }
+};
+
+/**
+ * Updates a user's role directly in the Firestore 'users' collection.
+ */
+export const updateFirestoreUserRole = async (uid: string, newRole: 'admin' | 'user'): Promise<boolean> => {
+  const db = getFirestoreDb();
+  if (!db || !uid) return false;
+
+  try {
+    const userRef = doc(db, 'users', uid);
+    await updateDoc(userRef, {
+      role: newRole,
+      roleUpdatedAt: serverTimestamp()
+    });
+    return true;
+  } catch (err: any) {
+    console.error('Error updating user role in Firestore:', err);
+    return false;
   }
 };
 
@@ -203,8 +281,7 @@ export const syncAllCMSDataToFirestore = async (cmsData: any) => {
     'heroStats',
     'techStack',
     'values',
-    'processSteps',
-    'adminUsers'
+    'processSteps'
   ];
 
   const results: Record<string, number> = {};
@@ -261,6 +338,7 @@ export {
   GoogleAuthProvider, 
   doc, 
   getDoc, 
+  getDocs,
   setDoc, 
   updateDoc, 
   collection, 
