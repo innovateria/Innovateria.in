@@ -54,13 +54,21 @@ if (typeof window !== 'undefined') {
   auth = getAuth(app);
 }
 
-// Initialize Firestore
-let db: Firestore;
-try {
-  db = getFirestore(app);
-} catch (e) {
-  db = getFirestore();
-}
+// Lazy Firestore instance getter to prevent continuous background reconnection if Firestore is not yet created in console
+let dbInstance: Firestore | null = null;
+
+export const getFirestoreDb = (): Firestore | null => {
+  if (typeof window === 'undefined') return null;
+  if (!dbInstance) {
+    try {
+      dbInstance = getFirestore(app);
+    } catch (err: any) {
+      console.warn('Firestore initialization deferred:', err?.message || err);
+      return null;
+    }
+  }
+  return dbInstance;
+};
 
 const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({
@@ -107,11 +115,14 @@ export const initAnalytics = async (): Promise<Analytics | null> => {
  * Creates or updates a user document in the Firestore 'users' collection for first-time / returning users.
  */
 export const syncUserToFirestore = async (user: User) => {
-  if (!db || !user?.uid) return null;
+  if (!user?.uid) return null;
 
   try {
+    const db = getFirestoreDb();
+    if (!db) return null;
+
     const userRef = doc(db, 'users', user.uid);
-    const userSnap = await getDoc(userRef);
+    const userSnap = await getDoc(userRef).catch(() => null);
 
     const defaultAdminEmails = [
       'innovateria.in@gmail.com',
@@ -121,7 +132,7 @@ export const syncUserToFirestore = async (user: User) => {
     const userEmail = (user.email || '').trim().toLowerCase();
     const isDefaultAdmin = defaultAdminEmails.includes(userEmail);
 
-    if (!userSnap.exists()) {
+    if (!userSnap || !userSnap.exists()) {
       // First-time user: Create new user document in 'users' collection
       const newUserData = {
         uid: user.uid,
@@ -136,7 +147,11 @@ export const syncUserToFirestore = async (user: User) => {
         lastLoginAt: serverTimestamp()
       };
 
-      await setDoc(userRef, newUserData);
+      await setDoc(userRef, newUserData).catch((err) => {
+        if (err?.message?.includes('not found') || err?.code === 'not-found') {
+          console.warn('Note: Cloud Firestore database has not been enabled in Firebase Console yet.');
+        }
+      });
       return { isNewUser: true, data: newUserData };
     } else {
       // Returning user: Update lastLoginAt and latest profile details
@@ -151,11 +166,13 @@ export const syncUserToFirestore = async (user: User) => {
         updates.role = 'admin';
       }
 
-      await updateDoc(userRef, updates);
+      await updateDoc(userRef, updates).catch(() => {});
       return { isNewUser: false, data: { ...existingData, ...updates } };
     }
-  } catch (error) {
-    console.warn('Firestore user collection sync note:', error);
+  } catch (error: any) {
+    if (error?.message?.includes('Database') && error?.message?.includes('not found')) {
+      console.warn('Note: Cloud Firestore database not provisioned in Firebase Console.');
+    }
     return null;
   }
 };
@@ -164,8 +181,9 @@ export const syncUserToFirestore = async (user: User) => {
  * Syncs all Admin Panel CMS data collections to Firebase Firestore.
  */
 export const syncAllCMSDataToFirestore = async (cmsData: any) => {
+  const db = getFirestoreDb();
   if (!db || !cmsData) {
-    throw new Error('Firestore database is not initialized or CMS data is empty');
+    throw new Error('Cloud Firestore database is not yet enabled in your Firebase Console. Go to Firebase Console -> Build -> Firestore Database -> Create database.');
   }
 
   const collections = [
@@ -188,48 +206,54 @@ export const syncAllCMSDataToFirestore = async (cmsData: any) => {
 
   const results: Record<string, number> = {};
 
-  // 1. Sync array collections
-  for (const colName of collections) {
-    const items = cmsData[colName];
-    if (Array.isArray(items) && items.length > 0) {
-      let count = 0;
-      for (let i = 0; i < items.length; i++) {
-        const item = items[i];
-        const docId = String(item.id || item.uid || item.step || item.label || `${colName}-${i + 1}`);
-        const docRef = doc(db, colName, docId);
-        
-        await setDoc(docRef, {
-          ...item,
-          _syncedAt: serverTimestamp()
-        }, { merge: true });
-        
-        count++;
+  try {
+    // 1. Sync array collections
+    for (const colName of collections) {
+      const items = cmsData[colName];
+      if (Array.isArray(items) && items.length > 0) {
+        let count = 0;
+        for (let i = 0; i < items.length; i++) {
+          const item = items[i];
+          const docId = String(item.id || item.uid || item.step || item.label || `${colName}-${i + 1}`);
+          const docRef = doc(db, colName, docId);
+          
+          await setDoc(docRef, {
+            ...item,
+            _syncedAt: serverTimestamp()
+          }, { merge: true });
+          
+          count++;
+        }
+        results[colName] = count;
       }
-      results[colName] = count;
     }
-  }
 
-  // 2. Sync agency settings document
-  if (cmsData.settings) {
-    const settingsRef = doc(db, 'settings', 'agency_settings');
-    await setDoc(settingsRef, {
-      ...cmsData.settings,
-      _syncedAt: serverTimestamp()
-    }, { merge: true });
-    results['settings'] = 1;
-  }
+    // 2. Sync agency settings document
+    if (cmsData.settings) {
+      const settingsRef = doc(db, 'settings', 'agency_settings');
+      await setDoc(settingsRef, {
+        ...cmsData.settings,
+        _syncedAt: serverTimestamp()
+      }, { merge: true });
+      results['settings'] = 1;
+    }
 
-  return {
-    success: true,
-    syncedAt: new Date().toISOString(),
-    results
-  };
+    return {
+      success: true,
+      syncedAt: new Date().toISOString(),
+      results
+    };
+  } catch (err: any) {
+    if (err?.message?.includes('Database') && err?.message?.includes('not found')) {
+      throw new Error('Database (default) not found. Please enable Cloud Firestore in your Firebase Console (Build > Firestore Database > Create database).');
+    }
+    throw err;
+  }
 };
 
 export { 
   app, 
   auth, 
-  db,
   googleProvider, 
   signInWithPopup, 
   signOut, 
