@@ -71,10 +71,18 @@ export default function AdminLoginPage() {
         }, 3000);
       }
     } catch (err: any) {
-      console.error('Google Sign-in error:', err);
+      console.warn('Google Sign-in status note:', err);
       if (err.code === 'auth/popup-closed-by-user') {
         setStatus('idle');
         setStatusMessage('');
+      } else if (
+        err?.message?.includes('Database is closing') ||
+        err?.message?.includes('closing/hidden') ||
+        err?.name === 'InvalidStateError'
+      ) {
+        // Transient IndexedDB lock during popup reload; retry or prompt user
+        setStatus('error');
+        setStatusMessage('Browser IndexedDB was busy. Please click "Sign in with Google" once more.');
       } else {
         setStatus('error');
         setStatusMessage(err.message || 'Google sign-in failed. Please try again.');

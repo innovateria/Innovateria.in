@@ -2,6 +2,11 @@ import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
 import { getAnalytics, isSupported, Analytics } from 'firebase/analytics';
 import { 
   getAuth, 
+  initializeAuth,
+  browserLocalPersistence,
+  browserSessionPersistence,
+  inMemoryPersistence,
+  browserPopupRedirectResolver,
   GoogleAuthProvider, 
   signInWithPopup, 
   signOut, 
@@ -33,12 +38,19 @@ const firebaseConfig = {
 // Initialize Firebase using singleton pattern (safe for Next.js SSR and client)
 const app: FirebaseApp = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 
-// Initialize Firebase Auth
+// Initialize Firebase Auth with resilient multi-persistence fallback
 let auth: Auth;
-try {
+if (typeof window !== 'undefined') {
+  try {
+    auth = initializeAuth(app, {
+      persistence: [browserLocalPersistence, browserSessionPersistence, inMemoryPersistence],
+      popupRedirectResolver: browserPopupRedirectResolver,
+    });
+  } catch (e) {
+    auth = getAuth(app);
+  }
+} else {
   auth = getAuth(app);
-} catch (e) {
-  auth = getAuth();
 }
 
 // Initialize Firestore
