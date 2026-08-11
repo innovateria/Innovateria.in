@@ -16,6 +16,7 @@ import {
   Mail,
   Calendar
 } from 'lucide-react';
+import FirebaseSyncButton from '@/components/FirebaseSyncButton';
 
 interface AdminUserItem {
   id: string;
@@ -117,6 +118,9 @@ export default function AdminSettingsPage() {
 
       {/* Scrollable Settings Section */}
       <div className="flex-1 min-h-0 overflow-y-auto p-2 pb-12 pr-2 space-y-6">
+
+        {/* Section 0: Firebase Firestore Cloud Database Sync */}
+        <FirebaseSyncButton variant="card" />
 
         {/* Section 1: Google (Gmail) User & Role Management */}
         <div className="glass-card rounded-3xl p-6 sm:p-8 border border-white/10 space-y-5">

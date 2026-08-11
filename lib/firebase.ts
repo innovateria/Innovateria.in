@@ -22,7 +22,8 @@ import {
   updateDoc,
   serverTimestamp,
   Firestore,
-  collection
+  collection,
+  writeBatch
 } from 'firebase/firestore';
 
 const firebaseConfig = {
@@ -146,7 +147,6 @@ export const syncUserToFirestore = async (user: User) => {
         photoURL: user.photoURL || existingData.photoURL
       };
 
-      // Guarantee primary superadmin always keeps 'admin' role
       if (isDefaultAdmin && existingData.role !== 'admin') {
         updates.role = 'admin';
       }
@@ -158,6 +158,72 @@ export const syncUserToFirestore = async (user: User) => {
     console.warn('Firestore user collection sync note:', error);
     return null;
   }
+};
+
+/**
+ * Syncs all Admin Panel CMS data collections to Firebase Firestore.
+ */
+export const syncAllCMSDataToFirestore = async (cmsData: any) => {
+  if (!db || !cmsData) {
+    throw new Error('Firestore database is not initialized or CMS data is empty');
+  }
+
+  const collections = [
+    'services',
+    'team',
+    'projects',
+    'portfolio',
+    'openSourceProjects',
+    'features',
+    'faqs',
+    'leads',
+    'clients',
+    'timeline',
+    'heroStats',
+    'techStack',
+    'values',
+    'processSteps',
+    'adminUsers'
+  ];
+
+  const results: Record<string, number> = {};
+
+  // 1. Sync array collections
+  for (const colName of collections) {
+    const items = cmsData[colName];
+    if (Array.isArray(items) && items.length > 0) {
+      let count = 0;
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        const docId = String(item.id || item.uid || item.step || item.label || `${colName}-${i + 1}`);
+        const docRef = doc(db, colName, docId);
+        
+        await setDoc(docRef, {
+          ...item,
+          _syncedAt: serverTimestamp()
+        }, { merge: true });
+        
+        count++;
+      }
+      results[colName] = count;
+    }
+  }
+
+  // 2. Sync agency settings document
+  if (cmsData.settings) {
+    const settingsRef = doc(db, 'settings', 'agency_settings');
+    await setDoc(settingsRef, {
+      ...cmsData.settings,
+      _syncedAt: serverTimestamp()
+    }, { merge: true });
+    results['settings'] = 1;
+  }
+
+  return {
+    success: true,
+    syncedAt: new Date().toISOString(),
+    results
+  };
 };
 
 export { 
@@ -174,6 +240,7 @@ export {
   setDoc,
   updateDoc,
   collection,
+  writeBatch,
   serverTimestamp,
   analyticsInstance as analytics 
 };

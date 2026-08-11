@@ -1661,27 +1661,5 @@
       "portfolioUrl": "https://vivekajee.com",
       "website": "https://vivekajee.com"
     }
-  },
-  "adminUsers": [
-    {
-      "id": "admin-1",
-      "uid": "",
-      "email": "innovateria.in@gmail.com",
-      "displayName": "Innovateria Admin",
-      "photoURL": "",
-      "role": "admin",
-      "createdAt": "2026-08-01T00:00:00.000Z",
-      "lastLoginAt": "2026-08-11T00:00:00.000Z"
-    },
-    {
-      "id": "admin-2",
-      "uid": "",
-      "email": "vivekajee@gmail.com",
-      "displayName": "Vivek Kumar",
-      "photoURL": "",
-      "role": "admin",
-      "createdAt": "2026-08-01T00:00:00.000Z",
-      "lastLoginAt": "2026-08-11T00:00:00.000Z"
-    }
-  ]
+  }
 }

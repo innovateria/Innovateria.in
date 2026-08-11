@@ -365,7 +365,27 @@ if (!global._crmStore) {
   };
 }
 
-export const crmStore = global._crmStore;
+export const crmStore = global._crmStore!;
+
+export function syncFromDisk() {
+  const disk = loadJSONData();
+  if (disk.services && disk.services.length > 0) crmStore.services = disk.services;
+  if (disk.team && disk.team.length > 0) crmStore.team = disk.team;
+  if (disk.projects && disk.projects.length > 0) crmStore.projects = disk.projects;
+  if (disk.portfolio && disk.portfolio.length > 0) crmStore.portfolio = disk.portfolio;
+  if (disk.openSourceProjects && Array.isArray(disk.openSourceProjects)) crmStore.openSourceProjects = disk.openSourceProjects;
+  if (disk.features && disk.features.length > 0) crmStore.features = disk.features;
+  if (disk.faqs && disk.faqs.length > 0) crmStore.faqs = disk.faqs;
+  if (disk.leads && Array.isArray(disk.leads)) crmStore.leads = disk.leads;
+  if (disk.clients && Array.isArray(disk.clients)) crmStore.clients = disk.clients;
+  if (disk.timeline && disk.timeline.length > 0) crmStore.timeline = disk.timeline;
+  if (disk.heroStats && disk.heroStats.length > 0) crmStore.heroStats = disk.heroStats;
+  if (disk.techStack && disk.techStack.length > 0) crmStore.techStack = disk.techStack;
+  if (disk.values && disk.values.length > 0) crmStore.values = disk.values;
+  if (disk.processSteps && disk.processSteps.length > 0) crmStore.processSteps = disk.processSteps;
+  if (disk.adminUsers && Array.isArray(disk.adminUsers)) crmStore.adminUsers = disk.adminUsers;
+  if (disk.settings) crmStore.settings = disk.settings;
+}
 
 function persistState() {
   saveJSONData({
@@ -383,29 +403,12 @@ function persistState() {
     techStack: crmStore.techStack || [],
     values: crmStore.values || [],
     processSteps: crmStore.processSteps || [],
+    adminUsers: crmStore.adminUsers || [],
     settings: crmStore.settings
   });
 }
 
 // Getters
-function syncFromDisk() {
-  const disk = loadJSONData();
-  if (disk.services && disk.services.length > 0) crmStore.services = disk.services;
-  if (disk.team && disk.team.length > 0) crmStore.team = disk.team;
-  if (disk.projects && disk.projects.length > 0) crmStore.projects = disk.projects;
-  if (disk.portfolio && disk.portfolio.length > 0) crmStore.portfolio = disk.portfolio;
-  if (disk.openSourceProjects && Array.isArray(disk.openSourceProjects)) crmStore.openSourceProjects = disk.openSourceProjects;
-  if (disk.features && disk.features.length > 0) crmStore.features = disk.features;
-  if (disk.faqs && disk.faqs.length > 0) crmStore.faqs = disk.faqs;
-  if (disk.leads && Array.isArray(disk.leads)) crmStore.leads = disk.leads;
-  if (disk.clients && Array.isArray(disk.clients)) crmStore.clients = disk.clients;
-  if (disk.timeline && disk.timeline.length > 0) crmStore.timeline = disk.timeline;
-  if (disk.heroStats && disk.heroStats.length > 0) crmStore.heroStats = disk.heroStats;
-  if (disk.techStack && disk.techStack.length > 0) crmStore.techStack = disk.techStack;
-  if (disk.values && disk.values.length > 0) crmStore.values = disk.values;
-  if (disk.processSteps && disk.processSteps.length > 0) crmStore.processSteps = disk.processSteps;
-  if (disk.settings) crmStore.settings = disk.settings;
-}
 
 export function sanitizeProjectCategory(category: string, techStack: string[] = []): string {
   const hasJavaOrKotlin = techStack.some(t => /java|kotlin/i.test(t));
