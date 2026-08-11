@@ -9,6 +9,16 @@ import {
   Auth,
   User 
 } from 'firebase/auth';
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  serverTimestamp,
+  Firestore,
+  collection
+} from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyDhYUgOMEgmt1wENGNrQ4c0gvPVKJrTNaI",
@@ -23,12 +33,20 @@ const firebaseConfig = {
 // Initialize Firebase using singleton pattern (safe for Next.js SSR and client)
 const app: FirebaseApp = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 
-// Initialize Firebase Auth with singleton safety
+// Initialize Firebase Auth
 let auth: Auth;
 try {
   auth = getAuth(app);
 } catch (e) {
   auth = getAuth();
+}
+
+// Initialize Firestore
+let db: Firestore;
+try {
+  db = getFirestore(app);
+} catch (e) {
+  db = getFirestore();
 }
 
 const googleProvider = new GoogleAuthProvider();
@@ -47,7 +65,6 @@ export const initAnalytics = async (): Promise<Analytics | null> => {
 
   analyticsPromise = (async () => {
     try {
-      // Ensure indexedDB is available and document is not hidden during init
       if (typeof window.indexedDB === 'undefined') {
         return null;
       }
@@ -58,7 +75,6 @@ export const initAnalytics = async (): Promise<Analytics | null> => {
         return analyticsInstance;
       }
     } catch (err: any) {
-      // Suppress transient IndexedDB "Database is closing/hidden" errors during Fast Refresh/HMR
       if (
         err?.message?.includes('Database is closing') ||
         err?.message?.includes('closing/hidden') ||
@@ -74,14 +90,79 @@ export const initAnalytics = async (): Promise<Analytics | null> => {
   return analyticsPromise;
 };
 
+/**
+ * Creates or updates a user document in the Firestore 'users' collection for first-time / returning users.
+ */
+export const syncUserToFirestore = async (user: User) => {
+  if (!db || !user?.uid) return null;
+
+  try {
+    const userRef = doc(db, 'users', user.uid);
+    const userSnap = await getDoc(userRef);
+
+    const defaultAdminEmails = [
+      'innovateria.in@gmail.com',
+      'vivekajee@gmail.com',
+      'vnjvibhash@gmail.com'
+    ];
+    const userEmail = (user.email || '').trim().toLowerCase();
+    const isDefaultAdmin = defaultAdminEmails.includes(userEmail);
+
+    if (!userSnap.exists()) {
+      // First-time user: Create new user document in 'users' collection
+      const newUserData = {
+        uid: user.uid,
+        email: user.email || '',
+        displayName: user.displayName || 'Google User',
+        photoURL: user.photoURL || '',
+        phoneNumber: user.phoneNumber || null,
+        role: isDefaultAdmin ? 'admin' : 'user',
+        status: 'active',
+        provider: user.providerData?.[0]?.providerId || 'google.com',
+        createdAt: serverTimestamp(),
+        lastLoginAt: serverTimestamp()
+      };
+
+      await setDoc(userRef, newUserData);
+      return { isNewUser: true, data: newUserData };
+    } else {
+      // Returning user: Update lastLoginAt and latest profile details
+      const existingData = userSnap.data();
+      const updates: any = {
+        lastLoginAt: serverTimestamp(),
+        displayName: user.displayName || existingData.displayName,
+        photoURL: user.photoURL || existingData.photoURL
+      };
+
+      // Guarantee primary superadmin always keeps 'admin' role
+      if (isDefaultAdmin && existingData.role !== 'admin') {
+        updates.role = 'admin';
+      }
+
+      await updateDoc(userRef, updates);
+      return { isNewUser: false, data: { ...existingData, ...updates } };
+    }
+  } catch (error) {
+    console.warn('Firestore user collection sync note:', error);
+    return null;
+  }
+};
+
 export { 
   app, 
   auth, 
+  db,
   googleProvider, 
   signInWithPopup, 
   signOut, 
   onAuthStateChanged,
   GoogleAuthProvider,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  collection,
+  serverTimestamp,
   analyticsInstance as analytics 
 };
 export type { User };

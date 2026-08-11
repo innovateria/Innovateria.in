@@ -13,7 +13,7 @@ import {
   Home,
   ChevronDown
 } from 'lucide-react';
-import { auth, googleProvider, signInWithPopup } from '@/lib/firebase';
+import { auth, googleProvider, signInWithPopup, syncUserToFirestore } from '@/lib/firebase';
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -31,6 +31,11 @@ export default function AdminLoginPage() {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
+
+      // Ensure user document is created/updated in Firestore 'users' collection for first-time users
+      await syncUserToFirestore(user).catch((err) => {
+        console.warn('Firestore sync note:', err);
+      });
 
       setStatusMessage(`Verifying permissions for ${user.email}...`);
 
