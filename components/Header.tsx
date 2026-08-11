@@ -48,7 +48,7 @@ export default function Header() {
     phone: '+91-7762974716',
     email: 'innovateria.in@gmail.com',
     agencyName: 'Innovateria',
-    portfolioUrl: 'https://vivekajee.in'
+    portfolioUrl: 'https://vivekajee.com'
   });
   const [dynamicServices, setDynamicServices] = useState<DynamicServiceItem[]>([]);
   const [dynamicProjects, setDynamicProjects] = useState<{ id: string; title: string; category: string }[]>([]);
@@ -83,7 +83,7 @@ export default function Header() {
           phone: data.phone || '+91-7762974716',
           email: data.email || 'innovateria.in@gmail.com',
           agencyName: data.agencyName || 'Innovateria',
-          portfolioUrl: data.portfolioUrl || 'https://www.vivekajee.com'
+          portfolioUrl: data.portfolioUrl || 'https://vivekajee.com'
         });
         if (Array.isArray(data.services) && data.services.length > 0) {
           setDynamicServices(data.services);

@@ -56,7 +56,7 @@ export default function AdminPortfolioPage() {
     description: '',
     tags: 'Flutter, Firebase, Dart',
     githubUrl: 'https://github.com/Vnjvibhash',
-    liveDemoUrl: 'https://vivekajee.in/',
+    liveDemoUrl: 'https://vivekajee.com/',
     stars: 10,
     forks: 5,
     featured: true
@@ -192,7 +192,7 @@ export default function AdminPortfolioPage() {
           description: '',
           tags: 'Flutter, Firebase, Dart',
           githubUrl: 'https://github.com/Vnjvibhash',
-          liveDemoUrl: 'https://vivekajee.in/',
+          liveDemoUrl: 'https://vivekajee.com/',
           stars: 10,
           forks: 5,
           featured: true

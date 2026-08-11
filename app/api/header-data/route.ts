@@ -14,7 +14,7 @@ export async function GET() {
       phone: settings.phone || '+91-7762974716',
       email: settings.adminEmail || 'innovateria.in@gmail.com',
       agencyName: settings.agencyName || 'Innovateria',
-      portfolioUrl: settings.socials?.github || 'https://vivekajee.in',
+      portfolioUrl: settings.portfolioUrl || 'https://vivekajee.com',
       services: services.map(s => ({
         id: s.id,
         title: s.title,
@@ -35,7 +35,7 @@ export async function GET() {
       phone: '+91-7762974716',
       email: 'innovateria.in@gmail.com',
       agencyName: 'Innovateria',
-      portfolioUrl: 'https://vivekajee.in',
+      portfolioUrl: 'https://vivekajee.com',
       services: [],
       projects: []
     });

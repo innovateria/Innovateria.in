@@ -123,7 +123,7 @@ npm start
 ## 👤 Founder & Leadership
 
 - **Founder & CEO**: Vivek Kumar (Vivekajee / Vnj Vibhash)
-- **Personal 3D Portfolio**: [vivekajee.in](https://vivekajee.in)
+- **Personal 3D Portfolio**: [vivekajee.com](https://vivekajee.com)
 - **GitHub**: [@VnjVibhash](https://github.com/VnjVibhash)
 - **Email**: innovateria.in@gmail.com
 - **Phone / WhatsApp**: +91 77629 74716

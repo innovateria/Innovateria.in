@@ -149,6 +149,8 @@ export interface AgencySettingsCMS {
   phone: string;
   address: string;
   passcode: string;
+  portfolioUrl?: string;
+  website?: string;
   socials: {
     github: string;
     facebook: string;
@@ -156,6 +158,8 @@ export interface AgencySettingsCMS {
     twitter: string;
     linkedin: string;
     instagram: string;
+    portfolioUrl?: string;
+    website?: string;
   };
 }
 
