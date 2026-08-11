@@ -36,6 +36,8 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || "G-DHD7XX7R9Q"
 };
 
+const DATABASE_ID = process.env.NEXT_PUBLIC_FIREBASE_DATABASE_ID || "default";
+
 // Initialize Firebase using singleton pattern (safe for Next.js SSR and client)
 const app: FirebaseApp = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 
@@ -54,17 +56,22 @@ if (typeof window !== 'undefined') {
   auth = getAuth(app);
 }
 
-// Lazy Firestore instance getter to prevent continuous background reconnection if Firestore is not yet created in console
+// Lazy Firestore instance explicitly targeting the custom "default" database ID
 let dbInstance: Firestore | null = null;
 
 export const getFirestoreDb = (): Firestore | null => {
   if (typeof window === 'undefined') return null;
   if (!dbInstance) {
     try {
-      dbInstance = getFirestore(app);
+      // Explicitly target custom-named database "default"
+      dbInstance = getFirestore(app, DATABASE_ID);
     } catch (err: any) {
-      console.warn('Firestore initialization deferred:', err?.message || err);
-      return null;
+      try {
+        dbInstance = getFirestore(app);
+      } catch (fallbackErr: any) {
+        console.warn('Firestore connection note:', fallbackErr?.message || fallbackErr);
+        return null;
+      }
     }
   }
   return dbInstance;
@@ -148,9 +155,7 @@ export const syncUserToFirestore = async (user: User) => {
       };
 
       await setDoc(userRef, newUserData).catch((err) => {
-        if (err?.message?.includes('not found') || err?.code === 'not-found') {
-          console.warn('Note: Cloud Firestore database has not been enabled in Firebase Console yet.');
-        }
+        console.warn('Firestore setDoc notice:', err?.message || err);
       });
       return { isNewUser: true, data: newUserData };
     } else {
@@ -170,20 +175,18 @@ export const syncUserToFirestore = async (user: User) => {
       return { isNewUser: false, data: { ...existingData, ...updates } };
     }
   } catch (error: any) {
-    if (error?.message?.includes('Database') && error?.message?.includes('not found')) {
-      console.warn('Note: Cloud Firestore database not provisioned in Firebase Console.');
-    }
+    console.warn('Firestore user sync note:', error?.message || error);
     return null;
   }
 };
 
 /**
- * Syncs all Admin Panel CMS data collections to Firebase Firestore.
+ * Syncs all Admin Panel CMS data collections to Firebase Firestore custom database.
  */
 export const syncAllCMSDataToFirestore = async (cmsData: any) => {
   const db = getFirestoreDb();
   if (!db || !cmsData) {
-    throw new Error('Cloud Firestore database is not yet enabled in your Firebase Console. Go to Firebase Console -> Build -> Firestore Database -> Create database.');
+    throw new Error('Cloud Firestore database is not initialized. Please verify your Firebase project.');
   }
 
   const collections = [
@@ -244,9 +247,6 @@ export const syncAllCMSDataToFirestore = async (cmsData: any) => {
       results
     };
   } catch (err: any) {
-    if (err?.message?.includes('Database') && err?.message?.includes('not found')) {
-      throw new Error('Database (default) not found. Please enable Cloud Firestore in your Firebase Console (Build > Firestore Database > Create database).');
-    }
     throw err;
   }
 };
@@ -257,15 +257,15 @@ export {
   googleProvider, 
   signInWithPopup, 
   signOut, 
-  onAuthStateChanged,
-  GoogleAuthProvider,
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc,
-  collection,
-  writeBatch,
-  serverTimestamp,
+  onAuthStateChanged, 
+  GoogleAuthProvider, 
+  doc, 
+  getDoc, 
+  setDoc, 
+  updateDoc, 
+  collection, 
+  writeBatch, 
+  serverTimestamp, 
   analyticsInstance as analytics 
 };
 export type { User };
