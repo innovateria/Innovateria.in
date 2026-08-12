@@ -13,10 +13,7 @@ import {
   ShieldAlert, 
   CheckCircle2, 
   Loader2, 
-  KeyRound, 
   ArrowRight,
-  ChevronDown,
-  Mail,
   Home,
   Sparkles,
   ShieldCheck
@@ -27,9 +24,6 @@ export default function AdminLoginPage() {
   const router = useRouter();
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'denied' | 'error'>('idle');
   const [statusMessage, setStatusMessage] = useState('');
-  const [showPasscodeForm, setShowPasscodeForm] = useState(false);
-  const [email, setEmail] = useState('innovateria.in@gmail.com');
-  const [passcode, setPasscode] = useState('');
 
   // Handle Google / Gmail Authentication
   const handleGoogleSignIn = async () => {
@@ -100,37 +94,6 @@ export default function AdminLoginPage() {
         setStatus('error');
         setStatusMessage(err.message || 'Google Authentication failed. Please try again.');
       }
-    }
-  };
-
-  // Handle Fallback Passcode Login
-  const handlePasscodeLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setStatus('loading');
-    setStatusMessage('Verifying credentials...');
-
-    try {
-      const res = await fetch('/api/admin/auth', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, passcode })
-      });
-
-      const data = await res.json();
-
-      if (res.ok && data.authorized) {
-        setStatus('success');
-        setStatusMessage('Authentication successful! Loading dashboard...');
-        setTimeout(() => {
-          router.push('/admin');
-        }, 1000);
-      } else {
-        setStatus('error');
-        setStatusMessage(data.error || 'Invalid passcode or email.');
-      }
-    } catch (err) {
-      setStatus('error');
-      setStatusMessage('Authentication error. Please try again.');
     }
   };
 
@@ -271,76 +234,6 @@ export default function AdminLoginPage() {
                 <span>Firestore Cloud Role RBAC</span>
               </span>
             </div>
-          </div>
-
-          {/* Divider */}
-          <div className="relative flex py-1 items-center">
-            <div className="flex-grow border-t border-white/10"></div>
-            <span className="flex-shrink mx-3 text-[10px] sm:text-[11px] text-gray-500 uppercase tracking-widest font-mono">or fallback</span>
-            <div className="flex-grow border-t border-white/10"></div>
-          </div>
-
-          {/* Passcode Accordion Trigger */}
-          <div>
-            <button
-              type="button"
-              onClick={() => setShowPasscodeForm(!showPasscodeForm)}
-              className="w-full flex items-center justify-between text-xs text-gray-400 hover:text-white transition-colors p-2.5 rounded-xl hover:bg-white/5 cursor-pointer border border-transparent hover:border-white/10"
-            >
-              <div className="flex items-center space-x-2">
-                <KeyRound size={14} className="text-brand-500" />
-                <span>Emergency PIN / Passcode Login</span>
-              </div>
-              <ChevronDown size={14} className={`transition-transform duration-200 ${showPasscodeForm ? 'rotate-180 text-brand-500' : ''}`} />
-            </button>
-
-            {/* Collapsible Passcode Form */}
-            {showPasscodeForm && (
-              <form onSubmit={handlePasscodeLogin} className="space-y-4 pt-3 mt-2 border-t border-white/5">
-                <div>
-                  <label className="block text-[11px] font-medium text-gray-300 mb-1">Admin Email</label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                      <Mail size={14} />
-                    </div>
-                    <input
-                      type="email"
-                      required
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="innovateria.in@gmail.com"
-                      className="w-full pl-9 pr-3 py-2 rounded-xl bg-[#0B0F17]/90 border border-white/10 text-white text-xs placeholder-gray-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-[11px] font-medium text-gray-300 mb-1">Passcode / PIN</label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                      <Lock size={14} />
-                    </div>
-                    <input
-                      type="password"
-                      required
-                      value={passcode}
-                      onChange={(e) => setPasscode(e.target.value)}
-                      placeholder="Enter 6-digit PIN"
-                      className="w-full pl-9 pr-3 py-2 rounded-xl bg-[#0B0F17]/90 border border-white/10 text-white text-xs placeholder-gray-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors font-mono"
-                    />
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={status === 'loading'}
-                  className="w-full flex items-center justify-center space-x-2 bg-gradient-brand text-white py-2.5 rounded-xl font-semibold text-xs uppercase tracking-wider shadow-md hover:shadow-lg transition-all disabled:opacity-50 cursor-pointer"
-                >
-                  <span>Verify PIN</span>
-                  <ArrowRight size={14} />
-                </button>
-              </form>
-            )}
           </div>
 
         </div>
