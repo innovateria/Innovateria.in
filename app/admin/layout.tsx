@@ -27,7 +27,6 @@ import {
   ExternalLink
 } from 'lucide-react';
 import { auth, signOut } from '@/lib/firebase';
-import FirebaseSyncButton from '@/components/FirebaseSyncButton';
 
 interface AdminProfile {
   name: string;
@@ -404,9 +403,6 @@ export default function AdminLayout({
                 </>
               )}
             </div>
-
-            {/* Sync to Firebase Cloud Button */}
-            <FirebaseSyncButton variant="compact" />
 
             <Link
               href="/"
