@@ -24,7 +24,8 @@ import {
   FolderKanban,
   Zap,
   ChevronRight,
-  Info
+  Info,
+  Cpu
 } from 'lucide-react';
 
 interface DynamicServiceItem {
@@ -140,7 +141,7 @@ export default function Header() {
   const isInDropdown = (paths: string[]) => paths.includes(pathname);
 
   // Group paths
-  const whoPaths = ['/about', '/team', '/portfolio', '/feature', '/faq'];
+  const whoPaths = ['/about', '/team', '/portfolio', '/feature', '/faq', '/tech-stack'];
 
   if (pathname?.startsWith('/admin')) return null;
 
@@ -258,6 +259,10 @@ export default function Header() {
               <Link href="/feature" className="flex items-center space-x-3 px-3 py-2 rounded-lg text-xs text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)] hover:bg-brand-500/20 transition-colors">
                 <Zap size={16} className="text-brand-500 shrink-0" />
                 <span>Features</span>
+              </Link>
+              <Link href="/tech-stack" className="flex items-center space-x-3 px-3 py-2 rounded-lg text-xs text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)] hover:bg-brand-500/20 transition-colors">
+                <Cpu size={16} className="text-brand-500 shrink-0" />
+                <span>Technology Stack</span>
               </Link>
               <Link href="/faq" className="flex items-center space-x-3 px-3 py-2 rounded-lg text-xs text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)] hover:bg-brand-500/20 transition-colors">
                 <HelpCircle size={16} className="text-brand-500 shrink-0" />
@@ -429,6 +434,7 @@ export default function Header() {
                 <Link href="/team" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-brand-500">Our Team</Link>
                 <Link href="/portfolio" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-brand-500">Portfolio</Link>
                 <Link href="/feature" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-brand-500">Features</Link>
+                <Link href="/tech-stack" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-brand-500">Technology Stack</Link>
                 <Link href="/faq" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-brand-500">FAQs</Link>
               </div>
             )}

@@ -194,25 +194,46 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ======= DYNAMIC TECH STACK ======= */}
+      {/* ======= DYNAMIC TECH STACK (2 ROWS SHOWCASE) ======= */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         <div className="text-center max-w-2xl mx-auto space-y-2">
           <span className="text-xs font-bold text-brand-500 uppercase tracking-widest bg-brand-500/10 px-3.5 py-1.5 rounded-full border border-brand-500/20">
             Technology Ecosystem
           </span>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-white">Technologies We Excel In</h2>
+          <p className="text-xs sm:text-sm text-gray-400">Our battle-tested stack powering scalable mobile, web, and enterprise solutions.</p>
         </div>
 
-        <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-9 gap-4">
-          {techStack.map((t, idx) => (
-            <div key={idx} className="glass-card glass-card-hover p-4 rounded-2xl border border-white/10 text-center space-y-2.5 group flex flex-col items-center justify-center">
-              <div className="w-10 h-10 flex items-center justify-center">
-                <img src={t.image} alt={t.name} className="max-h-10 max-w-10 w-auto object-contain drop-shadow-lg" style={{ background: 'transparent' }} />
+        {/* 2-Row Grid Showcase (Up to 18 items) */}
+        <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-9 gap-3.5 sm:gap-4">
+          {techStack.slice(0, 18).map((t, idx) => (
+            <div key={idx} className="glass-card glass-card-hover p-4 rounded-2xl border border-white/10 text-center space-y-2 group flex flex-col items-center justify-center transition-all duration-300">
+              <div className="w-10 h-10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <img 
+                  src={t.image} 
+                  alt={t.name} 
+                  className="max-h-9 max-w-9 w-auto object-contain drop-shadow-lg" 
+                  style={{ background: 'transparent' }} 
+                  onError={(e: any) => {
+                    e.target.src = '/assets/img/teckstack/react.svg';
+                  }}
+                />
               </div>
-              <span className="text-xs font-bold text-white group-hover:text-brand-500 transition-colors block">{t.name}</span>
-              <span className="text-[10px] text-gray-400 block">{t.category}</span>
+              <span className="text-xs font-bold text-white group-hover:text-brand-400 transition-colors block truncate w-full">{t.name}</span>
+              <span className="text-[10px] text-gray-400 block truncate w-full">{t.category}</span>
             </div>
           ))}
+        </div>
+
+        {/* Explore All Technologies CTA */}
+        <div className="text-center pt-2">
+          <Link
+            href="/tech-stack"
+            className="inline-flex items-center space-x-2.5 text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-brand-500/20 via-brand-500/30 to-brand-500/20 hover:from-brand-500 hover:to-blue-600 border border-brand-500/40 hover:border-transparent px-7 py-3 rounded-full transition-all duration-300 shadow-lg shadow-brand-500/10 hover:shadow-brand-500/30 hover:scale-[1.02] active:scale-[0.98]"
+          >
+            <span>Explore All 43+ Technologies & Engineering Stack</span>
+            <span className="text-brand-400 group-hover:text-white font-mono">→</span>
+          </Link>
         </div>
       </section>
 

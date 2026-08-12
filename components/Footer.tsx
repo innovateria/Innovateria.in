@@ -96,6 +96,12 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/tech-stack" className="hover:text-brand-500 transition-colors flex items-center space-x-2">
+                  <ArrowRight size={12} className="text-brand-500" />
+                  <span>Technology Stack</span>
+                </Link>
+              </li>
+              <li>
                 <Link href="/contact" className="hover:text-brand-500 transition-colors flex items-center space-x-2">
                   <ArrowRight size={12} className="text-brand-500" />
                   <span>Contact Us</span>
