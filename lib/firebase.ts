@@ -150,21 +150,21 @@ export const syncUserToFirestore = async (user: User): Promise<{ isNewUser: bool
 
     const defaultAdminEmails = [
       'innovateria.in@gmail.com',
-      'vivekajee@gmail.com',
-      'vnjvibhash@gmail.com'
+      'vivekajee@gmail.com'
     ];
     const userEmail = (user.email || '').trim().toLowerCase();
-    const isDefaultAdmin = defaultAdminEmails.includes(userEmail);
+    const isPrimaryOwner = defaultAdminEmails.includes(userEmail);
 
     if (!userSnap || !userSnap.exists()) {
-      // First-time user: Create new user document in 'users' collection
+      // First-time user: Create new user document in 'users' collection with 'user' role
+      const initialRole: 'admin' | 'user' = isPrimaryOwner ? 'admin' : 'user';
       const newUserData: FirestoreUser = {
         uid: user.uid,
         email: user.email || '',
         displayName: user.displayName || 'Google User',
         photoURL: user.photoURL || '',
         phoneNumber: user.phoneNumber || null,
-        role: isDefaultAdmin ? 'admin' : 'user',
+        role: initialRole,
         status: 'active',
         provider: user.providerData?.[0]?.providerId || 'google.com',
         createdAt: serverTimestamp(),
@@ -176,19 +176,15 @@ export const syncUserToFirestore = async (user: User): Promise<{ isNewUser: bool
       });
       return { isNewUser: true, user: newUserData };
     } else {
-      // Returning user: Update lastLoginAt and profile details, but preserve assigned role
+      // Returning user: Preserve assigned role from Firestore document
       const existingData = userSnap.data() as FirestoreUser;
-      let effectiveRole: 'admin' | 'user' = existingData.role || 'user';
-
-      if (isDefaultAdmin) {
-        effectiveRole = 'admin';
-      }
+      const assignedRole: 'admin' | 'user' = isPrimaryOwner ? 'admin' : (existingData.role || 'user');
 
       const updates: any = {
         lastLoginAt: serverTimestamp(),
         displayName: user.displayName || existingData.displayName || 'Google User',
         photoURL: user.photoURL || existingData.photoURL || '',
-        role: effectiveRole
+        role: assignedRole
       };
 
       await updateDoc(userRef, updates).catch(() => {});
@@ -198,7 +194,8 @@ export const syncUserToFirestore = async (user: User): Promise<{ isNewUser: bool
           ...existingData, 
           ...updates,
           uid: user.uid,
-          email: user.email || existingData.email
+          email: user.email || existingData.email,
+          role: assignedRole
         } 
       };
     }
