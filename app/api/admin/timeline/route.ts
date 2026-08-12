@@ -1,14 +1,15 @@
 import { NextResponse } from 'next/server';
-import { getTimelineCMS, addTimelineCMS, updateTimelineCMS, deleteTimelineCMS } from '@/lib/crm-store';
+import { getTimelineCMS, addTimelineCMS, updateTimelineCMS, deleteTimelineCMS, TimelineCMS } from '@/lib/crm-store';
+import { fetchFirestoreCollection, saveFirestoreDoc, deleteFirestoreDocument } from '@/lib/firestore-db';
 
 export async function GET() {
   try {
-    const timeline = getTimelineCMS();
-    return NextResponse.json({ success: true, timeline });
-  } catch (err) {
-    console.error('Error fetching timeline:', err);
-    return NextResponse.json({ success: false, message: 'Server error' }, { status: 500 });
-  }
+    const firestoreTimeline = await fetchFirestoreCollection<TimelineCMS>('timeline');
+    if (firestoreTimeline && firestoreTimeline.length > 0) {
+      return NextResponse.json({ success: true, timeline: firestoreTimeline });
+    }
+  } catch (err) {}
+  return NextResponse.json({ success: true, timeline: getTimelineCMS() });
 }
 
 export async function POST(req: Request) {
@@ -29,6 +30,13 @@ export async function POST(req: Request) {
       details: Array.isArray(body.details) ? body.details : []
     });
 
+    // Save to Firestore
+    try {
+      await saveFirestoreDoc('timeline', newMilestone.id, newMilestone);
+    } catch (dbErr) {
+      console.warn('Firestore write notice:', dbErr);
+    }
+
     return NextResponse.json({ success: true, milestone: newMilestone });
   } catch (err) {
     console.error('Error creating timeline milestone:', err);
@@ -48,6 +56,13 @@ export async function PATCH(req: Request) {
       return NextResponse.json({ success: false, message: 'Milestone not found' }, { status: 404 });
     }
 
+    // Update in Firestore
+    try {
+      await saveFirestoreDoc('timeline', body.id, updated);
+    } catch (dbErr) {
+      console.warn('Firestore update notice:', dbErr);
+    }
+
     return NextResponse.json({ success: true, milestone: updated });
   } catch (err) {
     console.error('Error updating timeline milestone:', err);
@@ -65,6 +80,14 @@ export async function DELETE(req: Request) {
     }
 
     const deleted = deleteTimelineCMS(id);
+
+    // Delete in Firestore
+    try {
+      await deleteFirestoreDocument('timeline', id);
+    } catch (dbErr) {
+      console.warn('Firestore delete notice:', dbErr);
+    }
+
     return NextResponse.json({ success: deleted });
   } catch (err) {
     console.error('Error deleting timeline milestone:', err);

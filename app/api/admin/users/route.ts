@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { getAdminUsersCMS, updateAdminUserRole, findOrRegisterAdminUser } from '@/lib/crm-store';
+import { getAdminUsersCMS, updateAdminUserRole, AdminUserCMS } from '@/lib/crm-store';
+import { fetchFirestoreCollection, saveFirestoreDoc } from '@/lib/firestore-db';
 import { cookies } from 'next/headers';
 
 export async function GET() {
@@ -10,6 +11,16 @@ export async function GET() {
     if (!token || !token.value) {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
+
+    try {
+      const firestoreUsers = await fetchFirestoreCollection<AdminUserCMS>('users');
+      if (firestoreUsers && firestoreUsers.length > 0) {
+        return NextResponse.json({
+          success: true,
+          users: firestoreUsers
+        });
+      }
+    } catch (e) {}
 
     const users = getAdminUsersCMS();
     return NextResponse.json({
@@ -37,15 +48,18 @@ export async function PUT(request: Request) {
       return NextResponse.json({ success: false, error: 'Invalid user ID/email or role' }, { status: 400 });
     }
 
-    const updated = updateAdminUserRole(emailOrId, role);
-    if (!updated) {
-      return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });
+    // Update in Firestore
+    try {
+      await saveFirestoreDoc('users', emailOrId, { role });
+    } catch (dbErr) {
+      console.warn('Firestore user update notice:', dbErr);
     }
+
+    updateAdminUserRole(emailOrId, role);
 
     return NextResponse.json({
       success: true,
-      message: `User role updated to '${role}' successfully`,
-      users: getAdminUsersCMS()
+      message: `User role updated to '${role}' successfully`
     });
   } catch (error) {
     return NextResponse.json({ success: false, error: 'Failed to update user role' }, { status: 500 });

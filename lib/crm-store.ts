@@ -1,5 +1,3 @@
-import fs from 'fs';
-import path from 'path';
 
 export interface Lead {
   id: string;
@@ -206,77 +204,179 @@ export interface CMSJSONDatabase {
   adminUsers?: AdminUserCMS[];
 }
 
-const JSON_FILE_PATH = path.join(process.cwd(), 'data', 'cms-data.json');
+declare global {
+  var _crmStore: (CMSJSONDatabase & { adminPasscode: string }) | undefined;
+}
 
-function loadJSONData(): CMSJSONDatabase {
-  try {
-    if (fs.existsSync(JSON_FILE_PATH)) {
-      const raw = fs.readFileSync(JSON_FILE_PATH, 'utf-8');
-      if (raw && raw.trim().length > 0) {
-        const parsed = JSON.parse(raw);
-        return {
-          services: Array.isArray(parsed.services) ? parsed.services : [],
-          team: Array.isArray(parsed.team) ? parsed.team : [],
-          projects: Array.isArray(parsed.projects) ? parsed.projects : [],
-          portfolio: Array.isArray(parsed.portfolio) ? parsed.portfolio : [],
-          openSourceProjects: Array.isArray(parsed.openSourceProjects) ? parsed.openSourceProjects : [],
-          features: Array.isArray(parsed.features) ? parsed.features : [],
-          faqs: Array.isArray(parsed.faqs) ? parsed.faqs : [],
-          leads: Array.isArray(parsed.leads) ? parsed.leads : [],
-          clients: Array.isArray(parsed.clients) ? parsed.clients : [],
-          timeline: Array.isArray(parsed.timeline) ? parsed.timeline : [],
-          heroStats: Array.isArray(parsed.heroStats) ? parsed.heroStats : [],
-          techStack: Array.isArray(parsed.techStack) ? parsed.techStack : [],
-          values: Array.isArray(parsed.values) ? parsed.values : [],
-          processSteps: Array.isArray(parsed.processSteps) ? parsed.processSteps : [],
-          adminUsers: Array.isArray(parsed.adminUsers) ? parsed.adminUsers : [],
-          settings: parsed.settings || {
-            agencyName: 'Innovateria Software Solutions',
-            adminEmail: 'innovateria.in@gmail.com',
-            phone: '+91-7762974716',
-            address: 'Bangalore & Mysore, India',
-            passcode: '123456',
-            socials: {
-              github: 'https://github.com/VnjVibhash',
-              facebook: 'https://facebook.com/Vivekajee',
-              whatsapp: 'https://wa.me/917762974716',
-              twitter: 'https://twitter.com/Vnjvibhash',
-              linkedin: 'https://linkedin.com/in/Vivekajee',
-              instagram: 'https://instagram.com/Vivekajee'
-            }
-          }
-        };
-      }
-    }
-  } catch (err) {
-    console.error('Error reading data/cms-data.json:', err);
-  }
-
-  // Fallback to in-memory store if available
-  if (global._crmStore) {
-    return {
-      services: global._crmStore.services || [],
-      team: global._crmStore.team || [],
-      projects: global._crmStore.projects || [],
-      portfolio: global._crmStore.portfolio || [],
-      openSourceProjects: global._crmStore.openSourceProjects || [],
-      features: global._crmStore.features || [],
-      faqs: global._crmStore.faqs || [],
-      leads: global._crmStore.leads || [],
-      clients: global._crmStore.clients || [],
-      timeline: global._crmStore.timeline || [],
-      heroStats: global._crmStore.heroStats || [],
-      techStack: global._crmStore.techStack || [],
-      values: global._crmStore.values || [],
-      processSteps: global._crmStore.processSteps || [],
-      settings: global._crmStore.settings
-    };
-  }
-
+function getInitialDatabase(): CMSJSONDatabase {
   return {
-    services: [],
-    team: [],
-    projects: [],
+    services: [
+      {
+        id: "srv-1",
+        title: "Mobile App Development (iOS & Android)",
+        category: "Mobile Solutions",
+        slug: "mobile",
+        iconName: "Smartphone",
+        description: "High-performance Flutter, Native Android (Kotlin) & iOS mobile apps engineered for blazing speed, offline data sync, payment gateways, and Play Store/App Store dominance.",
+        features: [
+          "Native Android (Kotlin) & iOS Swift Engineering",
+          "Cross-Platform Flutter & React Native Solutions",
+          "Real-Time Push Notifications & In-App Messaging",
+          "Secure Payment Gateways (Stripe, Razorpay, UPI)",
+          "Offline Local Caching & Firebase Realtime Sync",
+          "Location Tracking, Google Maps & Bluetooth APIs",
+          "Full Play Store & Apple App Store Deployment"
+        ],
+        status: "active"
+      },
+      {
+        id: "srv-2",
+        title: "Enterprise Software & SaaS Engineering",
+        category: "Software Architecture",
+        slug: "software",
+        iconName: "Code2",
+        description: "Custom Enterprise ERPs, CRM platforms, POS billing automation, LMS portals, and high-throughput microservice backends built with Next.js, Laravel, and Cloud Infrastructure.",
+        features: [
+          "Custom Enterprise Resource Planning (ERP) Solutions",
+          "Customer Relationship Management (CRM) Systems",
+          "Point-of-Sale (POS) & Automated Billing Software",
+          "School, LMS & Manufacturing Management Portals",
+          "High-Throughput REST APIs & Microservices Architecture",
+          "Automated Business Workflows & Analytics Dashboards",
+          "Bank-Grade Encryption & Role-Based Access Control"
+        ],
+        status: "active"
+      },
+      {
+        id: "srv-3",
+        title: "Web Application & Full-Stack Development",
+        category: "Web Engineering",
+        slug: "web",
+        iconName: "Globe2",
+        description: "Ultra-fast responsive web applications, B2B/B2C E-Commerce portals, multi-vendor marketplaces, and Headless CMS architectures built with Next.js 14, React, Tailwind CSS, and Node.js.",
+        features: [
+          "Next.js 14 & React Full-Stack Web Development",
+          "B2B, B2C & Multi-Vendor E-Commerce Platforms",
+          "Custom Dynamic Web Portals & High-Converting Landing Pages",
+          "Server-Side Rendering (SSR) & Instant Page Speed",
+          "Headless CMS & Content System Integration",
+          "Progressive Web App (PWA) Mobile Capabilities",
+          "Responsive Glassmorphic UI/UX Engineering"
+        ],
+        status: "active"
+      },
+      {
+        id: "srv-4",
+        title: "SEO & Technical Search Dominance",
+        category: "Growth & SEO",
+        slug: "seo-services",
+        iconName: "Search",
+        description: "Data-driven technical SEO, Schema markup, high-intent keyword ranking, local Google Business Profile optimization, and organic traffic strategies designed to dominate search engine results.",
+        features: [
+          "Complete Technical SEO & Website Speed Audits",
+          "On-Page Keyword Optimization & Schema Markup",
+          "Google Business Profile (GBP) & Local SEO Dominance",
+          "High-Intent Keyword Research & Competitor Mapping",
+          "White-Hat Organic Backlink & Authority Building",
+          "Google Search Console & GA4 Analytics Tracking",
+          "Guaranteed Page 1 Ranking Growth Strategies"
+        ],
+        status: "active"
+      },
+      {
+        id: "srv-5",
+        title: "Logo & Brand Identity Engineering",
+        category: "Brand Identity",
+        slug: "logo",
+        iconName: "Palette",
+        description: "Stunning vector logos, custom brand identity systems, social media kit assets, corporate brochures, and modern UI/UX design tokens crafted to make your business memorable.",
+        features: [
+          "Custom Vector Logo & Brand Identity Systems",
+          "UI/UX Design Systems & Interactive Prototypes",
+          "Corporate Brochures, Pamphlets & Company Profiles",
+          "Social Media Banners & Digital Marketing Creatives",
+          "Digital Visiting Cards & Brand Guidelines",
+          "High-Resolution Print & Merchandise Graphic Kits"
+        ],
+        status: "active"
+      },
+      {
+        id: "srv-6",
+        title: "Strategic Performance Digital Marketing",
+        category: "Growth & Performance",
+        slug: "digital-marketing",
+        iconName: "TrendingUp",
+        description: "High-ROI Pay-Per-Click (PPC) ad campaigns, Meta & LinkedIn social media marketing, WhatsApp automation, and automated conversion pipelines designed for maximum lead acquisition.",
+        features: [
+          "Targeted Google Ads & PPC Search Campaign Management",
+          "Social Media Marketing (Meta, LinkedIn, Instagram)",
+          "Conversion Rate Optimization (CRO) & Funnel Design",
+          "WhatsApp Automation & Direct Customer Messaging",
+          "High-Converting Sales Funnels & Lead Generation",
+          "Monthly ROI & Transparent Growth Analytics Reports"
+        ],
+        status: "active"
+      }
+    ],
+    team: [
+      {
+        id: "team-1",
+        name: "Vivek Kumar (Viveka Jee)",
+        role: "Founder & Lead Software Engineer",
+        company: "Innovateria",
+        location: "Bangalore, IN / Remote",
+        bio: "Full-stack software engineer & founder specializing in Flutter, React, Next.js, Android (Java/Kotlin), and Laravel APIs. Gold Medalist at Chandigarh University & 1st Runner-Up at Rajasthan IT Day Hackathon 2023.",
+        image: "/assets/img/team/vivekajee.png",
+        skills: [
+          "Flutter",
+          "Next.js",
+          "React Native",
+          "Android (Java/Kotlin)",
+          "Laravel",
+          "Firebase",
+          "MongoDB",
+          "RESTful APIs",
+          "Node.js",
+          "PostgreSQL",
+          "RazorPay",
+          "PHP"
+        ],
+        github: "https://github.com/Vnjvibhash",
+        linkedin: "https://www.linkedin.com/in/vivekajee",
+        twitter: "https://twitter.com/Vnjvibhash",
+        website: "https://vivekajee.com"
+      }
+    ],
+    projects: [
+      {
+        id: "proj-active-1",
+        title: "FinTech Pay – UPI Gateway 💳",
+        clientName: "Rohan Saxena",
+        clientEmail: "rohan@fintech-pay.in",
+        category: "Web Application & Full-Stack Development",
+        techStack: [
+          "Python",
+          "FastAPI",
+          "UPI Intent",
+          "PostgreSQL"
+        ],
+        status: "in_development",
+        budget: "₹3,50,000",
+        progress: 80,
+        startDate: "2026-07-15",
+        deadline: "2026-08-20",
+        image: "/assets/img/services/soft.png",
+        featured: true,
+        github: "https://github.com/Vnjvibhash/fastapi-upi-gateway",
+        desc: "High throughput backend API microservice for Razorpay, Paytm, and UPI intent flow with automated webhook callbacks.",
+        bullets: [
+          "Built asynchronous Python FastAPI engine",
+          "Webhook signature verification & callback logs",
+          "Automated PDF e-invoicing generation"
+        ],
+        showInHeader: true
+      }
+    ],
     portfolio: [],
     openSourceProjects: [],
     features: [],
@@ -288,105 +388,43 @@ function loadJSONData(): CMSJSONDatabase {
     techStack: [],
     values: [],
     processSteps: [],
+    adminUsers: [],
     settings: {
-      agencyName: 'Innovateria Software Solutions',
-      adminEmail: 'innovateria.in@gmail.com',
-      phone: '+91-7762974716',
-      address: 'Bangalore & Mysore, India',
-      passcode: '123456',
+      agencyName: "Innovateria Software Solutions",
+      adminEmail: "innovateria.in@gmail.com",
+      phone: "+91-7762974716",
+      address: "Bangalore & Mysore, India",
+      passcode: "123456",
+      portfolioUrl: "https://vivekajee.com",
+      website: "https://vivekajee.com",
       socials: {
-        github: 'https://github.com/VnjVibhash',
-        facebook: 'https://facebook.com/Vivekajee',
-        whatsapp: 'https://wa.me/917762974716',
-        twitter: 'https://twitter.com/Vnjvibhash',
-        linkedin: 'https://linkedin.com/in/Vivekajee',
-        instagram: 'https://instagram.com/Vivekajee'
+        github: "https://github.com/VnjVibhash",
+        facebook: "https://facebook.com/Vivekajee",
+        whatsapp: "https://wa.me/917762974716",
+        twitter: "https://twitter.com/Vnjvibhash",
+        linkedin: "https://linkedin.com/in/Vivekajee",
+        instagram: "https://instagram.com/Vivekajee"
       }
     }
   };
 }
 
-function saveJSONData(data: CMSJSONDatabase) {
-  try {
-    const dir = path.dirname(JSON_FILE_PATH);
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-    const tempFilePath = `${JSON_FILE_PATH}.tmp`;
-    fs.writeFileSync(tempFilePath, JSON.stringify(data, null, 2), 'utf-8');
-    fs.renameSync(tempFilePath, JSON_FILE_PATH);
-  } catch (err) {
-    console.error('Error writing to data/cms-data.json:', err);
-  }
-}
-
-declare global {
-  var _crmStore: (CMSJSONDatabase & { adminPasscode: string }) | undefined;
-}
-
 if (!global._crmStore) {
-  const diskData = loadJSONData();
+  const initial = getInitialDatabase();
   global._crmStore = {
-    ...diskData,
-    services: Array.isArray(diskData.services) ? diskData.services : [],
-    team: Array.isArray(diskData.team) ? diskData.team : [],
-    projects: Array.isArray(diskData.projects) ? diskData.projects : [],
-    portfolio: Array.isArray(diskData.portfolio) ? diskData.portfolio : [],
-    openSourceProjects: Array.isArray(diskData.openSourceProjects) ? diskData.openSourceProjects : [],
-    features: Array.isArray(diskData.features) ? diskData.features : [],
-    faqs: Array.isArray(diskData.faqs) ? diskData.faqs : [],
-    leads: Array.isArray(diskData.leads) ? diskData.leads : [],
-    clients: Array.isArray(diskData.clients) ? diskData.clients : [],
-    timeline: Array.isArray(diskData.timeline) ? diskData.timeline : [],
-    heroStats: Array.isArray(diskData.heroStats) ? diskData.heroStats : [],
-    techStack: Array.isArray(diskData.techStack) ? diskData.techStack : [],
-    values: Array.isArray(diskData.values) ? diskData.values : [],
-    processSteps: Array.isArray(diskData.processSteps) ? diskData.processSteps : [],
-    adminPasscode: diskData.settings?.passcode || '123456'
+    ...initial,
+    adminPasscode: initial.settings.passcode || '123456'
   };
 }
 
 export const crmStore = global._crmStore!;
 
 export function syncFromDisk() {
-  const disk = loadJSONData();
-  if (disk.services && disk.services.length > 0) crmStore.services = disk.services;
-  if (disk.team && disk.team.length > 0) crmStore.team = disk.team;
-  if (disk.projects && disk.projects.length > 0) crmStore.projects = disk.projects;
-  if (disk.portfolio && disk.portfolio.length > 0) crmStore.portfolio = disk.portfolio;
-  if (disk.openSourceProjects && Array.isArray(disk.openSourceProjects)) crmStore.openSourceProjects = disk.openSourceProjects;
-  if (disk.features && disk.features.length > 0) crmStore.features = disk.features;
-  if (disk.faqs && disk.faqs.length > 0) crmStore.faqs = disk.faqs;
-  if (disk.leads && Array.isArray(disk.leads)) crmStore.leads = disk.leads;
-  if (disk.clients && Array.isArray(disk.clients)) crmStore.clients = disk.clients;
-  if (disk.timeline && disk.timeline.length > 0) crmStore.timeline = disk.timeline;
-  if (disk.heroStats && disk.heroStats.length > 0) crmStore.heroStats = disk.heroStats;
-  if (disk.techStack && disk.techStack.length > 0) crmStore.techStack = disk.techStack;
-  if (disk.values && disk.values.length > 0) crmStore.values = disk.values;
-  if (disk.processSteps && disk.processSteps.length > 0) crmStore.processSteps = disk.processSteps;
-  if (disk.adminUsers && Array.isArray(disk.adminUsers)) crmStore.adminUsers = disk.adminUsers;
-  if (disk.settings) crmStore.settings = disk.settings;
+  // Pure Firestore in-memory state synchronization
 }
 
 function persistState() {
-  saveJSONData({
-    services: crmStore.services || [],
-    team: crmStore.team || [],
-    projects: crmStore.projects || [],
-    portfolio: crmStore.portfolio || [],
-    openSourceProjects: crmStore.openSourceProjects || [],
-    features: crmStore.features || [],
-    faqs: crmStore.faqs || [],
-    leads: crmStore.leads || [],
-    clients: crmStore.clients || [],
-    timeline: crmStore.timeline || [],
-    heroStats: crmStore.heroStats || [],
-    techStack: crmStore.techStack || [],
-    values: crmStore.values || [],
-    processSteps: crmStore.processSteps || [],
-    adminUsers: crmStore.adminUsers || [],
-    settings: crmStore.settings
-  });
+  // Pure Firestore in-memory state persistence
 }
 
 // Getters

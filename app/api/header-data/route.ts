@@ -1,13 +1,31 @@
 import { NextResponse } from 'next/server';
-import { getServicesCMS, getProjects, getSettingsCMS } from '@/lib/crm-store';
+import { getServicesCMS, getProjects, getSettingsCMS, ServiceCMS, ProjectCRM, AgencySettingsCMS } from '@/lib/crm-store';
+import { fetchFirestoreCollection, fetchFirestoreDoc } from '@/lib/firestore-db';
 
 export async function GET() {
   try {
-    const services = getServicesCMS();
-    const allProjects = getProjects();
+    let services: ServiceCMS[] = [];
+    let allProjects: ProjectCRM[] = [];
+    let settings: AgencySettingsCMS | null = null;
+
+    try {
+      const [fsServices, fsProjects, fsSettings] = await Promise.all([
+        fetchFirestoreCollection<ServiceCMS>('services'),
+        fetchFirestoreCollection<ProjectCRM>('projects'),
+        fetchFirestoreDoc<AgencySettingsCMS>('settings', 'agency_settings')
+      ]);
+
+      if (fsServices.length > 0) services = fsServices;
+      if (fsProjects.length > 0) allProjects = fsProjects;
+      if (fsSettings) settings = fsSettings;
+    } catch (e) {}
+
+    if (services.length === 0) services = getServicesCMS();
+    if (allProjects.length === 0) allProjects = getProjects();
+    if (!settings) settings = getSettingsCMS();
+
     const selectedHeaderProjects = allProjects.filter(p => p.showInHeader === true);
     const finalProjects = selectedHeaderProjects.length > 0 ? selectedHeaderProjects : allProjects;
-    const settings = getSettingsCMS();
 
     return NextResponse.json({
       success: true,

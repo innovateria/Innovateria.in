@@ -3,16 +3,19 @@ import {
   getOpenSourceProjectsCMS, 
   addOpenSourceProjectCMS, 
   updateOpenSourceProjectCMS, 
-  deleteOpenSourceProjectCMS 
+  deleteOpenSourceProjectCMS,
+  OpenSourceProjectCMS 
 } from '@/lib/crm-store';
+import { fetchFirestoreCollection, saveFirestoreDoc, deleteFirestoreDocument } from '@/lib/firestore-db';
 
 export async function GET() {
   try {
-    const items = getOpenSourceProjectsCMS();
-    return NextResponse.json({ success: true, openSourceProjects: items });
-  } catch (err) {
-    return NextResponse.json({ success: false, message: 'Failed to fetch open source projects' }, { status: 500 });
-  }
+    const firestoreItems = await fetchFirestoreCollection<OpenSourceProjectCMS>('openSourceProjects');
+    if (firestoreItems && firestoreItems.length > 0) {
+      return NextResponse.json({ success: true, openSourceProjects: firestoreItems });
+    }
+  } catch (err) {}
+  return NextResponse.json({ success: true, openSourceProjects: getOpenSourceProjectsCMS() });
 }
 
 export async function POST(req: Request) {
@@ -29,6 +32,14 @@ export async function POST(req: Request) {
       forks: Number(body.forks) || 0,
       featured: Boolean(body.featured)
     });
+
+    // Save to Firestore
+    try {
+      await saveFirestoreDoc('openSourceProjects', newItem.id, newItem);
+    } catch (dbErr) {
+      console.warn('Firestore write notice:', dbErr);
+    }
+
     return NextResponse.json({ success: true, item: newItem });
   } catch (err) {
     return NextResponse.json({ success: false, message: 'Failed to create open source project' }, { status: 500 });
@@ -45,6 +56,14 @@ export async function PATCH(req: Request) {
     if (!updated) {
       return NextResponse.json({ success: false, message: 'Item not found' }, { status: 404 });
     }
+
+    // Update in Firestore
+    try {
+      await saveFirestoreDoc('openSourceProjects', body.id, updated);
+    } catch (dbErr) {
+      console.warn('Firestore update notice:', dbErr);
+    }
+
     return NextResponse.json({ success: true, item: updated });
   } catch (err) {
     return NextResponse.json({ success: false, message: 'Failed to update open source project' }, { status: 500 });
@@ -59,6 +78,14 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ success: false, message: 'Item ID required' }, { status: 400 });
     }
     const deleted = deleteOpenSourceProjectCMS(id);
+
+    // Delete in Firestore
+    try {
+      await deleteFirestoreDocument('openSourceProjects', id);
+    } catch (dbErr) {
+      console.warn('Firestore delete notice:', dbErr);
+    }
+
     return NextResponse.json({ success: true, deleted });
   } catch (err) {
     return NextResponse.json({ success: false, message: 'Failed to delete open source project' }, { status: 500 });
