@@ -255,6 +255,28 @@ export const updateFirestoreUserRole = async (uid: string, newRole: 'admin' | 'u
   }
 };
 
+/**
+ * Syncs all technology stack items directly to Cloud Firestore 'techStack' collection.
+ */
+export const syncTechStackToFirestore = async (techItems: any[]): Promise<{ success: boolean; count: number }> => {
+  const db = getFirestoreDb();
+  if (!db) throw new Error('Cloud Firestore database is not initialized.');
+
+  let count = 0;
+  for (const item of techItems) {
+    const docId = String(item.id || `tech-${item.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}`);
+    const docRef = doc(db, 'techStack', docId);
+    await setDoc(docRef, {
+      ...item,
+      id: docId,
+      _syncedAt: serverTimestamp()
+    }, { merge: true });
+    count++;
+  }
+
+  return { success: true, count };
+};
+
 export { 
   app, 
   auth, 
