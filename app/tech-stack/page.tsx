@@ -4,7 +4,7 @@ import { getTechStackCMS, DEFAULT_TECH_STACK, TechStackCMS } from '@/lib/crm-sto
 import { fetchFirestoreCollection } from '@/lib/firestore-db';
 
 export const metadata: Metadata = {
-  title: 'Technology Stack & Engineering Ecosystem | Innovateria',
+  title: 'Technology Stack & Engineering Ecosystem',
   description: 'Explore Innovateria\'s complete 43+ technology ecosystem across Mobile Apps (Flutter, Kotlin, iOS), Web Engineering (Next.js, React), Backend APIs, Cloud Databases, and DevOps.',
   keywords: [
     'Technology Stack',
