@@ -160,7 +160,7 @@ export default function AdminLayout({
     { href: '/admin/faqs', label: 'FAQs CMS', icon: HelpCircle },
     { href: '/admin/clients', label: 'Client Directory', icon: Users },
     { href: '/admin/analytics', label: 'Analytics', icon: BarChart3 },
-    { href: '/admin/settings', label: 'CMS Settings', icon: Settings },
+    { href: '/admin/settings', label: 'Users', icon: ShieldCheck },
   ];
 
   const handleLogout = async () => {
