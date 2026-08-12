@@ -8,24 +8,6 @@ import {
   collection, 
   serverTimestamp 
 } from '@/lib/firebase';
-import { 
-  ServiceCMS, 
-  ProjectCRM, 
-  Lead, 
-  Client, 
-  TeamMemberCMS, 
-  FAQItemCMS, 
-  FeatureCMS, 
-  PortfolioItemCMS, 
-  TimelineCMS, 
-  HeroStatCMS, 
-  TechStackCMS, 
-  CoreValueCMS, 
-  ProcessStepCMS, 
-  AgencySettingsCMS, 
-  OpenSourceProjectCMS,
-  AdminUserCMS 
-} from '@/lib/crm-store';
 
 /**
  * Generic Firestore collection fetcher
