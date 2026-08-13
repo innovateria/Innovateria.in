@@ -7,8 +7,7 @@ import {
   Search, 
   X, 
   ArrowRight, 
-  CheckCircle2, 
-  ChevronRight
+  CheckCircle2
 } from 'lucide-react';
 import { TechStackCMS } from '@/lib/crm-store';
 
@@ -65,12 +64,6 @@ export default function TechStackClient({ initialTechStack }: TechStackClientPro
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-6 text-center">
           
-          {/* Breadcrumb Navigation */}
-          <nav className="inline-flex items-center space-x-2 text-xs text-[color:var(--text-muted)] glass-card px-4 py-1.5 rounded-full border border-[color:var(--border-color)]">
-            <Link href="/" className="hover:text-[color:var(--text-primary)] transition-colors">Home</Link>
-            <ChevronRight size={12} className="text-[color:var(--text-muted)]" />
-            <span className="text-brand-400 font-semibold">Technology Ecosystem</span>
-          </nav>
 
           <div className="space-y-4 max-w-3xl mx-auto">
             <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-brand-500/10 border border-brand-500/30 text-brand-400 text-xs font-bold uppercase tracking-wider">
