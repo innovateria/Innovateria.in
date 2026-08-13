@@ -135,14 +135,12 @@ export async function deleteFirestoreDocument(collectionName: string, docId: str
    ============================================================================ */
 
 export async function getFirestoreServices(): Promise<ServiceCMS[]> {
-  const items = await fetchFirestoreCollection<ServiceCMS>('services');
-  return items.length > 0 ? items : getServicesCMS();
+  return await fetchFirestoreCollection<ServiceCMS>('services');
 }
 
 export async function getFirestoreProjects(): Promise<ProjectCRM[]> {
   const items = await fetchFirestoreCollection<ProjectCRM>('projects');
-  const rawProjects = items.length > 0 ? items : getProjects();
-  return rawProjects.map(p => ({
+  return items.map(p => ({
     id: p.id || `proj-${Math.random().toString(36).substring(2, 9)}`,
     title: p.title || 'Untitled Project',
     clientName: p.clientName || 'Private Client',
@@ -164,53 +162,43 @@ export async function getFirestoreProjects(): Promise<ProjectCRM[]> {
 }
 
 export async function getFirestoreTechStack(): Promise<TechStackCMS[]> {
-  const items = await fetchFirestoreCollection<TechStackCMS>('techStack');
-  return items.length > 0 ? items : DEFAULT_TECH_STACK;
+  return await fetchFirestoreCollection<TechStackCMS>('techStack');
 }
 
 export async function getFirestoreTeam(): Promise<TeamMemberCMS[]> {
-  const items = await fetchFirestoreCollection<TeamMemberCMS>('team');
-  return items.length > 0 ? items : getTeamCMS();
+  return await fetchFirestoreCollection<TeamMemberCMS>('team');
 }
 
 export async function getFirestoreFAQs(): Promise<FAQItemCMS[]> {
-  const items = await fetchFirestoreCollection<FAQItemCMS>('faqs');
-  return items.length > 0 ? items : getFAQsCMS();
+  return await fetchFirestoreCollection<FAQItemCMS>('faqs');
 }
 
 export async function getFirestoreFeatures(): Promise<FeatureCMS[]> {
-  const items = await fetchFirestoreCollection<FeatureCMS>('features');
-  return items.length > 0 ? items : getFeaturesCMS();
+  return await fetchFirestoreCollection<FeatureCMS>('features');
 }
 
 export async function getFirestorePortfolio(): Promise<PortfolioItemCMS[]> {
-  const items = await fetchFirestoreCollection<PortfolioItemCMS>('portfolio');
-  return items.length > 0 ? items : getPortfolioCMS();
+  return await fetchFirestoreCollection<PortfolioItemCMS>('portfolio');
 }
 
 export async function getFirestoreTimeline(): Promise<TimelineCMS[]> {
-  const items = await fetchFirestoreCollection<TimelineCMS>('timeline');
-  return items.length > 0 ? items : getTimelineCMS();
+  return await fetchFirestoreCollection<TimelineCMS>('timeline');
 }
 
 export async function getFirestoreOpenSource(): Promise<OpenSourceProjectCMS[]> {
-  const items = await fetchFirestoreCollection<OpenSourceProjectCMS>('openSourceProjects');
-  return items.length > 0 ? items : getOpenSourceProjectsCMS();
+  return await fetchFirestoreCollection<OpenSourceProjectCMS>('openSourceProjects');
 }
 
 export async function getFirestoreStats(): Promise<HeroStatCMS[]> {
-  const items = await fetchFirestoreCollection<HeroStatCMS>('heroStats');
-  return items.length > 0 ? items : getHeroStatsCMS();
+  return await fetchFirestoreCollection<HeroStatCMS>('heroStats');
 }
 
 export async function getFirestoreValues(): Promise<CoreValueCMS[]> {
-  const items = await fetchFirestoreCollection<CoreValueCMS>('values');
-  return items.length > 0 ? items : getCompanyValuesCMS();
+  return await fetchFirestoreCollection<CoreValueCMS>('values');
 }
 
 export async function getFirestoreProcess(): Promise<ProcessStepCMS[]> {
-  const items = await fetchFirestoreCollection<ProcessStepCMS>('processSteps');
-  return items.length > 0 ? items : getProcessStepsCMS();
+  return await fetchFirestoreCollection<ProcessStepCMS>('processSteps');
 }
 
 export async function getFirestoreSettings(): Promise<AgencySettingsCMS> {

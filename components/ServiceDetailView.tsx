@@ -23,17 +23,28 @@ interface ServiceDetailViewProps {
 }
 
 export default function ServiceDetailView({ service }: ServiceDetailViewProps) {
+  const activeService: ServiceCMS = service || {
+    id: 'srv-default',
+    title: 'Software Engineering Solution',
+    category: 'Software Architecture',
+    slug: 'services',
+    iconName: 'Code2',
+    description: 'High-performance digital engineering and enterprise software solutions built for business growth.',
+    features: ['High Performance Architecture', 'Cloud Infrastructure', 'Bank-Grade Security', '24/7 Monitoring'],
+    status: 'active'
+  };
+
   // Enhanced detailed content from JSON or fallback defaults
-  const detailedOverview = (service.longDescription && service.longDescription.length > 0)
-    ? service.longDescription
+  const detailedOverview = (activeService.longDescription && activeService.longDescription.length > 0)
+    ? activeService.longDescription
     : [
-        `Our ${service.title} is engineered to deliver industry-leading speed, enterprise security, and cloud scalability tailored for modern businesses and ambitious startups.`,
+        `Our ${activeService.title} is engineered to deliver industry-leading speed, enterprise security, and cloud scalability tailored for modern businesses and ambitious startups.`,
         `We utilize state-of-the-art software frameworks, bank-grade encryption, and optimized architectures to ensure your digital asset drives measurable business revenue and customer retention.`,
         `Whether you require a custom end-to-end build, seamless third-party API integration, or legacy system modernization, our team provides full-lifecycle support from initial blueprint to cloud deployment.`
       ];
 
-  const methodologySteps = (service.methodology && service.methodology.length > 0)
-    ? service.methodology
+  const methodologySteps = (activeService.methodology && activeService.methodology.length > 0)
+    ? activeService.methodology
     : [
         { title: '1. Strategy & Discovery', desc: 'Analyzing your business goals, user personas, technical requirements, and market competitors to create a clear project blueprint.' },
         { title: '2. UI/UX & Architecture', desc: 'Crafting responsive glassmorphic wireframes, interactive Figma prototypes, and scalable database schema.' },
@@ -42,10 +53,10 @@ export default function ServiceDetailView({ service }: ServiceDetailViewProps) {
         { title: '5. Launch & Support', desc: 'Smooth deployment to cloud servers or app stores with 24/7 technical monitoring and maintenance.' }
       ];
 
-  const serviceFaqs = (service.faqs && service.faqs.length > 0)
-    ? service.faqs
+  const serviceFaqs = (activeService.faqs && activeService.faqs.length > 0)
+    ? activeService.faqs
     : [
-        { q: `What is the estimated delivery timeline for ${service.title}?`, a: `Timelines depend on scope and features. Standard builds range from 2 to 6 weeks, while enterprise platforms may take 8 to 12 weeks with milestone deliverables.` },
+        { q: `What is the estimated delivery timeline for ${activeService.title}?`, a: `Timelines depend on scope and features. Standard builds range from 2 to 6 weeks, while enterprise platforms may take 8 to 12 weeks with milestone deliverables.` },
         { q: `Do I get 100% full ownership of the source code?`, a: `Yes! Upon project completion, you receive complete IP rights, repository access, database credentials, and full documentation.` },
         { q: `How does Innovateria ensure post-launch maintenance?`, a: `We provide 30 to 90 days of complimentary post-launch support including bug fixes, server maintenance, performance updates, and technical assistance.` }
       ];
@@ -58,19 +69,19 @@ export default function ServiceDetailView({ service }: ServiceDetailViewProps) {
         <div className="lg:col-span-7 space-y-6">
           <span className="text-xs font-bold text-brand-500 uppercase tracking-widest bg-brand-500/10 px-3.5 py-1.5 rounded-full border border-brand-500/20 inline-flex items-center space-x-2">
             <Sparkles size={14} />
-            <span>{service.category}</span>
+            <span>{activeService.category}</span>
           </span>
 
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-tight">
-            {service.title}
+            {activeService.title}
           </h1>
 
           <p className="text-base text-gray-300 leading-relaxed max-w-2xl">
-            {service.description}
+            {activeService.description}
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-            {(service.features || []).map((feat, idx) => (
+            {(activeService.features || []).map((feat, idx) => (
               <div key={idx} className="flex items-start space-x-3 text-xs text-gray-200">
                 <CheckCircle2 size={16} className="text-brand-500 shrink-0 mt-0.5" />
                 <span className="font-medium">{feat}</span>
@@ -102,11 +113,11 @@ export default function ServiceDetailView({ service }: ServiceDetailViewProps) {
             <div className="flex justify-between items-center border-b border-white/10 pb-4">
               <div className="flex items-center space-x-3">
                 <div className="w-12 h-12 rounded-2xl bg-brand-500/20 border border-brand-500/30 flex items-center justify-center text-brand-400">
-                  <ServiceIcon iconName={service.iconName} title={service.title} size={28} />
+                  <ServiceIcon iconName={activeService.iconName} title={activeService.title} size={28} />
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold text-white line-clamp-1">{service.title}</h4>
-                  <span className="text-[10px] text-brand-400 font-semibold uppercase">{service.category}</span>
+                  <h4 className="text-sm font-bold text-white line-clamp-1">{activeService.title}</h4>
+                  <span className="text-[10px] text-brand-400 font-semibold uppercase">{activeService.category}</span>
                 </div>
               </div>
             </div>
@@ -140,7 +151,7 @@ export default function ServiceDetailView({ service }: ServiceDetailViewProps) {
             Deep Service Overview
           </span>
           <h2 className="text-3xl font-extrabold text-white">
-            About <span className="text-gradient-brand">{service.title}</span>
+            About <span className="text-gradient-brand">{activeService.title}</span>
           </h2>
         </div>
 
