@@ -29,6 +29,50 @@ import {
 } from '@/lib/crm-store';
 
 /**
+ * Deep sanitizer to strip non-serializable Firestore Timestamps, toJSON methods, 
+ * and convert any Timestamp or Date field into a plain ISO string or primitive value 
+ * so React Server Components can safely pass data to Client Components.
+ */
+export function sanitizeFirestoreData<T>(obj: any): T {
+  if (obj === null || obj === undefined) return obj;
+
+  // Handle Firestore Timestamp (has seconds/nanoseconds or toDate method)
+  if (typeof obj === 'object' && (typeof obj.toDate === 'function' || ('seconds' in obj && typeof obj.seconds === 'number'))) {
+    if (typeof obj.toDate === 'function') {
+      try {
+        return obj.toDate().toISOString() as any;
+      } catch (e) {}
+    }
+    if (typeof obj.seconds === 'number') {
+      return new Date(obj.seconds * 1000).toISOString() as any;
+    }
+  }
+
+  // Handle JS Date
+  if (obj instanceof Date) {
+    return obj.toISOString() as any;
+  }
+
+  // Handle Arrays
+  if (Array.isArray(obj)) {
+    return obj.map(item => sanitizeFirestoreData(item)) as any;
+  }
+
+  // Handle Plain Objects
+  if (typeof obj === 'object') {
+    const plainObj: Record<string, any> = {};
+    for (const key of Object.keys(obj)) {
+      const val = obj[key];
+      if (typeof val === 'function') continue;
+      plainObj[key] = sanitizeFirestoreData(val);
+    }
+    return plainObj as T;
+  }
+
+  return obj;
+}
+
+/**
  * Generic Firestore collection fetcher using getDocs snapshot
  */
 export async function fetchFirestoreCollection<T>(collectionName: string): Promise<T[]> {
@@ -43,10 +87,11 @@ export async function fetchFirestoreCollection<T>(collectionName: string): Promi
     const items: T[] = [];
     snapshot.forEach(docSnap => {
       const data = docSnap.data();
-      items.push({
+      const rawItem = {
         id: docSnap.id,
         ...data
-      } as T);
+      };
+      items.push(sanitizeFirestoreData<T>(rawItem));
     });
 
     return items;
@@ -68,10 +113,11 @@ export async function fetchFirestoreDoc<T>(collectionName: string, docId: string
     const snap = await getDoc(docRef).catch(() => null);
     if (!snap || !snap.exists()) return null;
 
-    return {
+    const rawItem = {
       id: snap.id,
       ...snap.data()
-    } as T;
+    };
+    return sanitizeFirestoreData<T>(rawItem);
   } catch (error) {
     console.warn(`Firestore read doc error on '${collectionName}/${docId}':`, error);
     return null;
@@ -97,7 +143,7 @@ export async function saveFirestoreDoc<T extends Record<string, any>>(
   };
 
   await setDoc(docRef, payload, { merge: true });
-  return payload as T;
+  return sanitizeFirestoreData<T>(payload);
 }
 
 /**
@@ -138,7 +184,8 @@ export function subscribeFirestoreCollection<T>(
       (snapshot) => {
         const items: T[] = [];
         snapshot.forEach((docSnap) => {
-          items.push({ id: docSnap.id, ...docSnap.data() } as T);
+          const rawItem = { id: docSnap.id, ...docSnap.data() };
+          items.push(sanitizeFirestoreData<T>(rawItem));
         });
         callback(items);
       },
@@ -178,7 +225,8 @@ export function subscribeFirestoreDoc<T>(
           callback(null);
           return;
         }
-        callback({ id: snap.id, ...snap.data() } as T);
+        const rawItem = { id: snap.id, ...snap.data() };
+        callback(sanitizeFirestoreData<T>(rawItem));
       },
       (error) => {
         console.warn(`Firestore doc snapshot error on '${collectionName}/${docId}':`, error);
