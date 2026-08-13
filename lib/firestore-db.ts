@@ -28,6 +28,1672 @@ import {
   AdminUserCMS
 } from '@/lib/crm-store';
 
+const CMS_FALLBACK_DATA = {
+  "services": [
+    {
+      "id": "srv-1",
+      "title": "Mobile App Development (iOS & Android)",
+      "category": "Mobile Solutions",
+      "slug": "mobile",
+      "iconName": "Smartphone",
+      "description": "High-performance Flutter, Native Android (Kotlin) & iOS mobile apps engineered for blazing speed, offline data sync, payment gateways, and Play Store/App Store dominance.",
+      "features": [
+        "Native Android (Kotlin) & iOS Swift Engineering",
+        "Cross-Platform Flutter & React Native Solutions",
+        "Real-Time Push Notifications & In-App Messaging",
+        "Secure Payment Gateways (Stripe, Razorpay, UPI)",
+        "Offline Local Caching & Firebase Realtime Sync",
+        "Location Tracking, Google Maps & Bluetooth APIs",
+        "Full Play Store & Apple App Store Deployment"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "srv-2",
+      "title": "Enterprise Software & SaaS Engineering",
+      "category": "Software Architecture",
+      "slug": "software",
+      "iconName": "Code2",
+      "description": "Custom Enterprise ERPs, CRM platforms, POS billing automation, LMS portals, and high-throughput microservice backends built with Next.js, Laravel, and Cloud Infrastructure.",
+      "features": [
+        "Custom Enterprise Resource Planning (ERP) Solutions",
+        "Customer Relationship Management (CRM) Systems",
+        "Point-of-Sale (POS) & Automated Billing Software",
+        "School, LMS & Manufacturing Management Portals",
+        "High-Throughput REST APIs & Microservices Architecture",
+        "Automated Business Workflows & Analytics Dashboards",
+        "Bank-Grade Encryption & Role-Based Access Control"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "srv-3",
+      "title": "Web Application & Full-Stack Development",
+      "category": "Web Engineering",
+      "slug": "web",
+      "iconName": "Globe2",
+      "description": "Ultra-fast responsive web applications, B2B/B2C E-Commerce portals, multi-vendor marketplaces, and Headless CMS architectures built with Next.js 14, React, Tailwind CSS, and Node.js.",
+      "features": [
+        "Next.js 14 & React Full-Stack Web Development",
+        "B2B, B2C & Multi-Vendor E-Commerce Platforms",
+        "Custom Dynamic Web Portals & High-Converting Landing Pages",
+        "Server-Side Rendering (SSR) & Instant Page Speed",
+        "Headless CMS & Content System Integration",
+        "Progressive Web App (PWA) Mobile Capabilities",
+        "Responsive Glassmorphic UI/UX Engineering"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "srv-4",
+      "title": "SEO & Technical Search Dominance",
+      "category": "Growth & SEO",
+      "slug": "seo-services",
+      "iconName": "Search",
+      "description": "Data-driven technical SEO, Schema markup, high-intent keyword ranking, local Google Business Profile optimization, and organic traffic strategies designed to dominate search engine results.",
+      "features": [
+        "Complete Technical SEO & Website Speed Audits",
+        "On-Page Keyword Optimization & Schema Markup",
+        "Google Business Profile (GBP) & Local SEO Dominance",
+        "High-Intent Keyword Research & Competitor Mapping",
+        "White-Hat Organic Backlink & Authority Building",
+        "Google Search Console & GA4 Analytics Tracking",
+        "Guaranteed Page 1 Ranking Growth Strategies"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "srv-5",
+      "title": "Logo & Brand Identity Engineering",
+      "category": "Brand Identity",
+      "slug": "logo",
+      "iconName": "Palette",
+      "description": "Stunning vector logos, custom brand identity systems, social media kit assets, corporate brochures, and modern UI/UX design tokens crafted to make your business memorable.",
+      "features": [
+        "Custom Vector Logo & Brand Identity Systems",
+        "UI/UX Design Systems & Interactive Prototypes",
+        "Corporate Brochures, Pamphlets & Company Profiles",
+        "Social Media Banners & Digital Marketing Creatives",
+        "Digital Visiting Cards & Brand Guidelines",
+        "High-Resolution Print & Merchandise Graphic Kits"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "srv-6",
+      "title": "Strategic Performance Digital Marketing",
+      "category": "Growth & Performance",
+      "slug": "digital-marketing",
+      "iconName": "TrendingUp",
+      "description": "High-ROI Pay-Per-Click (PPC) ad campaigns, Meta & LinkedIn social media marketing, WhatsApp automation, and automated conversion pipelines designed for maximum lead acquisition.",
+      "features": [
+        "Targeted Google Ads & PPC Search Campaign Management",
+        "Social Media Marketing (Meta, LinkedIn, Instagram)",
+        "Conversion Rate Optimization (CRO) & Funnel Design",
+        "WhatsApp Automation & Direct Customer Messaging",
+        "High-Converting Sales Funnels & Lead Generation",
+        "Monthly ROI & Transparent Growth Analytics Reports"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "srv-7",
+      "title": "Dynamic Website Development",
+      "category": "Web Engineering",
+      "slug": "dynamic-website",
+      "iconName": "Globe2",
+      "description": "High-converting dynamic websites powered by Next.js, Node.js, and headless CMS for real-time updates and interactive user experiences.",
+      "features": [
+        "Real-Time Content Management System (CMS)",
+        "Next.js 14 Server-Side Rendering (SSR) Speed",
+        "Interactive User Portals & Client Dashboards",
+        "Database Integration (MongoDB, PostgreSQL, MySQL)",
+        "Automated Form Workflows & CRM Sync",
+        "Responsive Glassmorphic UI/UX Styling"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "srv-8",
+      "title": "Static Website Development",
+      "category": "Web Engineering",
+      "slug": "static-website",
+      "iconName": "Globe2",
+      "description": "Blazing-fast, unhackable static websites built with HTML5, CSS3, JavaScript, and static site generators for maximum security and instant page loads.",
+      "features": [
+        "Instant Sub-Second Page Loading Speeds",
+        "Unhackable Serverless Security Architecture",
+        "SEO & Schema Optimized HTML5 Codebase",
+        "Clean Pixel-Perfect Responsive UI Layouts",
+        "Zero Hosting & Database Overhead Costs",
+        "Custom Domain, CDN & Free SSL Deployment"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "srv-9",
+      "title": "High-Converting Landing Pages",
+      "category": "Web Engineering",
+      "slug": "landing-page",
+      "iconName": "Zap",
+      "description": "Laser-focused, high-converting landing pages built for targeted marketing campaigns, product launches, and pay-per-click ad funnels.",
+      "features": [
+        "A/B Testing Optimized Conversion Layouts",
+        "High-Converting Call-To-Action (CTA) Buttons",
+        "Automated Lead Capture & Email Notifications",
+        "Fast Page Load Speeds (<1 Second)",
+        "Integrated Meta Pixel & GA4 Analytics Tracking",
+        "Mobile-First Glassmorphic Design Aesthetics"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "srv-10",
+      "title": "Website Modification & Redesign",
+      "category": "Website Maintenance",
+      "slug": "website-modification",
+      "iconName": "Wrench",
+      "description": "Revamp outdated website code, modernise legacy UI/UX design, fix broken responsive layouts, and add new features to your existing website.",
+      "features": [
+        "Legacy Codebase Modernization & Clean Code Rewrite",
+        "Responsive UI/UX Redesign for Mobile Devices",
+        "Page Load Speed & Core Web Vitals Optimization",
+        "Mobile Responsiveness & CSS Grid Layout Fixes",
+        "New Feature & Third-Party API Integration",
+        "Security Patching & Framework Version Upgrades"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "srv-11",
+      "title": "Website Maintenance & Support",
+      "category": "Website Maintenance",
+      "slug": "website-maintenance",
+      "iconName": "ShieldCheck",
+      "description": "24/7 proactive website monitoring, daily automated backups, security malware scans, framework updates, and instant emergency technical support.",
+      "features": [
+        "Daily Automated Offsite Database & Code Backups",
+        "Malware & Hacker Protection Vulnerability Scans",
+        "Plugin, Framework & Server Component Updates",
+        "24/7 Uptime & Core Web Vitals Performance Monitoring",
+        "Regular Content, Text & Image Update Requests",
+        "Priority Technical Helpdesk & Emergency Support"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "srv-12",
+      "title": "B2C E-Commerce Website Development",
+      "category": "E-Commerce Solutions",
+      "slug": "b2c-ecommerce",
+      "iconName": "ShoppingBag",
+      "description": "Custom direct-to-consumer online stores equipped with seamless shopping carts, payment gateways, product filters, and live order tracking.",
+      "features": [
+        "Custom Shopping Cart & Fast Checkout Flow",
+        "Instant Payment Gateway Integration (Stripe, Razorpay, UPI)",
+        "Product Inventory, Variant & Stock Management",
+        "Discount Coupons & Promotional Banner Engine",
+        "Order Status & Automated Courier Tracking",
+        "Mobile-Optimized Touch Interfaces"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "srv-13",
+      "title": "B2B E-Commerce Website Development",
+      "category": "E-Commerce Solutions",
+      "slug": "b2b-ecommerce",
+      "iconName": "Building",
+      "description": "Enterprise B2B wholesale portals with bulk pricing tiers, custom quotation requests, credit line invoicing, and ERP synchronization.",
+      "features": [
+        "Tiered Wholesale Bulk & Contract Pricing",
+        "Custom Purchase Order (PO) & Quote Requests",
+        "GST & Automated Commercial Invoice Generation",
+        "ERP & Warehouse Inventory Database Sync",
+        "Multi-User Corporate Account Permissions",
+        "Secure B2B Payment & Credit Terms Engine"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "srv-14",
+      "title": "Multi-Vendor E-Commerce Marketplace",
+      "category": "E-Commerce Solutions",
+      "slug": "multi-vendor-ecommerce",
+      "iconName": "Store",
+      "description": "Full-featured Amazon/Flipkart style multi-vendor marketplaces allowing vendor onboarding, automated commission splits, and vendor dashboards.",
+      "features": [
+        "Individual Vendor Seller Control Panels",
+        "Automated Commission Split & Wallet Payouts",
+        "Vendor Product Approval & Moderation Workflows",
+        "Customer Reviews, Seller Ratings & Q&A",
+        "Payout & Profit Margin Analytics Dashboards",
+        "Multi-Store Logistics & Dispatch Management"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "srv-15",
+      "title": "Native iOS App Development",
+      "category": "Mobile Solutions",
+      "slug": "ios-app-development",
+      "iconName": "Apple",
+      "description": "Premium native iOS mobile apps engineered with Swift, SwiftUI, and Xcode, delivering seamless performance across iPhones, iPads, and Apple Watch.",
+      "features": [
+        "Swift & SwiftUI Native iOS Architecture",
+        "Apple App Store Publishing & ASO Optimization",
+        "Apple Pay & In-App Subscription Purchases",
+        "Core Data & iCloud Secure Database Sync",
+        "Push Notifications via Apple APNs",
+        "Custom iOS Human Interface Guidelines (HIG)"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "srv-16",
+      "title": "Native Android App Development",
+      "category": "Mobile Solutions",
+      "slug": "android-app-development",
+      "iconName": "Smartphone",
+      "description": "Robust native Android apps built with Kotlin, Android Jetpack, and Material 3 Design, engineered for all Android mobile devices and tablets.",
+      "features": [
+        "Kotlin & Jetpack Compose Native Android Code",
+        "Google Play Store Publishing & ASO Strategy",
+        "Google Pay & UPI Payment Gateway Integration",
+        "Room Database & Background Services Architecture",
+        "Firebase Cloud Messaging (FCM) Push Notifications",
+        "Material 3 Adaptive Responsive Screen Layouts"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "srv-17",
+      "title": "Cross-Platform App Development",
+      "category": "Mobile Solutions",
+      "slug": "cross-platform-development",
+      "iconName": "Smartphone",
+      "description": "Cost-effective cross-platform Flutter and React Native mobile apps running smoothly on both iOS and Android from a single unified codebase.",
+      "features": [
+        "Single Unified Codebase for iOS & Android",
+        "Built with Flutter & React Native Frameworks",
+        "Native Performance & 60fps Smooth Rendering",
+        "Shared Business Logic & State Management",
+        "Faster Time-To-Market & Reduced Development Cost",
+        "Unified REST API & Cloud Database Sync"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "srv-18",
+      "title": "Pick & Drop Delivery App Development",
+      "category": "On-Demand Apps",
+      "slug": "pick-drop-app",
+      "iconName": "Truck",
+      "description": "On-demand logistics, parcel delivery, and courier pick-and-drop mobile app solutions with real-time GPS tracking and route optimization.",
+      "features": [
+        "Dedicated Customer, Driver & Admin App Suites",
+        "Real-Time Live GPS Driver & Vehicle Tracking",
+        "Automated Distance & Fare Rate Calculation",
+        "Multi-Stop Delivery Route Optimization Engine",
+        "Digital Proof of Delivery (OTP & E-Signature)",
+        "In-App Anonymous Customer-Driver Calling"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "srv-19",
+      "title": "Grocery & Supermarket Delivery App",
+      "category": "On-Demand Apps",
+      "slug": "grocery-app",
+      "iconName": "ShoppingBag",
+      "description": "Instant 10-minute grocery delivery and supermarket mobile app platforms complete with barcode inventory, express checkout, and slot booking.",
+      "features": [
+        "Category & Barcode Item Search Engine",
+        "Express Delivery Slot & Time Scheduling",
+        "Dark Store Warehouse Inventory Sync",
+        "Subscription & Daily Item Repeat Order Engine",
+        "Live Delivery Agent Order Status Tracking",
+        "Wallet, Cash on Delivery & Instant UPI Payments"
+      ],
+      "status": "active"
+    }
+  ],
+  "team": [
+    {
+      "id": "team-1",
+      "name": "Vivek Kumar (Viveka Jee)",
+      "role": "Founder & Lead Software Engineer",
+      "company": "Innovateria",
+      "location": "Bangalore, IN / Remote",
+      "bio": "Full-stack software engineer & founder specializing in Flutter, React, Next.js, Android (Java/Kotlin), and Laravel APIs. Gold Medalist at Chandigarh University & 1st Runner-Up at Rajasthan IT Day Hackathon 2023.",
+      "image": "/assets/img/team/vivekajee.png",
+      "skills": [
+        "Flutter",
+        "Next.js",
+        "React Native",
+        "Android (Java/Kotlin)",
+        "Laravel",
+        "Firebase",
+        "MongoDB",
+        "RESTful APIs",
+        "Node.js",
+        "PostgreSQL",
+        "RazorPay",
+        "PHP"
+      ],
+      "github": "https://github.com/Vnjvibhash",
+      "linkedin": "https://www.linkedin.com/in/vivekajee",
+      "twitter": "https://twitter.com/Vnjvibhash",
+      "website": "https://vivekajee.com"
+    }
+  ],
+  "projects": [
+    {
+      "id": "proj-active-1",
+      "title": "FinTech Pay – UPI Gateway 💳",
+      "clientName": "Rohan Saxena",
+      "clientEmail": "rohan@fintech-pay.in",
+      "category": "Web Application & Full-Stack Development",
+      "techStack": [
+        "Python",
+        "FastAPI",
+        "UPI Intent",
+        "PostgreSQL"
+      ],
+      "status": "in_development",
+      "budget": "₹3,50,000",
+      "progress": 80,
+      "startDate": "2026-07-15",
+      "deadline": "2026-08-20",
+      "image": "/assets/img/services/soft.png",
+      "featured": true,
+      "github": "https://github.com/Vnjvibhash/fastapi-upi-gateway",
+      "desc": "High throughput backend API microservice for Razorpay, Paytm, and UPI intent flow with automated webhook callbacks.",
+      "bullets": [
+        "Built asynchronous Python FastAPI engine",
+        "Webhook signature verification & callback logs",
+        "Automated PDF e-invoicing generation"
+      ],
+      "showInHeader": true
+    },
+    {
+      "id": "proj-active-2",
+      "title": "Telemedicine Doctor App 🩺",
+      "clientName": "Nisha Kapoor",
+      "clientEmail": "nisha@medicare-plus.in",
+      "category": "App Development",
+      "techStack": [
+        "Flutter",
+        "WebRTC",
+        "Firebase",
+        "Dart"
+      ],
+      "status": "in_development",
+      "budget": "₹5,00,000",
+      "progress": 65,
+      "startDate": "2026-07-20",
+      "deadline": "2026-09-10",
+      "image": "/assets/img/services/android.png",
+      "featured": true,
+      "github": "https://github.com/Vnjvibhash/flutter-telemedicine",
+      "desc": "Doctor consultation app with video calls, appointment scheduling, and digital prescription downloads.",
+      "bullets": [
+        "Encrypted 1-on-1 WebRTC video calls",
+        "Patient appointment queue & slot booking",
+        "Digital prescription generator and PDF download"
+      ],
+      "showInHeader": true
+    },
+    {
+      "id": "proj-active-3",
+      "title": "AgroTech IoT Dashboard 🌾",
+      "clientName": "Manish Choudhary",
+      "clientEmail": "manish@agrotech.in",
+      "category": "Web Development",
+      "techStack": [
+        "Next.js",
+        "TypeScript",
+        "TailwindCSS",
+        "MQTT"
+      ],
+      "status": "in_development",
+      "budget": "₹2,80,000",
+      "progress": 45,
+      "startDate": "2026-07-25",
+      "deadline": "2026-09-30",
+      "image": "/assets/img/services/pweb.png",
+      "featured": false,
+      "github": "https://github.com/Vnjvibhash/agrotech-dashboard",
+      "desc": "Real-time IoT dashboard for soil moisture sensors, temperature analytics, and irrigation automation triggers.",
+      "bullets": [
+        "Real-time MQTT telemetry data stream",
+        "Interactive canvas sensor maps",
+        "Automated irrigation relay notification triggers"
+      ],
+      "showInHeader": false
+    },
+    {
+      "id": "proj-active-4",
+      "title": "Law Firm Case Portal ⚖️",
+      "clientName": "Tarun Bhatt",
+      "clientEmail": "tarun@bhatt-associates.in",
+      "category": "Website Modification & Redesign",
+      "techStack": [
+        "React",
+        "Node.js",
+        "PostgreSQL",
+        "TailwindCSS"
+      ],
+      "status": "in_development",
+      "budget": "₹4,20,000",
+      "progress": 90,
+      "startDate": "2026-07-10",
+      "deadline": "2026-08-15",
+      "image": "/assets/img/services/software-c.png",
+      "featured": true,
+      "github": "https://github.com/Vnjvibhash/law-case-portal",
+      "desc": "Client portal, document repository, court hearing calendar, and automated billing management software.",
+      "bullets": [
+        "Encrypted legal document repository",
+        "Court hearing calendar sync with SMS reminders",
+        "Automated retainer fee billing & invoicing"
+      ],
+      "showInHeader": true
+    },
+    {
+      "id": "proj-1",
+      "title": "Shop-Orbit 🛍️",
+      "clientName": "Rahul Sharma",
+      "clientEmail": "rahul@techventures.in",
+      "category": "Mobile App Development (iOS & Android)",
+      "techStack": [
+        "Flutter",
+        "Firebase",
+        "Dart",
+        "Payment Gateway"
+      ],
+      "status": "completed",
+      "budget": "₹2,50,000",
+      "progress": 100,
+      "startDate": "2026-07-01",
+      "deadline": "2026-08-30",
+      "image": "/assets/img/services/android.png",
+      "featured": true,
+      "github": "https://github.com/Vnjvibhash/Shop-Orbit",
+      "desc": "A modern e-commerce mobile platform with a seamless shopping experience and intuitive UI.",
+      "bullets": [
+        "Developed with Flutter for cross-platform iOS & Android support",
+        "Integrated Firebase real-time database and secure authentication",
+        "Built-in cart, wishlist, order tracking, and payment gateways"
+      ],
+      "showInHeader": true
+    },
+    {
+      "id": "proj-2",
+      "title": "BuddyExpense 💰",
+      "clientName": "Vikram Mehta",
+      "clientEmail": "vikram@fintech-hub.in",
+      "category": "App Development",
+      "techStack": [
+        "Flutter",
+        "Firebase",
+        "Dart"
+      ],
+      "status": "completed",
+      "budget": "₹1,80,000",
+      "progress": 100,
+      "startDate": "2026-06-15",
+      "deadline": "2026-08-25",
+      "image": "/assets/img/services/android.png",
+      "featured": true,
+      "github": "https://github.com/Vnjvibhash/BuddyExpense",
+      "desc": "Smart expense tracking app for friends and groups to manage shared costs effortlessly.",
+      "bullets": [
+        "Built with Flutter for iOS & Android devices",
+        "Group-based expense tracking with dynamic split options",
+        "Data sync with Firebase for real-time group collaboration"
+      ],
+      "showInHeader": false
+    },
+    {
+      "id": "proj-3",
+      "title": "MediMinder 💊",
+      "clientName": "HealthPlus India",
+      "clientEmail": "support@healthplus.org",
+      "category": "App Development",
+      "techStack": [
+        "Flutter",
+        "Firebase",
+        "Notifications"
+      ],
+      "status": "completed",
+      "budget": "₹2,10,000",
+      "progress": 100,
+      "startDate": "2026-07-10",
+      "deadline": "2026-09-15",
+      "image": "/assets/img/services/android.png",
+      "featured": false,
+      "github": "https://github.com/Vnjvibhash/MediMinder",
+      "desc": "A health companion app that reminds users to take medicines on time.",
+      "bullets": [
+        "Schedule medicine reminders with push notifications",
+        "Supports dosage tracking and logs complete history",
+        "Syncs health data securely with Firebase database"
+      ]
+    },
+    {
+      "id": "proj-4",
+      "title": "SoulScripter ✍️",
+      "clientName": "LitLab Community",
+      "clientEmail": "contact@soulscripter.org",
+      "category": "Web Development",
+      "techStack": [
+        "React",
+        "Firebase",
+        "JavaScript",
+        "Tailwind CSS"
+      ],
+      "status": "completed",
+      "budget": "₹1,50,000",
+      "progress": 100,
+      "startDate": "2026-04-01",
+      "deadline": "2026-06-01",
+      "image": "/assets/img/services/pweb.png",
+      "featured": false,
+      "github": "https://github.com/Vnjvibhash/SoulScripter",
+      "desc": "A creative writing platform for poets & storytellers to express themselves.",
+      "bullets": [
+        "Developed with React frontend and Firebase backend",
+        "Users can write, publish, and save creative literature",
+        "Integrated likes, comments, and community engagement"
+      ]
+    },
+    {
+      "id": "proj-5",
+      "title": "iDVault – Aadhaar Scanner & Manager 🛡️",
+      "clientName": "Secure ID Solutions",
+      "clientEmail": "admin@idvault.in",
+      "category": "Software Engineering",
+      "techStack": [
+        "Flutter",
+        "Firebase",
+        "Dart",
+        "OCR Processing"
+      ],
+      "status": "completed",
+      "budget": "₹3,20,000",
+      "progress": 80,
+      "startDate": "2026-05-01",
+      "deadline": "2026-08-20",
+      "image": "/assets/img/services/software-d.png",
+      "featured": false,
+      "github": "https://github.com/Vnjvibhash/iDVault",
+      "desc": "Secure Aadhaar card management system featuring instant OCR scanning and encrypted vault storage.",
+      "bullets": [
+        "Integrated image processing / OCR for data extraction",
+        "Secure database storage with Firebase Realtime Database",
+        "Allows exporting and backing up identity records"
+      ]
+    },
+    {
+      "id": "proj-6",
+      "title": "Rangi Cabs – Premium Travel Solutions 🚕",
+      "clientName": "Travel Solutions Corp",
+      "clientEmail": "contact@rangicabs.com",
+      "category": "Web Development",
+      "techStack": [
+        "HTML5",
+        "CSS3",
+        "JavaScript",
+        "Bootstrap",
+        "jQuery"
+      ],
+      "status": "completed",
+      "budget": "₹1,20,000",
+      "progress": 100,
+      "startDate": "2026-03-01",
+      "deadline": "2026-05-01",
+      "image": "/assets/img/services/web.png",
+      "featured": true,
+      "github": "https://github.com/Vnjvibhash/RangiCabs",
+      "desc": "A responsive and interactive cab booking website designed to deliver a premium travel experience.",
+      "bullets": [
+        "Multi-page UI with clean, modern Bootstrap layouts",
+        "Used jQuery for smooth DOM animations and event handling",
+        "Integrated dynamic booking forms and location inputs"
+      ],
+      "showInHeader": true
+    },
+    {
+      "id": "proj-7",
+      "title": "Innovateria Shop – Admin Panel 🛒",
+      "clientName": "Innovateria Retail",
+      "clientEmail": "shop@innovateria.in",
+      "category": "Software Engineering",
+      "techStack": [
+        "React",
+        "Vite",
+        "Bootstrap",
+        "Node.js"
+      ],
+      "status": "completed",
+      "budget": "₹2,80,000",
+      "progress": 100,
+      "startDate": "2026-02-01",
+      "deadline": "2026-04-15",
+      "image": "/assets/img/services/software-c.png",
+      "featured": true,
+      "github": "https://github.com/Vnjvibhash/3D-Portfolio",
+      "desc": "Comprehensive admin control dashboard for managing products, categories, orders, and sales metrics.",
+      "bullets": [
+        "Built with React & Vite for lightning fast dashboard rendering",
+        "Integrated product analytics and inventory management",
+        "Secure JWT authentication and role-based permissions"
+      ]
+    },
+    {
+      "id": "proj-8",
+      "title": "Innovateria Shop – Server APIs ⚡",
+      "clientName": "Innovateria Cloud Platform",
+      "clientEmail": "api@innovateria.in",
+      "category": "Software Engineering",
+      "techStack": [
+        "Node.js",
+        "Express.js",
+        "MongoDB",
+        "JWT"
+      ],
+      "status": "completed",
+      "budget": "₹3,00,000",
+      "progress": 82,
+      "startDate": "2026-01-15",
+      "deadline": "2026-03-30",
+      "image": "/assets/img/services/soft.png",
+      "featured": false,
+      "github": "https://github.com/Vnjvibhash/3D-Portfolio",
+      "desc": "High-performance RESTful API backend handling e-commerce authentication, product databases, and order pipelines.",
+      "bullets": [
+        "Built with Express.js microservices & MongoDB database",
+        "Supports JWT token authentication & payment webhook listeners",
+        "Optimized queries for heavy concurrent requests"
+      ]
+    },
+    {
+      "id": "proj-9",
+      "title": "WhatsApp Status Saver (Android) 📲",
+      "clientName": "Mobile Apps Studio",
+      "clientEmail": "apps@innovateria.in",
+      "category": "Native Android App Development",
+      "techStack": [
+        "Kotlin",
+        "Android SDK",
+        "Git",
+        "Play Store"
+      ],
+      "status": "completed",
+      "budget": "₹1,10,000",
+      "progress": 100,
+      "startDate": "2025-11-01",
+      "deadline": "2025-12-15",
+      "image": "/assets/img/services/android-d.png",
+      "featured": true,
+      "github": "https://github.com/Vnjvibhash/3D-Portfolio",
+      "desc": "Native Android application allowing users to view, save, and share WhatsApp statuses directly to storage.",
+      "bullets": [
+        "Engineered with native Kotlin & Android Scoped Storage API",
+        "Supports image & video status viewing with built-in player",
+        "One-tap save and instant share to social networks"
+      ],
+      "showInHeader": true
+    },
+    {
+      "id": "proj-10",
+      "title": "EMI Calculator – Flutter App 📱",
+      "clientName": "FinTech Tools",
+      "clientEmail": "finance@innovateria.in",
+      "category": "App Development",
+      "techStack": [
+        "Flutter",
+        "Dart",
+        "Clean Architecture",
+        "Android",
+        "iOS"
+      ],
+      "status": "completed",
+      "budget": "₹1,40,000",
+      "progress": 100,
+      "startDate": "2025-10-01",
+      "deadline": "2025-11-15",
+      "image": "/assets/img/services/android.png",
+      "featured": true,
+      "github": "https://github.com/Vnjvibhash/3D-Portfolio",
+      "desc": "Financial utility app calculating loan EMIs, interest breakdowns, and amortization schedules.",
+      "bullets": [
+        "Clean Architecture design pattern with Flutter & BLoC state management",
+        "Supports Home Loan, Car Loan, and Personal Loan EMI breakdowns",
+        "Generates downloadable PDF amortization reports"
+      ],
+      "showInHeader": true
+    },
+    {
+      "id": "proj-11",
+      "title": "Portfolio App (Flutter) 🎨",
+      "clientName": "Developer Personal Portfolio",
+      "clientEmail": "vivekajee.in@gmail.com",
+      "category": "App Development",
+      "techStack": [
+        "Flutter",
+        "Firebase",
+        "Dart"
+      ],
+      "status": "completed",
+      "budget": "₹2,00,000",
+      "progress": 71,
+      "startDate": "2025-08-01",
+      "deadline": "2025-09-30",
+      "image": "/assets/img/services/android.png",
+      "featured": false,
+      "github": "https://github.com/Vnjvibhash/3D-Portfolio",
+      "desc": "Interactive 3D portfolio application showcasing mobile & web development projects with fluid animations.",
+      "bullets": [
+        "Flutter web & mobile cross-platform deployment",
+        "Firebase Firestore real-time backend integration",
+        "Smooth page transitions & custom visual components"
+      ]
+    },
+    {
+      "id": "proj-12",
+      "title": "Love Shayari & Quote – 2024 ❤️",
+      "clientName": "Creative Media Apps",
+      "clientEmail": "content@innovateria.in",
+      "category": "Native Android App Development",
+      "techStack": [
+        "Android",
+        "Java",
+        "Firebase",
+        "UI/UX"
+      ],
+      "status": "completed",
+      "budget": "₹95,000",
+      "progress": 100,
+      "startDate": "2025-06-01",
+      "deadline": "2025-07-15",
+      "image": "/assets/img/services/android-d.png",
+      "featured": false,
+      "github": "https://github.com/Vnjvibhash/3D-Portfolio",
+      "desc": "Content application offering curated romantic shayari, quotes, and custom image generator.",
+      "bullets": [
+        "Native Android Java application with offline caching",
+        "Custom quote image creator with background customization",
+        "Integrated Firebase Remote Config for daily quote updates"
+      ]
+    }
+  ],
+  "portfolio": [
+    {
+      "id": "port-1",
+      "title": "Shop-Orbit 🛍️",
+      "category": "Flutter E-Commerce App",
+      "image": "/assets/img/services/android.png",
+      "link": "https://github.com/Vnjvibhash/Shop-Orbit",
+      "desc": "Modern cross-platform mobile shopping app with payment gateway, cart, and live order tracking."
+    },
+    {
+      "id": "port-2",
+      "title": "BuddyExpense 💰",
+      "category": "Finance & Expense Tracker",
+      "image": "/assets/img/services/soft.png",
+      "link": "https://github.com/Vnjvibhash/BuddyExpense",
+      "desc": "Smart group expense tracking application for friends to manage shared costs effortlessly."
+    },
+    {
+      "id": "port-3",
+      "title": "SoulScripter ✍️",
+      "category": "React Literature Platform",
+      "image": "/assets/img/services/pweb.png",
+      "link": "https://github.com/Vnjvibhash/SoulScripter",
+      "desc": "Creative writing and publishing platform for poets and storytellers."
+    },
+    {
+      "id": "port-4",
+      "title": "iDVault OCR 🛡️",
+      "category": "Identity OCR & Security",
+      "image": "/assets/img/services/privacy.png",
+      "link": "https://github.com/Vnjvibhash/iDVault",
+      "desc": "Aadhaar document scanner and manager with OCR data extraction."
+    }
+  ],
+  "openSourceProjects": [
+    {
+      "id": "os-1",
+      "title": "WorkerPass – Digital Gate Pass & Attendance System",
+      "description": "Professional digital gate pass and attendance management system built with Flutter. Replaces paper registers with real-time mobile tracking for contract workers, security personnel, and site visitors.",
+      "category": "Mobile & Security System",
+      "tags": [
+        "Flutter",
+        "Dart",
+        "GatePass",
+        "Firebase"
+      ],
+      "githubUrl": "https://github.com/Vnjvibhash/WorkerPass",
+      "liveDemoUrl": "https://github.com/Vnjvibhash/WorkerPass",
+      "stars": 45,
+      "forks": 12,
+      "featured": true
+    },
+    {
+      "id": "os-2",
+      "title": "Print-Hub – Instant Printing & Plotting Platform",
+      "description": "Digital web application for Suvir Printing & Copy Solutions providing online document uploading, CAD blueprint plotting, custom binding options, and corporate order fulfillment.",
+      "category": "Web Engineering & E-Commerce",
+      "tags": [
+        "Next.js",
+        "TypeScript",
+        "TailwindCSS",
+        "Vercel"
+      ],
+      "githubUrl": "https://github.com/Vnjvibhash/Print-Hub",
+      "liveDemoUrl": "https://suvir-printing.vercel.app",
+      "stars": 88,
+      "forks": 24,
+      "featured": true
+    },
+    {
+      "id": "os-3",
+      "title": "WhisperWind – Offline Bluetooth Mesh Chat App",
+      "description": "Seamless offline peer-to-peer messaging application operating over Bluetooth mesh connectivity for fast, encrypted, and internet-independent communication.",
+      "category": "Mobile & Mesh Networking",
+      "tags": [
+        "Flutter",
+        "Dart",
+        "Bluetooth Mesh",
+        "P2P"
+      ],
+      "githubUrl": "https://github.com/Vnjvibhash/WhisperWind",
+      "liveDemoUrl": "https://github.com/Vnjvibhash/WhisperWind",
+      "stars": 62,
+      "forks": 18,
+      "featured": true
+    },
+    {
+      "id": "os-4",
+      "title": "ObjectScan (LensForge) – Mobile 3D Scanner & Mesh Viewer",
+      "description": "Mobile 3D photogrammetry app that captures real-world objects via smartphone cameras, generates 3D models, and supports interactive multi-angle model viewing and export.",
+      "category": "3D Graphics & Computer Vision",
+      "tags": [
+        "Flutter",
+        "C++",
+        "OpenGL",
+        "3D Mesh"
+      ],
+      "githubUrl": "https://github.com/Vnjvibhash/ObjectScan",
+      "liveDemoUrl": "https://github.com/Vnjvibhash/ObjectScan",
+      "stars": 74,
+      "forks": 19,
+      "featured": true
+    },
+    {
+      "id": "os-5",
+      "title": "QuickOrder – Scalable React Native Ordering Architecture",
+      "description": "High-performance React Native application engineered for ultra-fast, intuitive order placement, modular component structure, and optimized list rendering.",
+      "category": "Mobile E-Commerce Engine",
+      "tags": [
+        "React Native",
+        "TypeScript",
+        "Redux Toolkit",
+        "Mobile UI"
+      ],
+      "githubUrl": "https://github.com/Vnjvibhash/QuickOrder",
+      "liveDemoUrl": "https://github.com/Vnjvibhash/QuickOrder",
+      "stars": 53,
+      "forks": 15,
+      "featured": true
+    },
+    {
+      "id": "os-6",
+      "title": "StrangersChat – Real-time Anonymous Matchmaker",
+      "description": "Real-time stranger chat application built with Flutter featuring random peer matchmaking, instant WebSockets messaging, and Firestore presence sync.",
+      "category": "Real-time Mobile Applications",
+      "tags": [
+        "Flutter",
+        "Firebase",
+        "WebSockets",
+        "Dart"
+      ],
+      "githubUrl": "https://github.com/Vnjvibhash/StrangersChat",
+      "liveDemoUrl": "https://github.com/Vnjvibhash/StrangersChat",
+      "stars": 49,
+      "forks": 14,
+      "featured": true
+    },
+    {
+      "id": "os-7",
+      "title": "DSA With Java – Comprehensive Data Structures & Algorithms",
+      "description": "Clean Java implementation repository covering fundamental data structures, graph traversals, dynamic programming patterns, and algorithmic problem solving.",
+      "category": "Computer Science & Algorithms",
+      "tags": [
+        "Java",
+        "Data Structures",
+        "Algorithms",
+        "LeetCode"
+      ],
+      "githubUrl": "https://github.com/Vnjvibhash/DSA-With-Java",
+      "liveDemoUrl": "https://github.com/Vnjvibhash/DSA-With-Java",
+      "stars": 110,
+      "forks": 35,
+      "featured": true
+    },
+    {
+      "id": "os-8",
+      "title": "Innovateria – Production Next.js Agency Web Platform",
+      "description": "Modern Next.js 16 agency website featuring glassmorphism design tokens, dynamic CRM data store, responsive layout architecture, and complete agency services.",
+      "category": "Web Engineering",
+      "tags": [
+        "Next.js 16",
+        "React 19",
+        "TypeScript",
+        "TailwindCSS"
+      ],
+      "githubUrl": "https://github.com/Vnjvibhash/Innovateria",
+      "liveDemoUrl": "https://github.com/Vnjvibhash/Innovateria",
+      "stars": 156,
+      "forks": 42,
+      "featured": true
+    }
+  ],
+  "features": [
+    {
+      "id": "feat-1",
+      "title": "Cross-Platform Mobile Excellence",
+      "category": "Mobile Engineering",
+      "tagline": "iOS & Android from a Single Codebase",
+      "desc": "Build native-performing mobile applications with Flutter and Firebase backends for instant synchronization and real-time push notifications.",
+      "bullets": [
+        "Unified iOS & Android Codebase",
+        "Firebase Real-Time DB Sync",
+        "Payment Gateway Integration",
+        "Push Notification Engines"
+      ],
+      "iconName": "Smartphone"
+    },
+    {
+      "id": "feat-2",
+      "title": "Enterprise Architecture & Cloud API",
+      "category": "Software Solutions",
+      "tagline": "Built for High Throughput & Reliability",
+      "desc": "Engineered backend architectures utilizing Laravel, PostgreSQL, and Next.js for high transactional speed and zero downtime.",
+      "bullets": [
+        "RESTful & GraphQL API Design",
+        "PostgreSQL & Cloud Infrastructure",
+        "Enterprise Role-Based Access Control",
+        "Automated Database Backups"
+      ],
+      "iconName": "Code2"
+    },
+    {
+      "id": "feat-3",
+      "title": "Organic Growth & Technical SEO Automation",
+      "category": "Digital Strategy",
+      "tagline": "Dominate Search Engine Rankings",
+      "desc": "Automated SEO pipelines tracking organic rankings, domain authority metrics, technical schema markup, and monthly analytics reporting.",
+      "bullets": [
+        "Rich Schema JSON-LD Injection",
+        "Fast Edge Load Times (<1s)",
+        "Keyword SERP Tracking",
+        "Automated SEO Audit Reports"
+      ],
+      "iconName": "TrendingUp"
+    }
+  ],
+  "faqs": [
+    {
+      "id": "faq-1",
+      "question": "What mobile app frameworks does Innovateria specialize in?",
+      "answer": "We specialize in Flutter for high-performance cross-platform iOS and Android apps, as well as native Android development using Kotlin and Android SDK.",
+      "category": "Services"
+    },
+    {
+      "id": "faq-2",
+      "question": "How long does it take to develop a custom web or mobile application?",
+      "answer": "Development timelines depend on project scope. A standard mobile or web app takes between 4 to 8 weeks, while complex enterprise systems take 10 to 16 weeks.",
+      "category": "Services"
+    },
+    {
+      "id": "faq-3",
+      "question": "Do you offer custom pricing and milestone payment plans?",
+      "answer": "Yes! We provide transparent fixed-scope milestone billing with discovery, beta testing, and deployment phases.",
+      "category": "Pricing"
+    },
+    {
+      "id": "faq-4",
+      "question": "Do you provide post-launch maintenance and technical support?",
+      "answer": "Absolutely. All our projects include 60 days of complimentary post-launch support, security updates, and performance monitoring.",
+      "category": "General"
+    }
+  ],
+  "leads": [
+    {
+      "id": "lead-1",
+      "name": "Rahul Sharma",
+      "email": "rahul@techventures.in",
+      "phone": "9876543210",
+      "subject": "Cross-Platform E-Commerce Mobile App",
+      "message": "We want to build a Flutter e-commerce mobile app for Android and iOS with payment gateway and live inventory sync.",
+      "status": "new",
+      "notes": "High priority client interested in 2-month timeline.",
+      "source": "Website Contact Form",
+      "createdAt": "2026-08-02T16:00:00.000Z",
+      "updatedAt": "2026-08-02T21:21:21.618Z"
+    },
+    {
+      "id": "lead-2",
+      "name": "Priya Verma",
+      "email": "priya@healthplus.org",
+      "phone": "9123456789",
+      "subject": "Enterprise Healthcare Billing & OCR Software",
+      "message": "Need a custom document scanner and patient record management portal built with Next.js and Cloud storage.",
+      "status": "contacted",
+      "notes": "Sent initial discovery call invite for tomorrow at 3 PM.",
+      "source": "Direct Phone Inquiry",
+      "createdAt": "2026-08-01T10:00:00.000Z",
+      "updatedAt": "2026-08-01T15:00:00.000Z"
+    },
+    {
+      "id": "lead-3",
+      "name": "Ananya Deshmukh",
+      "email": "ananya@loginext.co.in",
+      "phone": "+91-9821034567",
+      "subject": "Custom Logistics Tracking & Driver Android App",
+      "message": "We need a native Android application (Kotlin) integrated with GPS real-time fleet tracking, barcode scanning, and automated e-way bill verification.",
+      "status": "lost",
+      "notes": "High priority requirement. Wants project proposal by end of week.",
+      "source": "Website Contact Form",
+      "createdAt": "2026-08-03T01:15:00.000Z",
+      "updatedAt": "2026-08-02T21:17:18.732Z"
+    },
+    {
+      "id": "lead-4",
+      "name": "Vikramaditya Nair",
+      "email": "vikram@nairlogistics.com",
+      "phone": "+91-9745612389",
+      "subject": "Next.js Multi-Vendor E-Commerce Marketplace",
+      "message": "Looking to build a high-performance Next.js 16 multi-vendor portal with seller dashboards, Razorpay UPI integration, and automated invoice PDF generation.",
+      "status": "proposal_sent",
+      "notes": "Wants demo of Next.js e-commerce architecture.",
+      "source": "LinkedIn Inquiry",
+      "createdAt": "2026-08-03T00:45:00.000Z",
+      "updatedAt": "2026-08-02T21:16:46.255Z"
+    },
+    {
+      "id": "lead-5",
+      "name": "Siddharth Malhotra",
+      "email": "siddharth@edutech-global.com",
+      "phone": "+91-9811223344",
+      "subject": "AI Powered LMS & Student Portal with Firebase",
+      "message": "We need a Learning Management System (LMS) with video streaming, automated quizzes, and Flutter cross-platform mobile apps for iOS & Android.",
+      "status": "new",
+      "notes": "Requested cost estimate for full-stack build.",
+      "source": "WhatsApp Chat",
+      "createdAt": "2026-08-02T22:30:00.000Z",
+      "updatedAt": "2026-08-02T22:30:00.000Z"
+    },
+    {
+      "id": "lead-6",
+      "name": "Kavita Rao",
+      "email": "kavita@finserve.in",
+      "phone": "+91-9940123456",
+      "subject": "Aadhaar & PAN Document OCR Verification Portal",
+      "message": "Interested in your iDVault OCR technology to integrate Aadhaar card data extraction into our financial KYC verification workflow.",
+      "status": "contacted",
+      "notes": "Discovery call scheduled for Aug 4 at 11 AM.",
+      "source": "Referral",
+      "createdAt": "2026-08-01T14:20:00.000Z",
+      "updatedAt": "2026-08-02T09:10:00.000Z"
+    },
+    {
+      "id": "lead-7",
+      "name": "Arjun Patel",
+      "email": "arjun@apex-manufacturing.com",
+      "phone": "+91-9898765432",
+      "subject": "Custom ERP & Inventory Management System",
+      "message": "We require an end-to-end manufacturing ERP with raw material tracking, PO generation, role-based access, and GST tax calculation modules.",
+      "status": "qualified",
+      "notes": "Proposal doc sent. Budget approved for ₹3.5 Lakhs.",
+      "source": "Direct Email",
+      "createdAt": "2026-07-28T09:00:00.000Z",
+      "updatedAt": "2026-08-01T16:00:00.000Z"
+    },
+    {
+      "id": "lead-8",
+      "name": "Meera Iyer",
+      "email": "meera@organiclife.co",
+      "phone": "+91-9711009988",
+      "subject": "SEO & Google Business Profile Optimization",
+      "message": "Looking for technical SEO, Schema markup, and Google Local Business Page 1 ranking strategies for our retail store locations in Bangalore.",
+      "status": "new",
+      "notes": "Inquired about monthly SEO retainer packages.",
+      "source": "Website Contact Form",
+      "createdAt": "2026-08-03T02:00:00.000Z",
+      "updatedAt": "2026-08-02T21:16:56.902Z"
+    },
+    {
+      "id": "lead-9",
+      "name": "Rohan Saxena",
+      "email": "rohan@fintech-pay.in",
+      "phone": "+91-9876123456",
+      "subject": "UPI & Card Payment Gateway Integration",
+      "message": "Need backend API microservice for Razorpay, Paytm, and UPI intent flow with automated webhook callbacks.",
+      "status": "new",
+      "notes": "Wants integration timeline within 15 days.",
+      "source": "Website Contact Form",
+      "createdAt": "2026-08-03T02:15:00.000Z",
+      "updatedAt": "2026-08-03T02:15:00.000Z"
+    },
+    {
+      "id": "lead-10",
+      "name": "Pooja Hegde",
+      "email": "pooja@retail-mart.com",
+      "phone": "+91-9820011223",
+      "subject": "Retail POS & Inventory Automation Software",
+      "message": "Looking for desktop and cloud web application for multi-store inventory tracking and GST bill printing.",
+      "status": "new",
+      "notes": "Requested software demo for board meeting.",
+      "source": "Google Ads Campaign",
+      "createdAt": "2026-08-03T02:10:00.000Z",
+      "updatedAt": "2026-08-03T02:10:00.000Z"
+    },
+    {
+      "id": "lead-11",
+      "name": "Deepak Joshi",
+      "email": "deepak@cloud-infra.io",
+      "phone": "+91-9988776655",
+      "subject": "DevOps CI/CD & Docker Kubernetes Setup",
+      "message": "Require AWS ECS, Docker containerization, and GitHub Actions automated deployment pipelines for Next.js app.",
+      "status": "new",
+      "notes": "Needs technical scope call tomorrow.",
+      "source": "LinkedIn Inquiry",
+      "createdAt": "2026-08-03T01:50:00.000Z",
+      "updatedAt": "2026-08-03T01:50:00.000Z"
+    },
+    {
+      "id": "lead-12",
+      "name": "Nisha Kapoor",
+      "email": "nisha@medicare-plus.in",
+      "phone": "+91-9765123400",
+      "subject": "Telemedicine iOS & Android App",
+      "message": "We are launching a doctor consultation app with video calls, appointment scheduling, and digital prescription downloads.",
+      "status": "new",
+      "notes": "High value prospect. Budget estimate ₹5 Lakhs.",
+      "source": "Website Contact Form",
+      "createdAt": "2026-08-03T01:30:00.000Z",
+      "updatedAt": "2026-08-03T01:30:00.000Z"
+    },
+    {
+      "id": "lead-13",
+      "name": "Manish Choudhary",
+      "email": "manish@agrotech.in",
+      "phone": "+91-9845098765",
+      "subject": "IoT Agriculture Sensor Data Dashboard",
+      "message": "Need web dashboard to visualize soil moisture, temperature sensors, and automated irrigation relay triggers.",
+      "status": "contacted",
+      "notes": "Sent technical questionnaire.",
+      "source": "Referral",
+      "createdAt": "2026-07-30T11:00:00.000Z",
+      "updatedAt": "2026-08-01T14:00:00.000Z"
+    },
+    {
+      "id": "lead-14",
+      "name": "Sneha Reddy",
+      "email": "sneha@realestate-prime.com",
+      "phone": "+91-9900112233",
+      "subject": "Real Estate Property Listing Portal & CRM",
+      "message": "Looking for custom property search engine with interactive 3D virtual tours and agent lead routing.",
+      "status": "qualified",
+      "notes": "Contract under legal review.",
+      "source": "Direct Phone Inquiry",
+      "createdAt": "2026-07-29T15:30:00.000Z",
+      "updatedAt": "2026-08-02T10:00:00.000Z"
+    },
+    {
+      "id": "lead-15",
+      "name": "Gaurav Sen",
+      "email": "gaurav@cyber-guard.in",
+      "phone": "+91-9810987654",
+      "subject": "Cybersecurity Audit & Penetration Testing",
+      "message": "Require vulnerability assessment and security hardening for financial web application.",
+      "status": "closed",
+      "notes": "Successfully closed contract. Project active.",
+      "source": "LinkedIn Inquiry",
+      "createdAt": "2026-07-25T10:00:00.000Z",
+      "updatedAt": "2026-07-28T12:00:00.000Z"
+    },
+    {
+      "id": "lead-16",
+      "name": "Ritika Agarwal",
+      "email": "ritika@fashion-studio.in",
+      "phone": "+91-9722334455",
+      "subject": "Shopify Custom Theme & Next.js Headless Integration",
+      "message": "Want to migrate existing boutique website to Next.js storefront for instant load speed and mobile UI.",
+      "status": "new",
+      "notes": "Needs design portfolio showcase.",
+      "source": "Website Contact Form",
+      "createdAt": "2026-08-03T02:25:00.000Z",
+      "updatedAt": "2026-08-03T02:25:00.000Z"
+    },
+    {
+      "id": "lead-17",
+      "name": "Harish Pillai",
+      "email": "harish@logistics-express.com",
+      "phone": "+91-9888776655",
+      "subject": "Automated Invoice Generator & GST Filing Module",
+      "message": "Need microservice module for PDF generation, digital signing, and e-invoicing API integration.",
+      "status": "contacted",
+      "notes": "Scheduled demo call for Aug 5.",
+      "source": "WhatsApp Chat",
+      "createdAt": "2026-08-01T16:00:00.000Z",
+      "updatedAt": "2026-08-02T11:30:00.000Z"
+    },
+    {
+      "id": "lead-18",
+      "name": "Tarun Bhatt",
+      "email": "tarun@bhatt-associates.in",
+      "phone": "+91-9955443322",
+      "subject": "Law Firm Case Management System",
+      "message": "Looking for client portal, document repository, court hearing calendar, and billing automation software.",
+      "status": "qualified",
+      "notes": "Technical architecture approved.",
+      "source": "Direct Email",
+      "createdAt": "2026-07-27T12:00:00.000Z",
+      "updatedAt": "2026-07-30T17:00:00.000Z"
+    },
+    {
+      "id": "lead-19",
+      "name": "Swati Ganguly",
+      "email": "swati@edulearn.org",
+      "phone": "+91-9819001122",
+      "subject": "School ERP & Fee Management Portal",
+      "message": "Custom portal for student attendance, online fee collection via UPI, and report card generation.",
+      "status": "new",
+      "notes": "Urgent requirement for academic term.",
+      "source": "Google Ads Campaign",
+      "createdAt": "2026-08-03T02:30:00.000Z",
+      "updatedAt": "2026-08-03T02:30:00.000Z"
+    },
+    {
+      "id": "lead-20",
+      "name": "Alok Banerjee",
+      "email": "alok@tech-innovations.in",
+      "phone": "+91-9744332211",
+      "subject": "Custom CRM & WhatsApp Business Automation",
+      "message": "We need automated WhatsApp lead notification triggers and lead status pipelines integrated with our CRM.",
+      "status": "new",
+      "notes": "Requested live demonstration.",
+      "source": "Website Contact Form",
+      "createdAt": "2026-08-03T02:32:00.000Z",
+      "updatedAt": "2026-08-03T02:32:00.000Z"
+    }
+  ],
+  "clients": [
+    {
+      "name": "Birendra Kumar",
+      "company": "Web Digital Mantra IT Service Pvt Ltd",
+      "email": "info@webdigitalmantra.in",
+      "phone": "9886466777",
+      "projectsCount": 1,
+      "totalSpent": "₹1,00,000",
+      "status": "active",
+      "id": "client-1785696108001",
+      "createdAt": "2026-08-02"
+    },
+    {
+      "name": "Rambhajan Singh",
+      "company": "Needy Zone",
+      "email": "info@needyzone.com",
+      "phone": "9717798826",
+      "projectsCount": 1,
+      "totalSpent": "₹2,50,000",
+      "status": "active",
+      "id": "client-1785695745448",
+      "createdAt": "2026-08-02"
+    },
+    {
+      "name": "Ghan Shyam",
+      "company": "A73 Studio",
+      "email": "info@a73studio.com",
+      "phone": "8427690306",
+      "projectsCount": 1,
+      "totalSpent": "₹1,00,000",
+      "status": "active",
+      "id": "client-1785695655705",
+      "createdAt": "2026-08-02"
+    },
+    {
+      "id": "client-1",
+      "name": "Rahul Sharma",
+      "company": "TechVentures Pvt Ltd",
+      "email": "rahul@techventures.in",
+      "phone": "9876543210",
+      "projectsCount": 1,
+      "totalSpent": "₹2,50,000",
+      "status": "active",
+      "createdAt": "2026-07-01"
+    },
+    {
+      "id": "client-2",
+      "name": "Vikram Mehta",
+      "company": "Fintech Hub India",
+      "email": "vikram@fintech-hub.in",
+      "phone": "9765432109",
+      "projectsCount": 2,
+      "totalSpent": "₹6,30,000",
+      "status": "active",
+      "createdAt": "2026-05-10"
+    }
+  ],
+  "timeline": [
+    {
+      "id": "time-5",
+      "period": "2024 - Present",
+      "title": "Full Stack Developer & Founder",
+      "company": "Innovateria",
+      "location": "India / Remote",
+      "type": "experience",
+      "iconName": "Laptop",
+      "details": [
+        "Custom web & mobile solutions development",
+        "Laravel, Next.js & Android specialization",
+        "End-to-end client project management"
+      ]
+    },
+    {
+      "id": "time-3",
+      "period": "2021 - 2024",
+      "title": "B.E. in Computer Science",
+      "institution": "Chandigarh University",
+      "location": "Punjab, IN",
+      "type": "education",
+      "iconName": "University",
+      "details": [
+        "Advanced Software Architecture",
+        "Database Management Systems",
+        "Cloud Computing & Networks"
+      ]
+    },
+    {
+      "id": "time-4",
+      "period": "2022",
+      "title": "Android Developer Intern",
+      "company": "Web Digital Mantra",
+      "location": "Bangalore, IN",
+      "type": "experience",
+      "iconName": "Briefcase",
+      "details": [
+        "Full Android development lifecycle",
+        "REST API integration & memory optimization",
+        "Payment gateway implementation"
+      ]
+    },
+    {
+      "id": "time-2",
+      "period": "2020 - 2021",
+      "title": "Junior Software Developer",
+      "company": "Connectwings Infotech",
+      "location": "Mysore, IN",
+      "type": "experience",
+      "iconName": "Briefcase",
+      "details": [
+        "Android & Laravel development",
+        "Payment gateway integration",
+        "Git version control & code deployment"
+      ]
+    },
+    {
+      "id": "time-1",
+      "period": "2017 - 2020",
+      "title": "Diploma in CSE",
+      "institution": "Hindustan Electronics Academy",
+      "location": "Bangalore, IN",
+      "type": "education",
+      "iconName": "GraduationCap",
+      "details": [
+        "Computer Science Fundamentals",
+        "Data Structures & Algorithms",
+        "Software Engineering Basics"
+      ]
+    }
+  ],
+  "heroStats": [
+    {
+      "label": "Digital Projects Delivered",
+      "value": "150+",
+      "desc": "High quality mobile, web, and enterprise solutions"
+    },
+    {
+      "label": "Client Satisfaction Rate",
+      "value": "98%",
+      "desc": "Long-term client relationships and high retention"
+    },
+    {
+      "label": "Engineering & Support Engine",
+      "value": "24/7",
+      "desc": "Round-the-clock technical uptime monitoring"
+    },
+    {
+      "label": "Average Client Rating",
+      "value": "4.9★",
+      "desc": "Proven track record across app & web domains"
+    }
+  ],
+  "techStack": [
+    {
+      "id": "tech-0",
+      "name": "Next.js",
+      "category": "Fullstack Framework",
+      "image": "/assets/img/teckstack/nextjs.png",
+      "description": "React framework for production-grade full-stack web applications & APIs",
+      "status": "active"
+    },
+    {
+      "id": "tech-1",
+      "name": "Flutter",
+      "category": "Mobile Framework",
+      "image": "/assets/img/teckstack/flutter.png",
+      "description": "Cross-platform mobile application development for iOS & Android",
+      "status": "active"
+    },
+    {
+      "id": "tech-2",
+      "name": "React",
+      "category": "Frontend UI",
+      "image": "/assets/img/teckstack/react.png",
+      "description": "Dynamic web interfaces & single page applications",
+      "status": "active"
+    },
+    {
+      "id": "tech-3",
+      "name": "React Native",
+      "category": "Mobile Framework",
+      "image": "/assets/img/teckstack/reactnative.png",
+      "description": "Cross-platform native mobile apps using React",
+      "status": "active"
+    },
+    {
+      "id": "tech-4",
+      "name": "Angular",
+      "category": "Frontend UI",
+      "image": "/assets/img/teckstack/angular.png",
+      "description": "Enterprise-grade TypeScript web framework by Google",
+      "status": "active"
+    },
+    {
+      "id": "tech-5",
+      "name": "Node.js",
+      "category": "Backend Runtime",
+      "image": "/assets/img/teckstack/node.png",
+      "description": "Server-side JavaScript runtime for scalable APIs",
+      "status": "active"
+    },
+    {
+      "id": "tech-6",
+      "name": "Laravel",
+      "category": "Backend Framework",
+      "image": "/assets/img/teckstack/laravel.png",
+      "description": "PHP framework for enterprise web backends & APIs",
+      "status": "active"
+    },
+    {
+      "id": "tech-7",
+      "name": "PHP",
+      "category": "Backend Language",
+      "image": "/assets/img/teckstack/php.png",
+      "description": "Server-side scripting for dynamic web applications",
+      "status": "active"
+    },
+    {
+      "id": "tech-8",
+      "name": "JavaScript",
+      "category": "Programming Language",
+      "image": "/assets/img/teckstack/JavaScript.png",
+      "description": "Core language for web, mobile & server development",
+      "status": "active"
+    },
+    {
+      "id": "tech-9",
+      "name": "jQuery",
+      "category": "Frontend Library",
+      "image": "/assets/img/teckstack/jquery.png",
+      "description": "Fast & lightweight DOM manipulation library",
+      "status": "active"
+    },
+    {
+      "id": "tech-10",
+      "name": "HTML5",
+      "category": "Markup Language",
+      "image": "/assets/img/teckstack/html-5.png",
+      "description": "Semantic web structure & modern content markup",
+      "status": "active"
+    },
+    {
+      "id": "tech-11",
+      "name": "CSS3",
+      "category": "Styling Language",
+      "image": "/assets/img/teckstack/css.png",
+      "description": "Modern responsive web styling & animations",
+      "status": "active"
+    },
+    {
+      "id": "tech-12",
+      "name": "Android",
+      "category": "Mobile Platform",
+      "image": "/assets/img/teckstack/android.png",
+      "description": "Native Android app development with Kotlin & Java",
+      "status": "active"
+    },
+    {
+      "id": "tech-13",
+      "name": "WordPress",
+      "category": "CMS Platform",
+      "image": "/assets/img/teckstack/wordpress.png",
+      "description": "World's leading content management system",
+      "status": "active"
+    },
+    {
+      "id": "tech-14",
+      "name": "Shopify",
+      "category": "E-Commerce Platform",
+      "image": "/assets/img/teckstack/shopify.png",
+      "description": "Complete e-commerce storefront & payment solution",
+      "status": "active"
+    },
+    {
+      "id": "tech-15",
+      "name": "WooCommerce",
+      "category": "E-Commerce Plugin",
+      "image": "/assets/img/teckstack/woo.png",
+      "description": "WordPress e-commerce plugin for online stores",
+      "status": "active"
+    },
+    {
+      "id": "tech-16",
+      "name": "Magento",
+      "category": "E-Commerce Platform",
+      "image": "/assets/img/teckstack/magento.png",
+      "description": "Enterprise-grade open-source e-commerce platform",
+      "status": "active"
+    },
+    {
+      "id": "tech-18",
+      "name": "Joomla",
+      "category": "CMS Platform",
+      "image": "/assets/img/teckstack/joomla.png",
+      "description": "Open-source content management & portal system",
+      "status": "active"
+    }
+  ],
+  "values": [
+    {
+      "title": "Innovation First",
+      "desc": "Engineered with cutting-edge frameworks for maximum speed, security, and digital differentiation."
+    },
+    {
+      "title": "Scalability & Velocity",
+      "desc": "Built to scale smoothly as your user base expands, with cloud edge delivery and zero friction."
+    },
+    {
+      "title": "Transparent Collaboration",
+      "desc": "Clear milestone reporting, code access, and direct developer communication throughout."
+    },
+    {
+      "title": "Quality Guarantee",
+      "desc": "Rigorous QA testing, accessibility compliance, and post-launch maintenance standard."
+    }
+  ],
+  "processSteps": [
+    {
+      "step": "01",
+      "title": "Discovery & Requirement Audit",
+      "desc": "Deep dive into your business goals, target audience, technical specifications, and system roadmap."
+    },
+    {
+      "step": "02",
+      "title": "Architecture & UI System",
+      "desc": "Designing high-fidelity glassmorphic UI wireframes, database schemas, and API workflow blueprints."
+    },
+    {
+      "step": "03",
+      "title": "Agile Software Engineering",
+      "desc": "Clean code development using Next.js, Flutter, and Laravel with regular client progress demos."
+    },
+    {
+      "step": "04",
+      "title": "Testing, Security & QA",
+      "desc": "Comprehensive unit testing, security audits, memory optimization, and device compatibility checks."
+    },
+    {
+      "step": "05",
+      "title": "Production Launch & Support",
+      "desc": "Seamless cloud server deployment, app store publishing, and 24/7 ongoing monitoring support."
+    }
+  ],
+  "settings": {
+    "agencyName": "Innovateria Software Solutions",
+    "adminEmail": "innovateria.in@gmail.com",
+    "phone": "+91-7762974716",
+    "address": "Bangalore & Mysore, India / Remote",
+    "passcode": "123456",
+    "socials": {
+      "github": "https://github.com/VnjVibhash",
+      "facebook": "https://facebook.com/Vivekajee",
+      "whatsapp": "https://wa.me/917762974716",
+      "twitter": "https://twitter.com/Vnjvibhash",
+      "linkedin": "https://linkedin.com/in/Vivekajee",
+      "instagram": "https://instagram.com/Vivekajee",
+      "portfolioUrl": "https://vivekajee.com",
+      "website": "https://vivekajee.com"
+    }
+  }
+};
+
 /**
  * Generic Firestore collection fetcher using getDocs snapshot
  */
@@ -51,7 +1717,7 @@ export async function fetchFirestoreCollection<T>(collectionName: string): Promi
 
     return items;
   } catch (error) {
-    console.warn(`Firestore read error on '${collectionName}':`, error);
+    console.warn('Firestore read error on ' + collectionName + ':', error);
     return [];
   }
 }
@@ -73,7 +1739,7 @@ export async function fetchFirestoreDoc<T>(collectionName: string, docId: string
       ...snap.data()
     } as T;
   } catch (error) {
-    console.warn(`Firestore read doc error on '${collectionName}/${docId}':`, error);
+    console.warn('Firestore read doc error on ' + collectionName + '/' + docId + ':', error);
     return null;
   }
 }
@@ -113,7 +1779,7 @@ export async function deleteFirestoreDocument(collectionName: string, docId: str
     await deleteDoc(docRef);
     return true;
   } catch (error) {
-    console.error(`Firestore delete error on '${collectionName}/${docId}':`, error);
+    console.error('Firestore delete error on ' + collectionName + '/' + docId + ':', error);
     return false;
   }
 }
@@ -123,11 +1789,12 @@ export async function deleteFirestoreDocument(collectionName: string, docId: str
  */
 export function subscribeFirestoreCollection<T>(
   collectionName: string,
-  callback: (items: T[]) => void
+  callback: (items: T[]) => void,
+  fallbackItems: T[] = []
 ): () => void {
   const db = getFirestoreDb();
   if (!db) {
-    callback([]);
+    callback(fallbackItems);
     return () => {};
   }
 
@@ -136,21 +1803,25 @@ export function subscribeFirestoreCollection<T>(
     const unsubscribe = onSnapshot(
       colRef,
       (snapshot) => {
+        if (snapshot.empty) {
+          callback(fallbackItems);
+          return;
+        }
         const items: T[] = [];
         snapshot.forEach((docSnap) => {
           items.push({ id: docSnap.id, ...docSnap.data() } as T);
         });
-        callback(items);
+        callback(items.length > 0 ? items : fallbackItems);
       },
       (error) => {
-        console.error(`Firestore snapshot subscription error on '${collectionName}':`, error);
-        callback([]);
+        console.warn('Firestore snapshot subscription error on ' + collectionName + ':', error);
+        callback(fallbackItems);
       }
     );
     return unsubscribe;
   } catch (error) {
-    console.error(`Firestore snapshot setup error on '${collectionName}':`, error);
-    callback([]);
+    console.warn('Firestore snapshot setup error on ' + collectionName + ':', error);
+    callback(fallbackItems);
     return () => {};
   }
 }
@@ -161,11 +1832,12 @@ export function subscribeFirestoreCollection<T>(
 export function subscribeFirestoreDoc<T>(
   collectionName: string,
   docId: string,
-  callback: (item: T | null) => void
+  callback: (item: T | null) => void,
+  fallbackItem: T | null = null
 ): () => void {
   const db = getFirestoreDb();
   if (!db) {
-    callback(null);
+    callback(fallbackItem);
     return () => {};
   }
 
@@ -175,36 +1847,38 @@ export function subscribeFirestoreDoc<T>(
       docRef,
       (snap) => {
         if (!snap.exists()) {
-          callback(null);
+          callback(fallbackItem);
           return;
         }
         callback({ id: snap.id, ...snap.data() } as T);
       },
       (error) => {
-        console.error(`Firestore doc snapshot error on '${collectionName}/${docId}':`, error);
-        callback(null);
+        console.warn('Firestore doc snapshot error on ' + collectionName + '/' + docId + ':', error);
+        callback(fallbackItem);
       }
     );
     return unsubscribe;
   } catch (error) {
-    console.error(`Firestore doc snapshot setup error on '${collectionName}/${docId}':`, error);
-    callback(null);
+    console.warn('Firestore doc snapshot setup error on ' + collectionName + '/' + docId + ':', error);
+    callback(fallbackItem);
     return () => {};
   }
 }
 
 /* ============================================================================
-   DIRECT CLOUD FIRESTORE SNAPSHOT & COLLECTION FETCHERS (NO MOCK/SEED JSON)
+   DIRECT CLOUD FIRESTORE SNAPSHOT & COLLECTION FETCHERS
    ============================================================================ */
 
 export async function getFirestoreServices(): Promise<ServiceCMS[]> {
-  return await fetchFirestoreCollection<ServiceCMS>('services');
+  const items = await fetchFirestoreCollection<ServiceCMS>('services');
+  return items.length > 0 ? items : (CMS_FALLBACK_DATA.services as ServiceCMS[]);
 }
 
 export async function getFirestoreProjects(): Promise<ProjectCRM[]> {
   const items = await fetchFirestoreCollection<ProjectCRM>('projects');
-  return items.map(p => ({
-    id: p.id || `proj-${Math.random().toString(36).substring(2, 9)}`,
+  const rawProjects = items.length > 0 ? items : (CMS_FALLBACK_DATA.projects as ProjectCRM[]);
+  return rawProjects.map(p => ({
+    id: p.id || ('proj-' + Math.random().toString(36).substring(2, 9)),
     title: p.title || 'Untitled Project',
     clientName: p.clientName || 'Private Client',
     clientEmail: p.clientEmail || '',
@@ -225,62 +1899,56 @@ export async function getFirestoreProjects(): Promise<ProjectCRM[]> {
 }
 
 export async function getFirestoreTechStack(): Promise<TechStackCMS[]> {
-  return await fetchFirestoreCollection<TechStackCMS>('techStack');
+  const items = await fetchFirestoreCollection<TechStackCMS>('techStack');
+  return items.length > 0 ? items : (CMS_FALLBACK_DATA.techStack as TechStackCMS[]);
 }
 
 export async function getFirestoreTeam(): Promise<TeamMemberCMS[]> {
-  return await fetchFirestoreCollection<TeamMemberCMS>('team');
+  const items = await fetchFirestoreCollection<TeamMemberCMS>('team');
+  return items.length > 0 ? items : (CMS_FALLBACK_DATA.team as TeamMemberCMS[]);
 }
 
 export async function getFirestoreFAQs(): Promise<FAQItemCMS[]> {
-  return await fetchFirestoreCollection<FAQItemCMS>('faqs');
+  const items = await fetchFirestoreCollection<FAQItemCMS>('faqs');
+  return items.length > 0 ? items : (CMS_FALLBACK_DATA.faqs as FAQItemCMS[]);
 }
 
 export async function getFirestoreFeatures(): Promise<FeatureCMS[]> {
-  return await fetchFirestoreCollection<FeatureCMS>('features');
+  const items = await fetchFirestoreCollection<FeatureCMS>('features');
+  return items.length > 0 ? items : (CMS_FALLBACK_DATA.features as FeatureCMS[]);
 }
 
 export async function getFirestorePortfolio(): Promise<PortfolioItemCMS[]> {
-  return await fetchFirestoreCollection<PortfolioItemCMS>('portfolio');
+  const items = await fetchFirestoreCollection<PortfolioItemCMS>('portfolio');
+  return items.length > 0 ? items : (CMS_FALLBACK_DATA.portfolio as PortfolioItemCMS[]);
 }
 
 export async function getFirestoreTimeline(): Promise<TimelineCMS[]> {
-  return await fetchFirestoreCollection<TimelineCMS>('timeline');
+  const items = await fetchFirestoreCollection<TimelineCMS>('timeline');
+  return items.length > 0 ? items : (CMS_FALLBACK_DATA.timeline as TimelineCMS[]);
 }
 
 export async function getFirestoreOpenSource(): Promise<OpenSourceProjectCMS[]> {
-  return await fetchFirestoreCollection<OpenSourceProjectCMS>('openSourceProjects');
+  const items = await fetchFirestoreCollection<OpenSourceProjectCMS>('openSourceProjects');
+  return items.length > 0 ? items : (CMS_FALLBACK_DATA.openSourceProjects as OpenSourceProjectCMS[]);
 }
 
 export async function getFirestoreStats(): Promise<HeroStatCMS[]> {
-  return await fetchFirestoreCollection<HeroStatCMS>('heroStats');
+  const items = await fetchFirestoreCollection<HeroStatCMS>('heroStats');
+  return items.length > 0 ? items : (CMS_FALLBACK_DATA.heroStats as HeroStatCMS[]);
 }
 
 export async function getFirestoreValues(): Promise<CoreValueCMS[]> {
-  return await fetchFirestoreCollection<CoreValueCMS>('values');
+  const items = await fetchFirestoreCollection<CoreValueCMS>('values');
+  return items.length > 0 ? items : (CMS_FALLBACK_DATA.values as CoreValueCMS[]);
 }
 
 export async function getFirestoreProcess(): Promise<ProcessStepCMS[]> {
-  return await fetchFirestoreCollection<ProcessStepCMS>('processSteps');
+  const items = await fetchFirestoreCollection<ProcessStepCMS>('processSteps');
+  return items.length > 0 ? items : (CMS_FALLBACK_DATA.processSteps as ProcessStepCMS[]);
 }
 
 export async function getFirestoreSettings(): Promise<AgencySettingsCMS> {
   const settingsDoc = await fetchFirestoreDoc<AgencySettingsCMS>('settings', 'agency');
-  return settingsDoc || {
-    agencyName: "Innovateria Software Solutions",
-    adminEmail: "innovateria.in@gmail.com",
-    phone: "+91-7762974716",
-    address: "Bangalore & Mysore, India / Remote",
-    passcode: "123456",
-    socials: {
-      github: "https://github.com/VnjVibhash",
-      facebook: "https://facebook.com/Vivekajee",
-      whatsapp: "https://wa.me/917762974716",
-      twitter: "https://twitter.com/Vnjvibhash",
-      linkedin: "https://linkedin.com/in/Vivekajee",
-      instagram: "https://instagram.com/Vivekajee",
-      portfolioUrl: "https://vivekajee.com",
-      website: "https://vivekajee.com"
-    }
-  };
+  return settingsDoc || (CMS_FALLBACK_DATA.settings as AgencySettingsCMS);
 }
