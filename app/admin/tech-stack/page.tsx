@@ -19,6 +19,35 @@ import {
 } from 'lucide-react';
 import { TechStackCMS, DEFAULT_TECH_STACK } from '@/lib/crm-store';
 
+
+export function normalizeTechCategory(rawCategory: string = '', name: string = ''): string {
+  const text = (rawCategory + ' ' + name).toLowerCase();
+  
+  if (/mobile|ios|android|kotlin|swift|flutter|dart/i.test(text)) {
+    return 'Mobile Apps & OS';
+  }
+  if (/frontend|web|react|next|vue|angular|vite|html|css|tailwind|bootstrap|threejs|cms|graphics|tooling/i.test(text)) {
+    return 'Frontend & Web';
+  }
+  if (/backend|express|django|laravel|node|api|runtime/i.test(text)) {
+    return 'Backend & APIs';
+  }
+  if (/database|nosql|sql|cloud|firebase|mongo|postgre|sqlite|appwrite|solutions/i.test(text)) {
+    return 'Databases & Cloud';
+  }
+  if (/language|programming|systems|java|python|c\+\+/i.test(text)) {
+    return 'Languages & Systems';
+  }
+  if (/devops|security|auth|jwt|auth0|version|git|deploy|ide|studio|payment|stripe|postman/i.test(text)) {
+    return 'DevOps, Security & Tools';
+  }
+  if (/design|ui|ux|figma/i.test(text)) {
+    return 'UI/UX & Design';
+  }
+  
+  return rawCategory.trim() || 'Core Engineering';
+}
+
 export default function AdminTechStackPage() {
   const [techList, setTechList] = useState<TechStackCMS[]>([]);
   const [loading, setLoading] = useState(true);
@@ -158,20 +187,29 @@ export default function AdminTechStackPage() {
 
   // Distinct categories for filter
   const categories = useMemo(() => {
-    const set = new Set<string>();
-    techList.forEach(t => {
-      if (t.category) set.add(t.category);
-    });
-    return ['All', ...Array.from(set)];
+    const definedOrder = [
+      'All',
+      'Mobile Apps & OS',
+      'Frontend & Web',
+      'Backend & APIs',
+      'Databases & Cloud',
+      'Languages & Systems',
+      'DevOps, Security & Tools',
+      'UI/UX & Design'
+    ];
+    const presentCats = new Set(techList.map(t => normalizeTechCategory(t.category, t.name)));
+    return definedOrder.filter(c => c === 'All' || presentCats.has(c));
   }, [techList]);
 
   // Filtered tech list based on search and category
   const filteredTechList = useMemo(() => {
     return techList.filter(t => {
-      const matchesCategory = selectedCategory === 'All' || t.category === selectedCategory;
+      const catName = normalizeTechCategory(t.category, t.name);
+      const matchesCategory = selectedCategory === 'All' || catName === selectedCategory;
       const matchesSearch = !searchQuery || 
         t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         t.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        catName.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (t.description || '').toLowerCase().includes(searchQuery.toLowerCase());
       return matchesCategory && matchesSearch;
     });
@@ -183,14 +221,14 @@ export default function AdminTechStackPage() {
       {/* Fixed Header */}
       <div className="shrink-0 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight flex items-center space-x-2">
+          <h1 className="text-2xl font-bold text-[color:var(--text-primary)] tracking-tight flex items-center space-x-2">
             <Cpu size={24} className="text-brand-500" />
             <span>Technologies CMS & Asset Library</span>
             <span className="text-xs px-2.5 py-0.5 rounded-full bg-brand-500/20 text-brand-400 font-mono font-bold border border-brand-500/30 ml-2">
               {techList.length} Technologies
             </span>
           </h1>
-          <p className="text-xs text-gray-400 mt-1">
+          <p className="text-xs text-[color:var(--text-muted)] mt-1">
             Manage tech stack assets, SVG vector icons, categories, and sync directly to Cloud Firestore.
           </p>
         </div>
@@ -198,7 +236,7 @@ export default function AdminTechStackPage() {
         <div className="flex items-center space-x-3 w-full md:w-auto justify-end">
           <button
             onClick={() => setShowAddModal(true)}
-            className="inline-flex items-center space-x-2 bg-gradient-brand text-white px-4 py-2.5 rounded-xl text-xs font-semibold shadow-lg shadow-brand-500/20 hover:opacity-90 transition-all cursor-pointer"
+            className="inline-flex items-center space-x-2 bg-gradient-brand text-[color:var(--text-primary)] px-4 py-2.5 rounded-xl text-xs font-semibold shadow-lg shadow-brand-500/20 hover:opacity-90 transition-all cursor-pointer"
           >
             <Plus size={16} />
             <span>Add Technology</span>
@@ -209,21 +247,21 @@ export default function AdminTechStackPage() {
 
 
       {/* Search & Category Filter Toolbar */}
-      <div className="shrink-0 flex flex-col sm:flex-row items-center justify-between gap-3 glass-card p-3 rounded-2xl border border-white/10">
+      <div className="shrink-0 flex flex-col sm:flex-row items-center justify-between gap-3 glass-card p-3 rounded-2xl border border-[color:var(--border-color)]">
         {/* Search Input */}
         <div className="relative w-full sm:w-72">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[color:var(--text-muted)]" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search technology or category..."
-            className="w-full pl-9 pr-3 py-1.5 rounded-xl bg-[#0B0F17] border border-white/10 text-white text-xs placeholder-gray-500 focus:outline-none focus:border-brand-500"
+            className="w-full pl-9 pr-3 py-1.5 rounded-xl bg-[color:var(--card-inner-bg)] border border-[color:var(--border-color)] text-[color:var(--text-primary)] text-xs placeholder-gray-500 focus:outline-none focus:border-brand-500"
           />
           {searchQuery && (
             <button 
               onClick={() => setSearchQuery('')}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[color:var(--text-muted)] hover:text-[color:var(--text-primary)]"
             >
               <X size={12} />
             </button>
@@ -238,8 +276,8 @@ export default function AdminTechStackPage() {
               onClick={() => setSelectedCategory(cat)}
               className={`text-[11px] px-3 py-1 rounded-xl font-semibold transition-all shrink-0 cursor-pointer ${
                 selectedCategory === cat
-                  ? 'bg-brand-500 text-white shadow-md shadow-brand-500/20'
-                  : 'bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white border border-white/5'
+                  ? 'bg-brand-500 text-[color:var(--text-primary)] shadow-md shadow-brand-500/20'
+                  : 'bg-[color:var(--card-inner-bg)] hover:bg-white/10 text-[color:var(--text-muted)] hover:text-[color:var(--text-primary)] border border-[color:var(--border-color)]'
               }`}
             >
               {cat}
@@ -259,24 +297,24 @@ export default function AdminTechStackPage() {
             {filteredTechList.map((tech) => (
               <div 
                 key={tech.id} 
-                className="glass-card glass-card-hover rounded-2xl p-4 border border-white/10 flex flex-col justify-between space-y-3 relative group"
+                className="glass-card glass-card-hover rounded-2xl p-4 border border-[color:var(--border-color)] flex flex-col justify-between space-y-3 relative group"
               >
                 <div className="space-y-2.5">
                   <div className="flex justify-between items-center">
                     <span className="text-[9px] font-bold text-brand-400 uppercase tracking-wider bg-brand-500/10 px-2 py-0.5 rounded-md border border-brand-500/20 truncate max-w-[130px]">
-                      {tech.category}
+                      {normalizeTechCategory(tech.category, tech.name)}
                     </span>
                     <span className={`text-[9px] uppercase font-bold px-1.5 py-0.5 rounded ${
                       tech.status === 'active' 
                         ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' 
-                        : 'bg-gray-500/20 text-gray-400 border border-gray-500/30'
+                        : 'bg-gray-500/20 text-[color:var(--text-muted)] border border-gray-500/30'
                     }`}>
                       {tech.status}
                     </span>
                   </div>
 
                   <div className="flex items-center space-x-3 pt-1">
-                    <div className="w-11 h-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center p-2 shrink-0 group-hover:border-brand-500/40 transition-colors">
+                    <div className="w-11 h-11 rounded-xl bg-[color:var(--card-inner-bg)] border border-[color:var(--border-color)] flex items-center justify-center p-2 shrink-0 group-hover:border-brand-500/40 transition-colors">
                       <img 
                         src={tech.image || '/assets/img/teckstack/react.svg'} 
                         alt={tech.name} 
@@ -287,19 +325,19 @@ export default function AdminTechStackPage() {
                       />
                     </div>
                     <div className="overflow-hidden min-w-0">
-                      <h3 className="text-sm font-bold text-white truncate">{tech.name}</h3>
-                      <p className="text-[10px] text-gray-400 truncate font-mono">{tech.image.replace('/assets/img/teckstack/', '')}</p>
+                      <h3 className="text-sm font-bold text-[color:var(--text-primary)] truncate">{tech.name}</h3>
+                      <p className="text-[10px] text-[color:var(--text-muted)] truncate font-mono">{tech.image.replace('/assets/img/teckstack/', '')}</p>
                     </div>
                   </div>
 
                   {tech.description && (
-                    <p className="text-[11px] text-gray-300 leading-relaxed line-clamp-2 pt-1 border-t border-white/5">
+                    <p className="text-[11px] text-[color:var(--text-secondary)] leading-relaxed line-clamp-2 pt-1 border-t border-[color:var(--border-color)]">
                       {tech.description}
                     </p>
                   )}
                 </div>
 
-                <div className="flex items-center space-x-2 pt-2 border-t border-white/5 w-full">
+                <div className="flex items-center space-x-2 pt-2 border-t border-[color:var(--border-color)] w-full">
                   <button 
                     onClick={() => setEditingTech(tech)} 
                     className="flex-1 py-1.5 rounded-lg text-xs font-semibold inline-flex items-center justify-center space-x-1 bg-brand-500/10 hover:bg-brand-500/20 text-brand-400 border border-brand-500/30 transition-all cursor-pointer"
@@ -319,7 +357,7 @@ export default function AdminTechStackPage() {
             ))}
           </div>
         ) : (
-          <div className="p-12 text-center text-xs text-gray-400 glass-card rounded-3xl space-y-3">
+          <div className="p-12 text-center text-xs text-[color:var(--text-muted)] glass-card rounded-3xl space-y-3">
             <Cpu size={32} className="mx-auto text-brand-500 opacity-60" />
             <p className="font-semibold text-gray-200">No matching technologies found.</p>
             <p className="text-[11px] text-gray-500">Click &quot;Add Technology&quot; above to create a technology asset in Cloud Firestore.</p>
@@ -330,15 +368,15 @@ export default function AdminTechStackPage() {
       {/* Edit Modal */}
       {editingTech && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
-          <div className="glass-card rounded-3xl p-6 max-w-xl w-full border border-white/10 space-y-4 max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center border-b border-white/10 pb-3">
+          <div className="glass-card rounded-3xl p-6 max-w-xl w-full border border-[color:var(--border-color)] space-y-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center border-b border-[color:var(--border-color)] pb-3">
               <div className="flex items-center space-x-2">
                 <Edit3 size={18} className="text-brand-500" />
-                <h3 className="text-base font-bold text-white">Edit Technology Entry</h3>
+                <h3 className="text-base font-bold text-[color:var(--text-primary)]">Edit Technology Entry</h3>
               </div>
               <button 
                 onClick={() => setEditingTech(null)} 
-                className="p-1.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition-all cursor-pointer" 
+                className="p-1.5 rounded-xl text-[color:var(--text-muted)] hover:text-[color:var(--text-primary)] hover:bg-white/10 transition-all cursor-pointer" 
                 title="Close"
               >
                 <X size={18} />
@@ -348,11 +386,11 @@ export default function AdminTechStackPage() {
             <div className="space-y-4">
               
               {/* Predefined Asset Library Quick-Pick */}
-              <div className="space-y-2 p-3 rounded-2xl bg-white/5 border border-white/10">
+              <div className="space-y-2 p-3 rounded-2xl bg-[color:var(--card-inner-bg)] border border-[color:var(--border-color)]">
                 <label className="block text-[11px] font-bold text-brand-400 uppercase tracking-wider">
                   Quick-Pick Available Asset ({DEFAULT_TECH_STACK.length} SVGs)
                 </label>
-                <div className="grid grid-cols-8 sm:grid-cols-10 gap-1.5 max-h-28 overflow-y-auto p-1 bg-[#0B0F17]/80 rounded-xl border border-white/5">
+                <div className="grid grid-cols-8 sm:grid-cols-10 gap-1.5 max-h-28 overflow-y-auto p-1 bg-[color:var(--card-inner-bg)]/80 rounded-xl border border-[color:var(--border-color)]">
                   {DEFAULT_TECH_STACK.map((item) => (
                     <button
                       key={item.id}
@@ -361,7 +399,7 @@ export default function AdminTechStackPage() {
                       className={`p-1.5 rounded-lg flex items-center justify-center transition-all cursor-pointer ${
                         editingTech.image === item.image
                           ? 'bg-brand-500/30 border border-brand-500 scale-105'
-                          : 'bg-white/5 hover:bg-white/15 border border-transparent'
+                          : 'bg-[color:var(--card-inner-bg)] hover:bg-white/15 border border-transparent'
                       }`}
                       title={`${item.name} (${item.category})`}
                     >
@@ -373,9 +411,9 @@ export default function AdminTechStackPage() {
 
               {/* Image Upload & Path */}
               <div>
-                <label className="block text-xs text-gray-300 mb-1 font-medium">Selected Icon / Asset Path</label>
+                <label className="block text-xs text-[color:var(--text-secondary)] mb-1 font-medium">Selected Icon / Asset Path</label>
                 <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 rounded-xl bg-[#0B0F17] border border-white/10 shrink-0 flex items-center justify-center p-2">
+                  <div className="w-12 h-12 rounded-xl bg-[color:var(--card-inner-bg)] border border-[color:var(--border-color)] shrink-0 flex items-center justify-center p-2">
                     <img src={editingTech.image || '/assets/img/teckstack/react.svg'} alt="Preview" className="max-h-8 w-auto object-contain" />
                   </div>
                   <div className="flex-1 space-y-1.5">
@@ -383,9 +421,9 @@ export default function AdminTechStackPage() {
                       type="text"
                       value={editingTech.image}
                       onChange={(e) => setEditingTech({ ...editingTech, image: e.target.value })}
-                      className="w-full px-3 py-2 rounded-xl bg-[#0B0F17] border border-white/10 text-white text-xs font-mono"
+                      className="w-full px-3 py-2 rounded-xl bg-[color:var(--card-inner-bg)] border border-[color:var(--border-color)] text-[color:var(--text-primary)] text-xs font-mono"
                     />
-                    <label className="cursor-pointer inline-flex items-center space-x-1.5 text-[11px] text-gray-400 hover:text-brand-400 transition-colors">
+                    <label className="cursor-pointer inline-flex items-center space-x-1.5 text-[11px] text-[color:var(--text-muted)] hover:text-brand-400 transition-colors">
                       {uploading ? <Loader2 size={13} className="animate-spin text-brand-400" /> : <Upload size={13} />}
                       <span>{uploading ? 'Uploading...' : 'Or upload custom image'}</span>
                       <input
@@ -405,43 +443,43 @@ export default function AdminTechStackPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs text-gray-300 mb-1 font-medium">Technology Name *</label>
+                  <label className="block text-xs text-[color:var(--text-secondary)] mb-1 font-medium">Technology Name *</label>
                   <input
                     type="text"
                     required
                     value={editingTech.name}
                     onChange={(e) => setEditingTech({ ...editingTech, name: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl bg-[#0B0F17] border border-white/10 text-white text-xs"
+                    className="w-full px-3.5 py-2 rounded-xl bg-[color:var(--card-inner-bg)] border border-[color:var(--border-color)] text-[color:var(--text-primary)] text-xs"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-gray-300 mb-1 font-medium">Category *</label>
+                  <label className="block text-xs text-[color:var(--text-secondary)] mb-1 font-medium">Category *</label>
                   <input
                     type="text"
                     required
                     value={editingTech.category}
                     onChange={(e) => setEditingTech({ ...editingTech, category: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl bg-[#0B0F17] border border-white/10 text-white text-xs"
+                    className="w-full px-3.5 py-2 rounded-xl bg-[color:var(--card-inner-bg)] border border-[color:var(--border-color)] text-[color:var(--text-primary)] text-xs"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs text-gray-300 mb-1 font-medium">Description</label>
+                <label className="block text-xs text-[color:var(--text-secondary)] mb-1 font-medium">Description</label>
                 <textarea
                   rows={2}
                   value={editingTech.description || ''}
                   onChange={(e) => setEditingTech({ ...editingTech, description: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded-xl bg-[#0B0F17] border border-white/10 text-white text-xs resize-none"
+                  className="w-full px-3.5 py-2 rounded-xl bg-[color:var(--card-inner-bg)] border border-[color:var(--border-color)] text-[color:var(--text-primary)] text-xs resize-none"
                 ></textarea>
               </div>
 
               <div>
-                <label className="block text-xs text-gray-300 mb-1 font-medium">Publishing Status</label>
+                <label className="block text-xs text-[color:var(--text-secondary)] mb-1 font-medium">Publishing Status</label>
                 <select
                   value={editingTech.status}
                   onChange={(e: any) => setEditingTech({ ...editingTech, status: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded-xl bg-[#0B0F17] border border-white/10 text-white text-xs"
+                  className="w-full px-3.5 py-2 rounded-xl bg-[color:var(--card-inner-bg)] border border-[color:var(--border-color)] text-[color:var(--text-primary)] text-xs"
                 >
                   <option value="active">Active (Visible)</option>
                   <option value="draft">Draft (Hidden)</option>
@@ -449,18 +487,18 @@ export default function AdminTechStackPage() {
               </div>
             </div>
 
-            <div className="flex items-center space-x-3 pt-3 border-t border-white/10">
+            <div className="flex items-center space-x-3 pt-3 border-t border-[color:var(--border-color)]">
               <button 
                 type="button"
                 onClick={() => setEditingTech(null)} 
-                className="flex-1 py-2.5 rounded-xl glass-card text-xs font-semibold text-gray-300 hover:text-white transition-all cursor-pointer text-center"
+                className="flex-1 py-2.5 rounded-xl glass-card text-xs font-semibold text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)] transition-all cursor-pointer text-center"
               >
                 Cancel
               </button>
               <button 
                 type="button"
                 onClick={handleUpdateTech} 
-                className="flex-1 inline-flex items-center justify-center space-x-2 bg-gradient-brand text-white py-2.5 rounded-xl text-xs font-semibold shadow-lg shadow-brand-500/20 hover:opacity-90 transition-all cursor-pointer"
+                className="flex-1 inline-flex items-center justify-center space-x-2 bg-gradient-brand text-[color:var(--text-primary)] py-2.5 rounded-xl text-xs font-semibold shadow-lg shadow-brand-500/20 hover:opacity-90 transition-all cursor-pointer"
               >
                 <Save size={15} />
                 <span>Save Changes</span>
@@ -473,15 +511,15 @@ export default function AdminTechStackPage() {
       {/* Add Modal */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
-          <div className="glass-card rounded-3xl p-6 max-w-xl w-full border border-white/10 space-y-4 max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center border-b border-white/10 pb-3">
+          <div className="glass-card rounded-3xl p-6 max-w-xl w-full border border-[color:var(--border-color)] space-y-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center border-b border-[color:var(--border-color)] pb-3">
               <div className="flex items-center space-x-2">
                 <Plus size={18} className="text-brand-500" />
-                <h3 className="text-base font-bold text-white">Add New Technology</h3>
+                <h3 className="text-base font-bold text-[color:var(--text-primary)]">Add New Technology</h3>
               </div>
               <button 
                 onClick={() => setShowAddModal(false)} 
-                className="p-1.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition-all cursor-pointer" 
+                className="p-1.5 rounded-xl text-[color:var(--text-muted)] hover:text-[color:var(--text-primary)] hover:bg-white/10 transition-all cursor-pointer" 
                 title="Close"
               >
                 <X size={18} />
@@ -491,11 +529,11 @@ export default function AdminTechStackPage() {
             <form onSubmit={handleAddTech} className="space-y-4">
               
               {/* Predefined Asset Library Quick-Pick */}
-              <div className="space-y-2 p-3 rounded-2xl bg-white/5 border border-white/10">
+              <div className="space-y-2 p-3 rounded-2xl bg-[color:var(--card-inner-bg)] border border-[color:var(--border-color)]">
                 <label className="block text-[11px] font-bold text-brand-400 uppercase tracking-wider">
                   Quick-Pick Available Asset ({DEFAULT_TECH_STACK.length} SVGs)
                 </label>
-                <div className="grid grid-cols-8 sm:grid-cols-10 gap-1.5 max-h-28 overflow-y-auto p-1 bg-[#0B0F17]/80 rounded-xl border border-white/5">
+                <div className="grid grid-cols-8 sm:grid-cols-10 gap-1.5 max-h-28 overflow-y-auto p-1 bg-[color:var(--card-inner-bg)]/80 rounded-xl border border-[color:var(--border-color)]">
                   {DEFAULT_TECH_STACK.map((item) => (
                     <button
                       key={item.id}
@@ -504,7 +542,7 @@ export default function AdminTechStackPage() {
                       className={`p-1.5 rounded-lg flex items-center justify-center transition-all cursor-pointer ${
                         form.image === item.image
                           ? 'bg-brand-500/30 border border-brand-500 scale-105'
-                          : 'bg-white/5 hover:bg-white/15 border border-transparent'
+                          : 'bg-[color:var(--card-inner-bg)] hover:bg-white/15 border border-transparent'
                       }`}
                       title={`${item.name} (${item.category})`}
                     >
@@ -516,9 +554,9 @@ export default function AdminTechStackPage() {
 
               {/* Image Upload & Path */}
               <div>
-                <label className="block text-xs text-gray-300 mb-1 font-medium">Selected Icon / Asset Path</label>
+                <label className="block text-xs text-[color:var(--text-secondary)] mb-1 font-medium">Selected Icon / Asset Path</label>
                 <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 rounded-xl bg-[#0B0F17] border border-white/10 shrink-0 flex items-center justify-center p-2">
+                  <div className="w-12 h-12 rounded-xl bg-[color:var(--card-inner-bg)] border border-[color:var(--border-color)] shrink-0 flex items-center justify-center p-2">
                     <img src={form.image} alt="Preview" className="max-h-8 w-auto object-contain" />
                   </div>
                   <div className="flex-1 space-y-1.5">
@@ -528,9 +566,9 @@ export default function AdminTechStackPage() {
                       value={form.image}
                       onChange={(e) => setForm({ ...form, image: e.target.value })}
                       placeholder="/assets/img/teckstack/flutter.svg"
-                      className="w-full px-3 py-2 rounded-xl bg-[#0B0F17] border border-white/10 text-white text-xs font-mono"
+                      className="w-full px-3 py-2 rounded-xl bg-[color:var(--card-inner-bg)] border border-[color:var(--border-color)] text-[color:var(--text-primary)] text-xs font-mono"
                     />
-                    <label className="cursor-pointer inline-flex items-center space-x-1.5 text-[11px] text-gray-400 hover:text-brand-400 transition-colors">
+                    <label className="cursor-pointer inline-flex items-center space-x-1.5 text-[11px] text-[color:var(--text-muted)] hover:text-brand-400 transition-colors">
                       {uploading ? <Loader2 size={13} className="animate-spin text-brand-400" /> : <Upload size={13} />}
                       <span>{uploading ? 'Uploading...' : 'Or upload custom image'}</span>
                       <input
@@ -550,63 +588,63 @@ export default function AdminTechStackPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs text-gray-300 mb-1 font-medium">Technology Name *</label>
+                  <label className="block text-xs text-[color:var(--text-secondary)] mb-1 font-medium">Technology Name *</label>
                   <input
                     type="text"
                     required
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                     placeholder="e.g. Flutter / Next.js / Docker"
-                    className="w-full px-3.5 py-2 rounded-xl bg-[#0B0F17] border border-white/10 text-white text-xs"
+                    className="w-full px-3.5 py-2 rounded-xl bg-[color:var(--card-inner-bg)] border border-[color:var(--border-color)] text-[color:var(--text-primary)] text-xs"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-gray-300 mb-1 font-medium">Category *</label>
+                  <label className="block text-xs text-[color:var(--text-secondary)] mb-1 font-medium">Category *</label>
                   <input
                     type="text"
                     required
                     value={form.category}
                     onChange={(e) => setForm({ ...form, category: e.target.value })}
                     placeholder="e.g. Mobile Framework / Fullstack"
-                    className="w-full px-3.5 py-2 rounded-xl bg-[#0B0F17] border border-white/10 text-white text-xs"
+                    className="w-full px-3.5 py-2 rounded-xl bg-[color:var(--card-inner-bg)] border border-[color:var(--border-color)] text-[color:var(--text-primary)] text-xs"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs text-gray-300 mb-1 font-medium">Description</label>
+                <label className="block text-xs text-[color:var(--text-secondary)] mb-1 font-medium">Description</label>
                 <textarea
                   rows={2}
                   value={form.description}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
                   placeholder="Short description of technology..."
-                  className="w-full px-3.5 py-2 rounded-xl bg-[#0B0F17] border border-white/10 text-white text-xs resize-none"
+                  className="w-full px-3.5 py-2 rounded-xl bg-[color:var(--card-inner-bg)] border border-[color:var(--border-color)] text-[color:var(--text-primary)] text-xs resize-none"
                 ></textarea>
               </div>
 
               <div>
-                <label className="block text-xs text-gray-300 mb-1 font-medium">Publishing Status</label>
+                <label className="block text-xs text-[color:var(--text-secondary)] mb-1 font-medium">Publishing Status</label>
                 <select
                   value={form.status}
                   onChange={(e: any) => setForm({ ...form, status: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded-xl bg-[#0B0F17] border border-white/10 text-white text-xs"
+                  className="w-full px-3.5 py-2 rounded-xl bg-[color:var(--card-inner-bg)] border border-[color:var(--border-color)] text-[color:var(--text-primary)] text-xs"
                 >
                   <option value="active">Active (Visible)</option>
                   <option value="draft">Draft (Hidden)</option>
                 </select>
               </div>
 
-              <div className="flex items-center space-x-3 pt-3 border-t border-white/10">
+              <div className="flex items-center space-x-3 pt-3 border-t border-[color:var(--border-color)]">
                 <button 
                   type="button" 
                   onClick={() => setShowAddModal(false)} 
-                  className="flex-1 py-2.5 rounded-xl glass-card text-xs font-semibold text-gray-300 hover:text-white transition-all cursor-pointer text-center"
+                  className="flex-1 py-2.5 rounded-xl glass-card text-xs font-semibold text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)] transition-all cursor-pointer text-center"
                 >
                   Cancel
                 </button>
                 <button 
                   type="submit" 
-                  className="flex-1 inline-flex items-center justify-center space-x-2 bg-gradient-brand text-white py-2.5 rounded-xl text-xs font-semibold shadow-lg shadow-brand-500/20 hover:opacity-90 transition-all cursor-pointer"
+                  className="flex-1 inline-flex items-center justify-center space-x-2 bg-gradient-brand text-[color:var(--text-primary)] py-2.5 rounded-xl text-xs font-semibold shadow-lg shadow-brand-500/20 hover:opacity-90 transition-all cursor-pointer"
                 >
                   <Plus size={15} />
                   <span>Save Technology</span>
