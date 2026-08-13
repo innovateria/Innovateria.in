@@ -11,6 +11,35 @@ import {
 } from 'lucide-react';
 import { TechStackCMS } from '@/lib/crm-store';
 
+
+export function normalizeTechCategory(rawCategory: string = '', name: string = ''): string {
+  const text = (rawCategory + ' ' + name).toLowerCase();
+  
+  if (/mobile|ios|android|kotlin|swift|flutter|dart/i.test(text)) {
+    return 'Mobile Apps & OS';
+  }
+  if (/frontend|web|react|next|vue|angular|vite|html|css|tailwind|bootstrap|threejs|cms|graphics|tooling/i.test(text)) {
+    return 'Frontend & Web';
+  }
+  if (/backend|express|django|laravel|node|api|runtime/i.test(text)) {
+    return 'Backend & APIs';
+  }
+  if (/database|nosql|sql|cloud|firebase|mongo|postgre|sqlite|appwrite|solutions/i.test(text)) {
+    return 'Databases & Cloud';
+  }
+  if (/language|programming|systems|java|python|c\+\+/i.test(text)) {
+    return 'Languages & Systems';
+  }
+  if (/devops|security|auth|jwt|auth0|version|git|deploy|ide|studio|payment|stripe|postman/i.test(text)) {
+    return 'DevOps, Security & Tools';
+  }
+  if (/design|ui|ux|figma/i.test(text)) {
+    return 'UI/UX & Design';
+  }
+  
+  return rawCategory.trim() || 'Core Engineering';
+}
+
 interface TechStackClientProps {
   initialTechStack: TechStackCMS[];
 }
@@ -22,18 +51,30 @@ export default function TechStackClient({ initialTechStack }: TechStackClientPro
 
   // Categorize technologies into high-level business clusters
   const categories = useMemo(() => {
-    const rawCategories = Array.from(new Set(initialTechStack.map(t => t.category).filter(Boolean)));
-    return ['All', ...rawCategories];
+    const definedOrder = [
+      'All',
+      'Mobile Apps & OS',
+      'Frontend & Web',
+      'Backend & APIs',
+      'Databases & Cloud',
+      'Languages & Systems',
+      'DevOps, Security & Tools',
+      'UI/UX & Design'
+    ];
+    const presentCats = new Set(initialTechStack.map(t => normalizeTechCategory(t.category, t.name)));
+    return definedOrder.filter(c => c === 'All' || presentCats.has(c));
   }, [initialTechStack]);
 
   // Filtered tech stack items
   const filteredTech = useMemo(() => {
     return initialTechStack.filter(t => {
-      const matchesCat = selectedCategory === 'All' || t.category === selectedCategory;
+      const catName = normalizeTechCategory(t.category, t.name);
+      const matchesCat = selectedCategory === 'All' || catName === selectedCategory;
       const q = searchQuery.toLowerCase().trim();
       const matchesSearch = !q || 
         t.name.toLowerCase().includes(q) ||
         t.category.toLowerCase().includes(q) ||
+        catName.toLowerCase().includes(q) ||
         (t.description || '').toLowerCase().includes(q);
       return matchesCat && matchesSearch;
     });
@@ -146,9 +187,7 @@ export default function TechStackClient({ initialTechStack }: TechStackClientPro
           {/* Category Filter Pills (Scrollable) */}
           <div className="flex items-center space-x-2 overflow-x-auto pb-1 pt-2 border-t border-[color:var(--border-color)] scrollbar-none">
             {categories.map((cat) => {
-              const count = cat === 'All' 
-                ? initialTechStack.length 
-                : initialTechStack.filter(t => t.category === cat).length;
+              const count = cat === 'All' ? initialTechStack.length : initialTechStack.filter(t => normalizeTechCategory(t.category, t.name) === cat).length;
 
               return (
                 <button
@@ -187,7 +226,7 @@ export default function TechStackClient({ initialTechStack }: TechStackClientPro
                   {/* Top Category Badge & Status */}
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-bold text-brand-500 dark:text-brand-400 uppercase tracking-wider bg-brand-500/10 px-2.5 py-0.5 rounded-md border border-brand-500/20 truncate max-w-[150px]">
-                      {tech.category}
+                      {normalizeTechCategory(tech.category, tech.name)}
                     </span>
                     <span className="flex items-center space-x-1 text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse"></span>
