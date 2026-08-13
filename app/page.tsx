@@ -161,38 +161,29 @@ export default async function HomePage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {services && services.length > 0 ? (
-            services.slice(0, 6).map((s) => (
-              <div key={s.id} className="glass-card glass-card-hover rounded-3xl p-6 border border-white/10 flex flex-col justify-between space-y-4 group">
-                <div className="space-y-3">
-                  <div className="w-12 h-12 rounded-xl bg-brand-500/10 border border-brand-500/20 flex items-center justify-center text-brand-500 group-hover:bg-brand-500 group-hover:text-white transition-colors">
-                    <ServiceIcon iconName={s.iconName} title={s.title} size={24} />
-                  </div>
-                  <span className="text-[10px] font-bold text-brand-500 uppercase tracking-wider block">{s.category}</span>
-                  <h3 className="text-lg font-bold text-white group-hover:text-brand-500 transition-colors">{s.title}</h3>
-                  <p className="text-xs text-gray-300 leading-relaxed">{s.description}</p>
+          {services.slice(0, 6).map((s) => (
+            <div key={s.id} className="glass-card glass-card-hover rounded-3xl p-6 border border-white/10 flex flex-col justify-between space-y-4 group">
+              <div className="space-y-3">
+                <div className="w-12 h-12 rounded-xl bg-brand-500/10 border border-brand-500/20 flex items-center justify-center text-brand-500 group-hover:bg-brand-500 group-hover:text-white transition-colors">
+                  <ServiceIcon iconName={s.iconName} title={s.title} size={24} />
                 </div>
-
-                <div className="pt-2 border-t border-white/10 flex justify-between items-center">
-                  <Link href={`/${s.slug}`} className="inline-flex items-center space-x-1 text-xs font-semibold text-brand-400 group-hover:text-white transition-colors">
-                    <span>Explore Service</span>
-                    <ChevronRight size={14} />
-                  </Link>
-
-                  <Link href="/contact" className="text-xs text-gray-400 hover:text-white transition-colors">
-                    Get Quote
-                  </Link>
-                </div>
+                <span className="text-[10px] font-bold text-brand-500 uppercase tracking-wider block">{s.category}</span>
+                <h3 className="text-lg font-bold text-white group-hover:text-brand-500 transition-colors">{s.title}</h3>
+                <p className="text-xs text-gray-300 leading-relaxed">{s.description}</p>
               </div>
-            ))
-          ) : (
-            <div className="col-span-full text-center py-12 glass-card rounded-3xl border border-white/10 space-y-3">
-              <p className="text-gray-300 text-sm font-semibold">Cloud Firestore database connected. No service documents found.</p>
-              <Link href="/admin/services" className="inline-block bg-brand-500 text-white text-xs px-5 py-2.5 rounded-full font-bold transition-all hover:scale-105 shadow-lg">
-                Add Services in Admin Panel
-              </Link>
+
+              <div className="pt-2 border-t border-white/10 flex justify-between items-center">
+                <Link href={`/${s.slug}`} className="inline-flex items-center space-x-1 text-xs font-semibold text-brand-400 group-hover:text-white transition-colors">
+                  <span>Explore Service</span>
+                  <ChevronRight size={14} />
+                </Link>
+
+                <Link href="/contact" className="text-xs text-gray-400 hover:text-white transition-colors">
+                  Get Quote
+                </Link>
+              </div>
             </div>
-          )}
+          ))}
         </div>
 
         <div className="text-center pt-2">
@@ -200,7 +191,7 @@ export default async function HomePage() {
             href="/services"
             className="inline-flex items-center space-x-2 text-xs font-bold text-brand-400 hover:text-white bg-brand-500/10 hover:bg-brand-500/20 border border-brand-500/30 px-6 py-3 rounded-full transition-all shadow-lg"
           >
-            <span>Explore All Services →</span>
+            <span>Explore All 19 Services →</span>
           </Link>
         </div>
       </section>

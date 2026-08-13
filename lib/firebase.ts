@@ -65,7 +65,7 @@ let dbInstance: Firestore | null = null;
 export const getFirestoreDb = (): Firestore | null => {
   if (!dbInstance) {
     try {
-      if (DATABASE_ID && DATABASE_ID !== 'default' && DATABASE_ID !== '(default)') {
+      if (DATABASE_ID && DATABASE_ID !== '(default)') {
         dbInstance = getFirestore(app, DATABASE_ID);
       } else {
         dbInstance = getFirestore(app);
