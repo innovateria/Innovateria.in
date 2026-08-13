@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getFeaturesCMS } from '@/lib/crm-store';
+import { getFirestoreFeatures } from '@/lib/firestore-db';
 import { 
   Zap, 
   ShieldCheck, 
@@ -21,8 +21,8 @@ export const metadata = {
   description: 'Discover key features, security, technology stack, and customizable software capabilities by Innovateria.',
 };
 
-export default function FeaturePage() {
-  const dynamicFeatures = getFeaturesCMS();
+export default async function FeaturePage() {
+  const dynamicFeatures = await getFirestoreFeatures();
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-16">

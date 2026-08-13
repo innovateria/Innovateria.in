@@ -1,7 +1,6 @@
 import { Metadata } from 'next';
+import { getFirestoreTechStack } from '@/lib/firestore-db';
 import TechStackClient from './TechStackClient';
-import { getTechStackCMS, DEFAULT_TECH_STACK, TechStackCMS } from '@/lib/crm-store';
-import { fetchFirestoreCollection } from '@/lib/firestore-db';
 
 export const metadata: Metadata = {
   title: 'Technology Stack & Engineering Ecosystem',
@@ -19,23 +18,6 @@ export const metadata: Metadata = {
 };
 
 export default async function TechStackPage() {
-  let techItems: TechStackCMS[] = [];
-
-  try {
-    const firestoreItems = await fetchFirestoreCollection<TechStackCMS>('techStack');
-    if (firestoreItems && firestoreItems.length > 0) {
-      techItems = firestoreItems;
-    }
-  } catch (err) {
-    console.warn('Firestore tech stack read note:', err);
-  }
-
-  if (techItems.length === 0) {
-    techItems = getTechStackCMS();
-  }
-  if (techItems.length === 0) {
-    techItems = DEFAULT_TECH_STACK;
-  }
-
+  const techItems = await getFirestoreTechStack();
   return <TechStackClient initialTechStack={techItems} />;
 }

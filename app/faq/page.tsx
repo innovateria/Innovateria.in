@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
-import Script from 'next/script';
-import { getFAQsCMS } from '@/lib/crm-store';
+import { getFirestoreFAQs } from '@/lib/firestore-db';
 import FaqClientView from '@/components/FaqClientView';
 
 export const dynamic = 'force-dynamic';
@@ -23,8 +22,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function FaqPage() {
-  const faqs = getFAQsCMS();
+export default async function FaqPage() {
+  const faqs = await getFirestoreFAQs();
 
   const faqSchema = {
     '@context': 'https://schema.org',
@@ -41,7 +40,7 @@ export default function FaqPage() {
 
   return (
     <>
-      <Script
+      <script
         id="faq-schema"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}

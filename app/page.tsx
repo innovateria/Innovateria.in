@@ -3,12 +3,12 @@ import ContactForm from '@/components/ContactForm';
 import ServiceIcon from '@/components/ServiceIcon';
 import FeaturedProjectsCarousel from '@/components/FeaturedProjectsCarousel';
 import { 
-  getHeroStatsCMS, 
-  getTechStackCMS, 
-  getServicesCMS,
-  getCompanyValuesCMS,
-  getProjects
-} from '@/lib/crm-store';
+  getFirestoreServices, 
+  getFirestoreStats, 
+  getFirestoreTechStack, 
+  getFirestoreProjects, 
+  getFirestoreValues 
+} from '@/lib/firestore-db';
 import { 
   Smartphone, 
   Code2, 
@@ -33,13 +33,15 @@ import {
 
 export const dynamic = 'force-dynamic';
 
-export default function HomePage() {
-  const services = getServicesCMS();
-  const metrics = getHeroStatsCMS();
-  const techStack = getTechStackCMS();
-  const allProjects = getProjects();
+export default async function HomePage() {
+  const [services, metrics, techStack, allProjects, values] = await Promise.all([
+    getFirestoreServices(),
+    getFirestoreStats(),
+    getFirestoreTechStack(),
+    getFirestoreProjects(),
+    getFirestoreValues(),
+  ]);
   const featuredProjects = allProjects.filter(p => p.featured !== false);
-  const values = getCompanyValuesCMS();
 
   return (
     <div className="space-y-16 sm:space-y-20 lg:space-y-24 pb-12 sm:pb-16">
@@ -210,13 +212,10 @@ export default function HomePage() {
             <div key={idx} className="glass-card glass-card-hover p-4 rounded-2xl border border-white/10 text-center space-y-2 group flex flex-col items-center justify-center transition-all duration-300">
               <div className="w-10 h-10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                 <img 
-                  src={t.image} 
+                  src={t.image || '/assets/img/teckstack/react.svg'} 
                   alt={t.name} 
                   className="max-h-9 max-w-9 w-auto object-contain drop-shadow-lg" 
                   style={{ background: 'transparent' }} 
-                  onError={(e: any) => {
-                    e.target.src = '/assets/img/teckstack/react.svg';
-                  }}
                 />
               </div>
               <span className="text-xs font-bold text-white group-hover:text-brand-400 transition-colors block truncate w-full">{t.name}</span>

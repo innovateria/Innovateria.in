@@ -10,7 +10,6 @@ import {
   Upload, 
   Loader2, 
   Save, 
-  CloudUpload, 
   CheckCircle2, 
   Search,
   Sparkles,
@@ -19,13 +18,10 @@ import {
   Filter
 } from 'lucide-react';
 import { TechStackCMS, DEFAULT_TECH_STACK } from '@/lib/crm-store';
-import { syncTechStackToFirestore } from '@/lib/firebase';
 
 export default function AdminTechStackPage() {
   const [techList, setTechList] = useState<TechStackCMS[]>([]);
   const [loading, setLoading] = useState(true);
-  const [syncing, setSyncing] = useState(false);
-  const [syncMessage, setSyncMessage] = useState('');
   const [uploading, setUploading] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingTech, setEditingTech] = useState<TechStackCMS | null>(null);
@@ -59,40 +55,6 @@ export default function AdminTechStackPage() {
       setTechList(DEFAULT_TECH_STACK);
     } finally {
       setLoading(false);
-    }
-  };
-
-  // Sync / Push all 43 available tech assets to Cloud Firestore
-  const handleSyncToFirestore = async () => {
-    try {
-      setSyncing(true);
-      setSyncMessage('Writing 43 technology vector assets into Cloud Firestore...');
-
-      // 1. Direct Client-side Firestore SDK write
-      try {
-        await syncTechStackToFirestore(DEFAULT_TECH_STACK);
-      } catch (clientErr) {
-        console.warn('Client Firestore write notice:', clientErr);
-      }
-
-      // 2. Also notify Backend API endpoint
-      const res = await fetch('/api/admin/tech-stack', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ syncDefault: true })
-      });
-
-      const data = await res.json().catch(() => ({}));
-      
-      setSyncMessage('🎉 Successfully updated all 43 technology assets in Firebase Firestore!');
-      await fetchTechStack();
-      setTimeout(() => setSyncMessage(''), 5000);
-    } catch (err: any) {
-      console.error('Error syncing tech stack to Firestore:', err);
-      setSyncMessage('Sync Notice: ' + (err.message || 'Updated in Firestore.'));
-      await fetchTechStack();
-    } finally {
-      setSyncing(false);
     }
   };
 
@@ -234,21 +196,6 @@ export default function AdminTechStackPage() {
         </div>
 
         <div className="flex items-center space-x-3 w-full md:w-auto justify-end">
-          {/* Sync All 43 Available Assets to Cloud Firestore Button */}
-          <button
-            onClick={handleSyncToFirestore}
-            disabled={syncing}
-            className="inline-flex items-center space-x-2 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3.5 py-2.5 rounded-xl text-xs font-semibold shadow-lg transition-all cursor-pointer disabled:opacity-50"
-            title="Push all 43 available SVG technology assets directly to Firebase Firestore"
-          >
-            {syncing ? (
-              <Loader2 size={16} className="animate-spin text-emerald-400" />
-            ) : (
-              <CloudUpload size={16} />
-            )}
-            <span>{syncing ? 'Syncing to Firebase...' : 'Update All Assets to Firebase'}</span>
-          </button>
-
           <button
             onClick={() => setShowAddModal(true)}
             className="inline-flex items-center space-x-2 bg-gradient-brand text-white px-4 py-2.5 rounded-xl text-xs font-semibold shadow-lg shadow-brand-500/20 hover:opacity-90 transition-all cursor-pointer"
@@ -259,13 +206,7 @@ export default function AdminTechStackPage() {
         </div>
       </div>
 
-      {/* Sync Status Banner */}
-      {syncMessage && (
-        <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center space-x-3 text-emerald-400 text-xs shadow-lg shrink-0">
-          <CheckCircle2 size={18} className="shrink-0" />
-          <span>{syncMessage}</span>
-        </div>
-      )}
+
 
       {/* Search & Category Filter Toolbar */}
       <div className="shrink-0 flex flex-col sm:flex-row items-center justify-between gap-3 glass-card p-3 rounded-2xl border border-white/10">
@@ -381,7 +322,7 @@ export default function AdminTechStackPage() {
           <div className="p-12 text-center text-xs text-gray-400 glass-card rounded-3xl space-y-3">
             <Cpu size={32} className="mx-auto text-brand-500 opacity-60" />
             <p className="font-semibold text-gray-200">No matching technologies found.</p>
-            <p className="text-[11px] text-gray-500">Click &quot;Update All Assets to Firebase&quot; above to load the complete 43-technology ecosystem.</p>
+            <p className="text-[11px] text-gray-500">Click &quot;Add Technology&quot; above to create a technology asset in Cloud Firestore.</p>
           </div>
         )}
       </div>

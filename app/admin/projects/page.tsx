@@ -353,19 +353,25 @@ export default function AdminProjectsPage() {
 
   const filteredProjects = (projects || [])
     .filter(p => {
-      const q = searchQuery.toLowerCase();
+      const q = (searchQuery || '').toLowerCase();
+      const pTitle = (p.title || '').toLowerCase();
+      const pClientName = (p.clientName || '').toLowerCase();
+      const pDesc = (p.desc || '').toLowerCase();
+      const pCat = (p.category || '').toLowerCase();
+
       const matchesSearch = 
-        p.title.toLowerCase().includes(q) || 
-        p.clientName.toLowerCase().includes(q) ||
-        (p.desc && p.desc.toLowerCase().includes(q));
+        !q ||
+        pTitle.includes(q) || 
+        pClientName.includes(q) ||
+        pDesc.includes(q);
       
-      const sel = selectedCategory.toLowerCase();
+      const sel = (selectedCategory || 'all').toLowerCase();
       const matchesCat = 
         selectedCategory === 'all' || 
         p.category === selectedCategory ||
-        p.category.toLowerCase().includes(sel) ||
-        sel.includes(p.category.toLowerCase()) ||
-        p.title.toLowerCase().includes(sel);
+        pCat.includes(sel) ||
+        sel.includes(pCat) ||
+        pTitle.includes(sel);
       
       return matchesSearch && matchesCat;
     })

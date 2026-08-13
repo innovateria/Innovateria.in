@@ -1,5 +1,5 @@
 import ServiceDetailView from '@/components/ServiceDetailView';
-import { getServicesCMS } from '@/lib/crm-store';
+import { getFirestoreServices } from '@/lib/firestore-db';
 
 export const metadata = {
   title: 'Enterprise Software & SaaS Engineering | Innovateria',
@@ -7,8 +7,8 @@ export const metadata = {
   alternates: { canonical: 'https://innovateria.in/software' },
 };
 
-export default function SoftwarePage() {
-  const services = getServicesCMS();
+export default async function SoftwarePage() {
+  const services = await getFirestoreServices();
   const service = services.find(s => s.slug === 'software') || services[1];
 
   return <ServiceDetailView service={service} />;

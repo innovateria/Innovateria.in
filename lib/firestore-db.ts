@@ -24,7 +24,20 @@ import {
   ProcessStepCMS, 
   AgencySettingsCMS, 
   OpenSourceProjectCMS,
-  AdminUserCMS 
+  AdminUserCMS,
+  DEFAULT_TECH_STACK,
+  getServicesCMS,
+  getProjects,
+  getTeamCMS,
+  getFAQsCMS,
+  getFeaturesCMS,
+  getPortfolioCMS,
+  getTimelineCMS,
+  getOpenSourceProjectsCMS,
+  getHeroStatsCMS,
+  getCompanyValuesCMS,
+  getProcessStepsCMS,
+  getSettingsCMS
 } from '@/lib/crm-store';
 
 /**
@@ -115,4 +128,92 @@ export async function deleteFirestoreDocument(collectionName: string, docId: str
     console.error(`Firestore delete error on '${collectionName}/${docId}':`, error);
     return false;
   }
+}
+
+/* ============================================================================
+   DIRECT FIREBASE DATA FETCHERS FOR PUBLIC PAGES & APIS
+   ============================================================================ */
+
+export async function getFirestoreServices(): Promise<ServiceCMS[]> {
+  const items = await fetchFirestoreCollection<ServiceCMS>('services');
+  return items.length > 0 ? items : getServicesCMS();
+}
+
+export async function getFirestoreProjects(): Promise<ProjectCRM[]> {
+  const items = await fetchFirestoreCollection<ProjectCRM>('projects');
+  const rawProjects = items.length > 0 ? items : getProjects();
+  return rawProjects.map(p => ({
+    id: p.id || `proj-${Math.random().toString(36).substring(2, 9)}`,
+    title: p.title || 'Untitled Project',
+    clientName: p.clientName || 'Private Client',
+    clientEmail: p.clientEmail || '',
+    category: p.category || 'App Development',
+    techStack: Array.isArray(p.techStack) ? p.techStack : [],
+    status: p.status || 'in_development',
+    budget: p.budget || '₹1,50,000',
+    progress: typeof p.progress === 'number' ? p.progress : 50,
+    startDate: p.startDate || new Date().toISOString().split('T')[0],
+    deadline: p.deadline || '',
+    image: p.image || '/assets/img/services/soft.png',
+    featured: p.featured ?? true,
+    showInHeader: p.showInHeader ?? false,
+    github: p.github || '',
+    desc: p.desc || '',
+    bullets: Array.isArray(p.bullets) ? p.bullets : []
+  }));
+}
+
+export async function getFirestoreTechStack(): Promise<TechStackCMS[]> {
+  const items = await fetchFirestoreCollection<TechStackCMS>('techStack');
+  return items.length > 0 ? items : DEFAULT_TECH_STACK;
+}
+
+export async function getFirestoreTeam(): Promise<TeamMemberCMS[]> {
+  const items = await fetchFirestoreCollection<TeamMemberCMS>('team');
+  return items.length > 0 ? items : getTeamCMS();
+}
+
+export async function getFirestoreFAQs(): Promise<FAQItemCMS[]> {
+  const items = await fetchFirestoreCollection<FAQItemCMS>('faqs');
+  return items.length > 0 ? items : getFAQsCMS();
+}
+
+export async function getFirestoreFeatures(): Promise<FeatureCMS[]> {
+  const items = await fetchFirestoreCollection<FeatureCMS>('features');
+  return items.length > 0 ? items : getFeaturesCMS();
+}
+
+export async function getFirestorePortfolio(): Promise<PortfolioItemCMS[]> {
+  const items = await fetchFirestoreCollection<PortfolioItemCMS>('portfolio');
+  return items.length > 0 ? items : getPortfolioCMS();
+}
+
+export async function getFirestoreTimeline(): Promise<TimelineCMS[]> {
+  const items = await fetchFirestoreCollection<TimelineCMS>('timeline');
+  return items.length > 0 ? items : getTimelineCMS();
+}
+
+export async function getFirestoreOpenSource(): Promise<OpenSourceProjectCMS[]> {
+  const items = await fetchFirestoreCollection<OpenSourceProjectCMS>('openSourceProjects');
+  return items.length > 0 ? items : getOpenSourceProjectsCMS();
+}
+
+export async function getFirestoreStats(): Promise<HeroStatCMS[]> {
+  const items = await fetchFirestoreCollection<HeroStatCMS>('heroStats');
+  return items.length > 0 ? items : getHeroStatsCMS();
+}
+
+export async function getFirestoreValues(): Promise<CoreValueCMS[]> {
+  const items = await fetchFirestoreCollection<CoreValueCMS>('values');
+  return items.length > 0 ? items : getCompanyValuesCMS();
+}
+
+export async function getFirestoreProcess(): Promise<ProcessStepCMS[]> {
+  const items = await fetchFirestoreCollection<ProcessStepCMS>('processSteps');
+  return items.length > 0 ? items : getProcessStepsCMS();
+}
+
+export async function getFirestoreSettings(): Promise<AgencySettingsCMS> {
+  const settingsDoc = await fetchFirestoreDoc<AgencySettingsCMS>('settings', 'agency');
+  return settingsDoc || getSettingsCMS();
 }

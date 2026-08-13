@@ -1,10 +1,10 @@
-import Script from 'next/script';
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SocialBar from '@/components/SocialBar';
 import BackToTop from '@/components/BackToTop';
 import FirebaseAnalytics from '@/components/FirebaseAnalytics';
+import MainContentShell from '@/components/MainContentShell';
 import { metadata, viewport } from './metadata';
 
 export { metadata, viewport };
@@ -127,8 +127,6 @@ const themeInitScript = `
   })();
 `;
 
-import MainContentShell from '@/components/MainContentShell';
-
 export default function RootLayout({
   children,
 }: {
@@ -137,11 +135,23 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth" className="w-full max-w-full overflow-x-hidden">
       <head>
-        <Script id="theme-init-script" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <script
+          id="theme-init-script"
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: themeInitScript }}
+        />
       </head>
       <body className="bg-[color:var(--bg-primary)] text-[color:var(--text-primary)] min-h-screen w-full max-w-full overflow-x-hidden flex flex-col font-sans antialiased m-0 p-0">
-        <Script id="professional-service-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
-        <Script id="website-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
+        <script
+          id="professional-service-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+        <script
+          id="website-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
         <Header />
         <SocialBar />
         <MainContentShell>

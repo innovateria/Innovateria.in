@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
-import Script from 'next/script';
 import { notFound } from 'next/navigation';
 import ServiceDetailView from '@/components/ServiceDetailView';
-import { getServiceBySlugCMS, getServicesCMS } from '@/lib/crm-store';
+import { getFirestoreServices } from '@/lib/firestore-db';
 
 export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const service = getServiceBySlugCMS(slug);
+  const services = await getFirestoreServices();
+  const service = services.find((s) => s.slug === slug);
 
   if (!service) {
     return {
@@ -53,7 +53,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 export async function generateStaticParams() {
-  const services = getServicesCMS();
+  const services = await getFirestoreServices();
   return services.map((s) => ({
     slug: s.slug,
   }));
@@ -61,7 +61,8 @@ export async function generateStaticParams() {
 
 export default async function DynamicServicePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const service = getServiceBySlugCMS(slug);
+  const services = await getFirestoreServices();
+  const service = services.find((s) => s.slug === slug);
 
   if (!service) {
     notFound();
@@ -87,7 +88,7 @@ export default async function DynamicServicePage({ params }: { params: Promise<{
 
   return (
     <>
-      <Script
+      <script
         id={`service-schema-${service.id}`}
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

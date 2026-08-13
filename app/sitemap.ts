@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
-import { getProjects, getOpenSourceProjectsCMS, getServicesCMS } from '@/lib/crm-store';
+import { getFirestoreServices, getFirestoreProjects, getFirestoreOpenSource } from '@/lib/firestore-db';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://innovateria.in';
 
   // 1. Core static pages
@@ -26,9 +26,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/disclaimer`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
   ];
 
+  const [services, projects, openSource] = await Promise.all([
+    getFirestoreServices(),
+    getFirestoreProjects(),
+    getFirestoreOpenSource(),
+  ]);
+
   // 2. Dynamic project pages (/projects/[id])
-  const projects = getProjects();
-  const openSource = getOpenSourceProjectsCMS();
   const allProjectIds = Array.from(new Set([...projects.map(p => p.id), ...openSource.map(os => os.id)]));
   const projectPages: MetadataRoute.Sitemap = allProjectIds.map((id) => ({
     url: `${baseUrl}/projects/${id}`,
@@ -38,7 +42,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   // 3. Dynamic CMS service slug pages (/[slug])
-  const services = getServicesCMS();
   const servicePages: MetadataRoute.Sitemap = services.map((s) => ({
     url: `${baseUrl}/${s.slug}`,
     lastModified: new Date(),

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import ServiceIcon from '@/components/ServiceIcon';
 import ContactForm from '@/components/ContactForm';
-import { getServicesCMS } from '@/lib/crm-store';
+import { getFirestoreServices } from '@/lib/firestore-db';
 import { ChevronRight, CheckCircle2, Wrench, Sparkles, ArrowRight } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
@@ -17,8 +17,8 @@ export const metadata = {
   },
 };
 
-export default function AllServicesPage() {
-  const services = getServicesCMS();
+export default async function AllServicesPage() {
+  const services = await getFirestoreServices();
 
   return (
     <div className="space-y-16 pb-16 pt-6">

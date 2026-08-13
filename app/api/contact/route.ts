@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { addLead } from '@/lib/crm-store';
+import { Lead } from '@/lib/crm-store';
 import { saveFirestoreDoc } from '@/lib/firestore-db';
 
 export async function POST(request: Request) {
@@ -30,29 +30,26 @@ export async function POST(request: Request) {
       );
     }
 
-    // Save lead into CRM Lead Store
-    const savedLead = addLead({
+    const leadId = `lead-${Date.now()}`;
+    const newLead: Lead = {
+      id: leadId,
       name,
       email,
       phone,
       subject,
       message,
-      source: 'Website Contact Form'
-    });
+      status: 'new',
+      source: 'Website Contact Form',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
 
-    // Save directly into Firestore 'leads' collection
-    try {
-      await saveFirestoreDoc('leads', savedLead.id, savedLead);
-    } catch (dbErr) {
-      console.warn('Firestore lead save notice:', dbErr);
-    }
-
-    console.log('[Innovateria Contact Submission Saved to Firestore]', savedLead);
+    await saveFirestoreDoc('leads', leadId, newLead);
 
     return NextResponse.json({
       success: true,
       message: 'Thank you for contacting us. We will get back to you shortly!',
-      leadId: savedLead.id
+      leadId
     });
   } catch (error) {
     console.error('Contact API Error:', error);

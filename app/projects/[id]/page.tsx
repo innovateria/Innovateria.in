@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
-import Script from 'next/script';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getProjectById, getProjects, getOpenSourceProjectsCMS } from '@/lib/crm-store';
+import { getFirestoreProjects, getFirestoreOpenSource } from '@/lib/firestore-db';
 import ContactForm from '@/components/ContactForm';
 import { 
   ArrowLeft, 
@@ -23,8 +22,10 @@ export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
-  const project = getProjectById(id);
-  const openSourceItem = !project ? getOpenSourceProjectsCMS().find(os => os.id === id) : null;
+  const projects = await getFirestoreProjects();
+  const openSource = await getFirestoreOpenSource();
+  const project = projects.find(p => p.id === id);
+  const openSourceItem = !project ? openSource.find(os => os.id === id) : null;
 
   if (!project && !openSourceItem) {
     return {
@@ -71,8 +72,8 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 }
 
 export async function generateStaticParams() {
-  const projects = getProjects();
-  const openSource = getOpenSourceProjectsCMS();
+  const projects = await getFirestoreProjects();
+  const openSource = await getFirestoreOpenSource();
   
   const pParams = projects.map((p) => ({ id: p.id }));
   const osParams = openSource.map((os) => ({ id: os.id }));
@@ -83,8 +84,10 @@ export async function generateStaticParams() {
 export default async function ProjectDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   
-  const project = getProjectById(id);
-  const openSourceItem = !project ? getOpenSourceProjectsCMS().find(os => os.id === id) : null;
+  const projects = await getFirestoreProjects();
+  const openSource = await getFirestoreOpenSource();
+  const project = projects.find(p => p.id === id);
+  const openSourceItem = !project ? openSource.find(os => os.id === id) : null;
 
   if (!project && !openSourceItem) {
     notFound();
@@ -109,7 +112,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
     'Bank-grade RESTful API encryption and authentication tokens'
   ];
 
-  const otherProjects = getProjects().filter(p => p.id !== id).slice(0, 3);
+  const otherProjects = projects.filter(p => p.id !== id).slice(0, 3);
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -127,7 +130,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-12 sm:space-y-16">
-      <Script
+      <script
         id={`project-schema-${id}`}
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

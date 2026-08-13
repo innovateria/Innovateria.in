@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getCompanyValuesCMS } from '@/lib/crm-store';
+import { getFirestoreValues } from '@/lib/firestore-db';
 import { Target, Eye, CheckCircle2, ArrowRight, Sparkles } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
@@ -15,8 +15,8 @@ export const metadata = {
   },
 };
 
-export default function AboutPage() {
-  const companyValues = getCompanyValuesCMS();
+export default async function AboutPage() {
+  const companyValues = await getFirestoreValues();
 
   return (
     <div className="relative min-h-screen overflow-hidden">

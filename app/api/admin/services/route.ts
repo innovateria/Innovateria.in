@@ -1,29 +1,28 @@
 import { NextResponse } from 'next/server';
-import { getServicesCMS, addServiceCMS, updateServiceCMS, deleteServiceCMS, ServiceCMS } from '@/lib/crm-store';
-import { fetchFirestoreCollection, saveFirestoreDoc, deleteFirestoreDocument } from '@/lib/firestore-db';
+import { ServiceCMS } from '@/lib/crm-store';
+import { getFirestoreServices, saveFirestoreDoc, deleteFirestoreDocument } from '@/lib/firestore-db';
 
 export async function GET() {
   try {
-    const firestoreServices = await fetchFirestoreCollection<ServiceCMS>('services');
-    if (firestoreServices && firestoreServices.length > 0) {
-      return NextResponse.json({ success: true, services: firestoreServices });
-    }
-  } catch (err) {}
-  return NextResponse.json({ success: true, services: getServicesCMS() });
+    const services = await getFirestoreServices();
+    return NextResponse.json({ success: true, services });
+  } catch (err) {
+    return NextResponse.json({ success: false, error: 'Failed to fetch services' }, { status: 500 });
+  }
 }
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const newSrv = addServiceCMS(body);
-    
-    // Save directly to Firestore
-    try {
-      await saveFirestoreDoc('services', newSrv.id, newSrv);
-    } catch (dbErr) {
-      console.warn('Firestore write notice:', dbErr);
-    }
+    const id = body.id || `srv-${Date.now()}`;
+    const newSrv: ServiceCMS = {
+      ...body,
+      id,
+      status: body.status || 'active',
+      features: Array.isArray(body.features) ? body.features : []
+    };
 
+    await saveFirestoreDoc('services', id, newSrv);
     return NextResponse.json({ success: true, service: newSrv });
   } catch (error) {
     return NextResponse.json({ success: false, error: 'Failed to create service' }, { status: 500 });
@@ -35,16 +34,7 @@ export async function PATCH(request: Request) {
     const { id, ...updates } = await request.json();
     if (!id) return NextResponse.json({ success: false, error: 'Service ID required' }, { status: 400 });
 
-    const updated = updateServiceCMS(id, updates);
-    if (!updated) return NextResponse.json({ success: false, error: 'Service not found' }, { status: 404 });
-
-    // Update directly in Firestore
-    try {
-      await saveFirestoreDoc('services', id, updated);
-    } catch (dbErr) {
-      console.warn('Firestore update notice:', dbErr);
-    }
-
+    const updated = await saveFirestoreDoc('services', id, updates);
     return NextResponse.json({ success: true, service: updated });
   } catch (error) {
     return NextResponse.json({ success: false, error: 'Failed to update service' }, { status: 500 });
@@ -57,15 +47,7 @@ export async function DELETE(request: Request) {
     const id = searchParams.get('id');
     if (!id) return NextResponse.json({ success: false, error: 'Service ID required' }, { status: 400 });
 
-    const deleted = deleteServiceCMS(id);
-    
-    // Delete directly in Firestore
-    try {
-      await deleteFirestoreDocument('services', id);
-    } catch (dbErr) {
-      console.warn('Firestore delete notice:', dbErr);
-    }
-
+    const deleted = await deleteFirestoreDocument('services', id);
     return NextResponse.json({ success: deleted });
   } catch (error) {
     return NextResponse.json({ success: false, error: 'Failed to delete service' }, { status: 500 });

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getProjects } from '@/lib/crm-store';
+import { getFirestoreProjects } from '@/lib/firestore-db';
 import { Github, ExternalLink, CheckCircle2, ArrowRight } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
@@ -9,8 +9,8 @@ export const metadata = {
   description: 'Explore featured client agency projects engineered by Innovateria.',
 };
 
-export default function ProjectsPage() {
-  const projects = getProjects();
+export default async function ProjectsPage() {
+  const projects = await getFirestoreProjects();
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-16 sm:space-y-24">
@@ -65,7 +65,7 @@ export default function ProjectsPage() {
                         ? 'bg-amber-500/80 text-amber-200 border-amber-500/40'
                         : 'bg-blue-500/80 text-blue-200 border-blue-500/40'
                     }`}>
-                      {project.status.replace('_', ' ')}
+                      {(project.status || 'in_development').replace('_', ' ')}
                     </span>
                   </div>
                 </div>
@@ -97,7 +97,7 @@ export default function ProjectsPage() {
 
               <div className="p-6 pt-0 space-y-4">
                 <div className="flex flex-wrap gap-1.5 pt-3 border-t border-white/10">
-                  {project.techStack.map((t, idx) => (
+                  {(project.techStack || []).map((t, idx) => (
                     <span key={idx} className="text-[10px] bg-white/5 border border-white/10 px-2.5 py-0.5 rounded-full text-gray-300">
                       {t}
                     </span>

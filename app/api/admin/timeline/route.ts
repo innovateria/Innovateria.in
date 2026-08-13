@@ -1,15 +1,14 @@
 import { NextResponse } from 'next/server';
-import { getTimelineCMS, addTimelineCMS, updateTimelineCMS, deleteTimelineCMS, TimelineCMS } from '@/lib/crm-store';
-import { fetchFirestoreCollection, saveFirestoreDoc, deleteFirestoreDocument } from '@/lib/firestore-db';
+import { TimelineCMS } from '@/lib/crm-store';
+import { getFirestoreTimeline, saveFirestoreDoc, deleteFirestoreDocument } from '@/lib/firestore-db';
 
 export async function GET() {
   try {
-    const firestoreTimeline = await fetchFirestoreCollection<TimelineCMS>('timeline');
-    if (firestoreTimeline && firestoreTimeline.length > 0) {
-      return NextResponse.json({ success: true, timeline: firestoreTimeline });
-    }
-  } catch (err) {}
-  return NextResponse.json({ success: true, timeline: getTimelineCMS() });
+    const timeline = await getFirestoreTimeline();
+    return NextResponse.json({ success: true, timeline });
+  } catch (err) {
+    return NextResponse.json({ success: false, message: 'Server error' }, { status: 500 });
+  }
 }
 
 export async function POST(req: Request) {
@@ -19,7 +18,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: false, message: 'Title and Period required' }, { status: 400 });
     }
 
-    const newMilestone = addTimelineCMS({
+    const id = body.id || `time-${Date.now()}`;
+    const newMilestone: TimelineCMS = {
+      id,
       period: body.period,
       title: body.title,
       company: body.company || '',
@@ -28,15 +29,9 @@ export async function POST(req: Request) {
       type: body.type || 'experience',
       iconName: body.iconName || 'Briefcase',
       details: Array.isArray(body.details) ? body.details : []
-    });
+    };
 
-    // Save to Firestore
-    try {
-      await saveFirestoreDoc('timeline', newMilestone.id, newMilestone);
-    } catch (dbErr) {
-      console.warn('Firestore write notice:', dbErr);
-    }
-
+    await saveFirestoreDoc('timeline', id, newMilestone);
     return NextResponse.json({ success: true, milestone: newMilestone });
   } catch (err) {
     console.error('Error creating timeline milestone:', err);
@@ -47,22 +42,12 @@ export async function POST(req: Request) {
 export async function PATCH(req: Request) {
   try {
     const body = await req.json();
-    if (!body.id) {
+    const { id, ...updates } = body;
+    if (!id) {
       return NextResponse.json({ success: false, message: 'ID is required' }, { status: 400 });
     }
 
-    const updated = updateTimelineCMS(body.id, body);
-    if (!updated) {
-      return NextResponse.json({ success: false, message: 'Milestone not found' }, { status: 404 });
-    }
-
-    // Update in Firestore
-    try {
-      await saveFirestoreDoc('timeline', body.id, updated);
-    } catch (dbErr) {
-      console.warn('Firestore update notice:', dbErr);
-    }
-
+    const updated = await saveFirestoreDoc('timeline', id, updates);
     return NextResponse.json({ success: true, milestone: updated });
   } catch (err) {
     console.error('Error updating timeline milestone:', err);
@@ -79,15 +64,7 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ success: false, message: 'ID required' }, { status: 400 });
     }
 
-    const deleted = deleteTimelineCMS(id);
-
-    // Delete in Firestore
-    try {
-      await deleteFirestoreDocument('timeline', id);
-    } catch (dbErr) {
-      console.warn('Firestore delete notice:', dbErr);
-    }
-
+    const deleted = await deleteFirestoreDocument('timeline', id);
     return NextResponse.json({ success: deleted });
   } catch (err) {
     console.error('Error deleting timeline milestone:', err);

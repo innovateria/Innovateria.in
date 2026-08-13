@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import OpenSourceProjectsCarousel from '@/components/OpenSourceProjectsCarousel';
-import { getTimelineCMS, getOpenSourceProjectsCMS } from '@/lib/crm-store';
+import { getFirestoreTimeline, getFirestoreOpenSource } from '@/lib/firestore-db';
 import { 
   GraduationCap, 
   Briefcase, 
@@ -22,9 +22,11 @@ export const metadata = {
   description: 'Explore our technology timeline, career journey milestones, and open-source project portfolio.',
 };
 
-export default function PortfolioPage() {
-  const timeline = getTimelineCMS();
-  const openSourceProjects = getOpenSourceProjectsCMS();
+export default async function PortfolioPage() {
+  const [timeline, openSourceProjects] = await Promise.all([
+    getFirestoreTimeline(),
+    getFirestoreOpenSource(),
+  ]);
 
   const getIcon = (type: string) => {
     return type === 'education' ? GraduationCap : Briefcase;

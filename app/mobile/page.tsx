@@ -1,5 +1,5 @@
 import ServiceDetailView from '@/components/ServiceDetailView';
-import { getServicesCMS } from '@/lib/crm-store';
+import { getFirestoreServices } from '@/lib/firestore-db';
 
 export const metadata = {
   title: 'Mobile App Development Services (iOS & Android) | Innovateria',
@@ -12,8 +12,8 @@ export const metadata = {
   },
 };
 
-export default function MobilePage() {
-  const services = getServicesCMS();
+export default async function MobilePage() {
+  const services = await getFirestoreServices();
   const service = services.find(s => s.slug === 'mobile') || services[0];
 
   return <ServiceDetailView service={service} />;

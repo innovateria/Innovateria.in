@@ -1,4 +1,4 @@
-import { getTeamCMS } from '@/lib/crm-store';
+import { getFirestoreTeam } from '@/lib/firestore-db';
 import { Github, Twitter, Linkedin, Globe, MapPin } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
@@ -8,8 +8,8 @@ export const metadata = {
   description: 'Meet the engineering and leadership team behind Innovateria software solutions.',
 };
 
-export default function TeamPage() {
-  const teamMembers = getTeamCMS();
+export default async function TeamPage() {
+  const teamMembers = await getFirestoreTeam();
 
   return (
     <div className="relative min-h-screen overflow-hidden">

@@ -63,11 +63,13 @@ if (typeof window !== 'undefined') {
 let dbInstance: Firestore | null = null;
 
 export const getFirestoreDb = (): Firestore | null => {
-  if (typeof window === 'undefined') return null;
   if (!dbInstance) {
     try {
-      // Explicitly target custom-named database "default"
-      dbInstance = getFirestore(app, DATABASE_ID);
+      if (DATABASE_ID && DATABASE_ID !== 'default' && DATABASE_ID !== '(default)') {
+        dbInstance = getFirestore(app, DATABASE_ID);
+      } else {
+        dbInstance = getFirestore(app);
+      }
     } catch (err: any) {
       try {
         dbInstance = getFirestore(app);
