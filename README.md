@@ -4,7 +4,7 @@
 
 Innovateria is a modern, high-performance web platform built with **Next.js 16**, **React 19**, **TypeScript**, and **Tailwind CSS**. It showcases enterprise software engineering, native Android/cross-platform app development, custom web application architecture, logo & graphic design, and organic SEO growth strategies.
 
-![Innovateria Banner](public/assets/img/hero-img.png)
+![Innovateria Banner](public/assets/img/logo_black.png)
 
 ---
 
