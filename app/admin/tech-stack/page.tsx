@@ -20,7 +20,7 @@ import {
 import { TechStackCMS, DEFAULT_TECH_STACK } from '@/lib/crm-store';
 
 
-export function normalizeTechCategory(rawCategory: string = '', name: string = ''): string {
+function normalizeTechCategory(rawCategory: string = '', name: string = ''): string {
   const text = (rawCategory + ' ' + name).toLowerCase();
   
   if (/mobile|ios|android|kotlin|swift|flutter|dart/i.test(text)) {

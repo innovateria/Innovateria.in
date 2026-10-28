@@ -82,7 +82,7 @@ export default function AdminProjectsPage() {
     progress: 25,
     startDate: new Date().toISOString().split('T')[0],
     deadline: '',
-    image: '/assets/img/android.png',
+    image: '/assets/img/services/android.png',
     featured: true,
     github: '',
     desc: ''
@@ -259,7 +259,7 @@ export default function AdminProjectsPage() {
           progress: 25,
           startDate: new Date().toISOString().split('T')[0],
           deadline: '',
-          image: '/assets/img/android.png',
+          image: '/assets/img/services/android.png',
           featured: true,
           github: '',
           desc: ''
@@ -549,7 +549,7 @@ export default function AdminProjectsPage() {
                   {/* Interactive Project Image Preview with Top-Left Pin Button */}
                   <div className="relative w-full h-44 rounded-2xl overflow-hidden bg-[#131A29] border border-white/10 group/img">
                     <img
-                      src={proj.image || '/assets/img/android.png'}
+                      src={proj.image || '/assets/img/services/android.png'}
                       alt={proj.title}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-105"
                     />
@@ -681,7 +681,7 @@ export default function AdminProjectsPage() {
                 <label className="block text-xs font-medium text-gray-300 mb-1">Project Header Image</label>
                 <div className="flex items-center space-x-3">
                   <div className="w-20 h-14 rounded-xl overflow-hidden bg-[#0B0F17] border border-white/10 shrink-0">
-                    <img src={editingProj.image || '/assets/img/android.png'} alt="Preview" className="w-full h-full object-cover" />
+                    <img src={editingProj.image || '/assets/img/services/android.png'} alt="Preview" className="w-full h-full object-cover" />
                   </div>
                   <div className="flex-1 space-y-1.5">
                     <label className="cursor-pointer inline-flex items-center space-x-2 bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-xl text-xs font-medium border border-white/10 transition-all">
@@ -702,7 +702,7 @@ export default function AdminProjectsPage() {
                       type="text"
                       value={editingProj.image || ''}
                       onChange={(e) => setEditingProj({ ...editingProj, image: e.target.value })}
-                      placeholder="/assets/img/android.png"
+                      placeholder="/assets/img/services/android.png"
                       className="w-full px-3 py-1.5 rounded-xl bg-[#0B0F17] border border-white/10 text-white text-[11px]"
                     />
                   </div>
@@ -888,7 +888,7 @@ export default function AdminProjectsPage() {
                       type="text"
                       value={newProj.image}
                       onChange={(e) => setNewProj({ ...newProj, image: e.target.value })}
-                      placeholder="/assets/img/android.png"
+                      placeholder="/assets/img/services/android.png"
                       className="w-full px-3 py-1.5 rounded-xl bg-[#0B0F17] border border-white/10 text-white text-[11px]"
                     />
                   </div>

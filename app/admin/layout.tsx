@@ -157,6 +157,7 @@ export default function AdminLayout({
     { href: '/admin/team', label: 'Team Members CMS', icon: UserCheck },
     { href: '/admin/portfolio', label: 'Portfolio CMS', icon: Grid },
     { href: '/admin/tech-stack', label: 'Technologies CMS', icon: Cpu },
+    { href: '/admin/features', label: 'Features CMS', icon: Zap },
     { href: '/admin/faqs', label: 'FAQs CMS', icon: HelpCircle },
     { href: '/admin/clients', label: 'Client Directory', icon: Users },
     { href: '/admin/analytics', label: 'Analytics', icon: BarChart3 },

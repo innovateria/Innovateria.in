@@ -19,7 +19,7 @@ export default function AdminServicesPage() {
     slug: 'mobile',
     iconName: 'Smartphone',
     description: '',
-    image: '/assets/img/android.png',
+    image: '/assets/img/services/android.png',
     features: '',
     status: 'active' as ServiceCMS['status']
   });
@@ -87,7 +87,7 @@ export default function AdminServicesPage() {
       if (res.ok) {
         fetchServices();
         setShowAddModal(false);
-        setForm({ title: '', category: 'Mobile Solutions', slug: 'mobile', iconName: 'Smartphone', description: '', image: '/assets/img/android.png', features: '', status: 'active' });
+        setForm({ title: '', category: 'Mobile Solutions', slug: 'mobile', iconName: 'Smartphone', description: '', image: '/assets/img/services/android.png', features: '', status: 'active' });
       }
     } catch (err) {
       console.error('Error creating service:', err);
@@ -223,7 +223,7 @@ export default function AdminServicesPage() {
                 <label className="block text-xs text-gray-300 mb-1">Service Icon / Banner Image</label>
                 <div className="flex items-center space-x-3">
                   <div className="w-12 h-12 rounded-xl overflow-hidden bg-[#0B0F17] border border-white/10 shrink-0 flex items-center justify-center p-1">
-                    <img src={editingService.image || '/assets/img/android.png'} alt="Preview" className="max-h-10 w-auto object-contain" />
+                    <img src={editingService.image || '/assets/img/services/android.png'} alt="Preview" className="max-h-10 w-auto object-contain" />
                   </div>
                   <div className="flex-1 space-y-1.5">
                     <label className="cursor-pointer inline-flex items-center space-x-2 bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-xl text-xs font-medium border border-white/10 transition-all">
@@ -244,7 +244,7 @@ export default function AdminServicesPage() {
                       type="text"
                       value={editingService.image || ''}
                       onChange={(e) => setEditingService({ ...editingService, image: e.target.value })}
-                      placeholder="/assets/img/android.png"
+                      placeholder="/assets/img/services/android.png"
                       className="w-full px-3 py-1.5 rounded-xl bg-[#0B0F17] border border-white/10 text-white text-[11px]"
                     />
                   </div>
@@ -363,7 +363,7 @@ export default function AdminServicesPage() {
                       type="text"
                       value={form.image}
                       onChange={(e) => setForm({ ...form, image: e.target.value })}
-                      placeholder="/assets/img/android.png"
+                      placeholder="/assets/img/services/android.png"
                       className="w-full px-3 py-1.5 rounded-xl bg-[#0B0F17] border border-white/10 text-white text-[11px]"
                     />
                   </div>
