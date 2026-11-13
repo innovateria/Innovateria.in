@@ -67,7 +67,7 @@ export default function OpenSourceProjectsCarousel({
   }
 
   return (
-    <div className="space-y-6 relative">
+    <div className="space-y-6 relative w-full max-w-full overflow-hidden">
       {showHeader && (
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 border-b border-white/10 pb-6">
           <div>

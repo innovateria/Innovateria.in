@@ -45,7 +45,7 @@ export default function FeaturedProjectsCarousel({ projects }: FeaturedProjectsC
   };
 
   return (
-    <div className="space-y-6 relative">
+    <div className="space-y-6 relative w-full max-w-full overflow-hidden">
       {/* Header Bar with Controls */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 border-b border-[var(--border-color)] pb-6">
         <div className="space-y-2">

@@ -140,7 +140,7 @@ export default function AdminLayout({
 
   if (isAuthenticated === null) {
     return (
-      <div className="h-screen w-screen bg-[#0B0F17] flex items-center justify-center text-white">
+      <div className="h-screen w-full bg-[#0B0F17] flex items-center justify-center text-white">
         <div className="flex flex-col items-center space-y-4">
           <div className="w-10 h-10 border-4 border-brand-500 border-t-transparent rounded-full animate-spin"></div>
           <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">Verifying Admin Permissions...</p>

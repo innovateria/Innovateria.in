@@ -9,7 +9,7 @@ export default function Footer() {
   if (pathname?.startsWith('/admin')) return null;
 
   return (
-    <footer style={{ backgroundColor: 'var(--footer-bg)' }} className="border-t border-[color:var(--border-color)] text-gray-400 pt-16 pb-8 relative overflow-hidden">
+    <footer style={{ backgroundColor: 'var(--footer-bg)' }} className="border-t border-[color:var(--border-color)] text-gray-400 pt-16 pb-8 relative overflow-hidden w-full max-w-full">
       {/* Glow highlight */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-1 bg-gradient-to-r from-transparent via-brand-500 to-transparent opacity-70"></div>
 

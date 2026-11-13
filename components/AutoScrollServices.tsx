@@ -46,7 +46,7 @@ export default function AutoScrollServices({ services }: AutoScrollServicesProps
   };
 
   return (
-    <div className="relative group">
+    <div className="relative group w-full max-w-full overflow-hidden">
       {/* Auto-scrolling horizontal carousel */}
       <div
         ref={scrollRef}
