@@ -27,7 +27,7 @@ export default async function AboutPage() {
       ></div>
       <div className="absolute inset-0 bg-gradient-to-b from-[#0B0F17]/60 via-transparent to-[#0B0F17] pointer-events-none"></div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-16">
+      <div className="relative z-10 w-full px-4 sm:px-6 lg:px-10 xl:px-12 2xl:px-16 py-10 sm:py-16 space-y-16">
       
       {/* Header Banner */}
       <div className="text-center max-w-3xl mx-auto space-y-4">

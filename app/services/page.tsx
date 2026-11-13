@@ -37,8 +37,8 @@ export default async function AllServicesPage() {
       </section>
 
       {/* ======= ALL SERVICES GRID ======= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <section className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 2xl:px-16 space-y-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
           {services.map((srv) => (
             <div key={srv.id} className="glass-card glass-card-hover rounded-3xl p-6 border border-white/10 flex flex-col justify-between space-y-5 group">
               <div className="space-y-4">
@@ -90,7 +90,7 @@ export default async function AllServicesPage() {
       </section>
 
       {/* ======= CONTACT CTA ======= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+      <section className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 2xl:px-16 pt-6">
         <ContactForm />
       </section>
     </div>

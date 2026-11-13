@@ -20,7 +20,7 @@ export default async function TeamPage() {
       ></div>
       <div className="absolute inset-0 bg-gradient-to-b from-[#0B0F17]/70 via-transparent to-[#0B0F17] pointer-events-none"></div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-12 sm:space-y-16">
+      <div className="relative z-10 w-full px-4 sm:px-6 lg:px-10 xl:px-12 2xl:px-16 py-10 sm:py-16 space-y-12 sm:space-y-16">
       
       {/* Header */}
       <div className="text-center max-w-3xl mx-auto space-y-4">
@@ -36,7 +36,7 @@ export default async function TeamPage() {
       </div>
 
       {/* Dynamic Team Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-center">
         {teamMembers.map((member) => (
           <div key={member.id} className="glass-card glass-card-hover rounded-3xl p-6 border border-white/10 text-center space-y-4 relative overflow-hidden group">
             <div className="w-28 h-28 mx-auto rounded-full overflow-hidden border-2 border-brand-500/40 p-1 bg-[#131A29] shrink-0">

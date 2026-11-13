@@ -31,7 +31,7 @@ export default function FaqClientView({ initialFaqs }: FaqClientViewProps) {
   );
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-12">
+    <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 2xl:px-16 py-10 sm:py-16 space-y-12">
       
       {/* Header Banner */}
       <div className="text-center max-w-3xl mx-auto space-y-4">
@@ -61,7 +61,7 @@ export default function FaqClientView({ initialFaqs }: FaqClientViewProps) {
       </div>
 
       {/* FAQ Accordion List */}
-      <div className="space-y-4">
+      <div className="max-w-4xl mx-auto space-y-4">
         {filteredFaqs.length === 0 ? (
           <div className="text-center py-12 text-gray-400 text-sm glass-card rounded-2xl border border-white/10">
             No matching questions found.

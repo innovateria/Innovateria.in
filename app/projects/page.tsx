@@ -13,7 +13,7 @@ export default async function ProjectsPage() {
   const projects = await getFirestoreProjects();
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-16 sm:space-y-24">
+    <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 2xl:px-16 py-10 sm:py-16 space-y-16 sm:space-y-24">
       
       {/* Header Banner */}
       <div className="text-center max-w-3xl mx-auto space-y-4">
@@ -35,7 +35,7 @@ export default async function ProjectsPage() {
           <p className="text-xs text-gray-400 mt-1">Production applications engineered for clients across Android, iOS, Web, and SaaS.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
           {projects.map((project) => (
             <div 
               key={project.id}

@@ -7,8 +7,8 @@ export const metadata = {
 
 export default function DisclaimerPage() {
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
-      <div className="text-center space-y-4">
+    <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 2xl:px-16 py-12 space-y-8">
+      <div className="text-center space-y-4 max-w-3xl mx-auto">
         <span className="text-xs font-bold text-brand-500 uppercase tracking-widest bg-brand-500/10 px-3.5 py-1.5 rounded-full border border-brand-500/20">
           Legal Terms
         </span>
@@ -17,7 +17,7 @@ export default function DisclaimerPage() {
         </h1>
       </div>
 
-      <div className="glass-card rounded-3xl p-8 border border-white/10 space-y-6 text-xs text-gray-300 leading-relaxed">
+      <div className="max-w-4xl mx-auto glass-card rounded-3xl p-8 border border-white/10 space-y-6 text-xs text-gray-300 leading-relaxed">
         <div className="flex items-center space-x-3 text-brand-500 pb-2 border-b border-white/10">
           <Shield size={24} />
           <h2 className="text-lg font-bold text-white">General Information & Warranties</h2>

@@ -25,7 +25,7 @@ export default async function FeaturePage() {
   const dynamicFeatures = await getFirestoreFeatures();
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-16">
+    <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 2xl:px-16 py-10 sm:py-16 space-y-16">
       
       {/* Header Banner */}
       <div className="text-center max-w-3xl mx-auto space-y-4">
@@ -41,7 +41,7 @@ export default async function FeaturePage() {
       </div>
 
       {/* Dynamic Features Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-8">
         {dynamicFeatures.map((feat) => (
           <div key={feat.id} className="glass-card glass-card-hover rounded-3xl p-6 sm:p-8 border border-white/10 flex flex-col justify-between space-y-6 group">
             <div className="space-y-4">

@@ -62,7 +62,7 @@ export default function ServiceDetailView({ service }: ServiceDetailViewProps) {
       ];
 
   return (
-    <div className="space-y-16 pb-16 pt-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="space-y-16 pb-16 pt-6 w-full px-4 sm:px-6 lg:px-10 xl:px-12 2xl:px-16">
       
       {/* ======= HERO HEADER ======= */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">

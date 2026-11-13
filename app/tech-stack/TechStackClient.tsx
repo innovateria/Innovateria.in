@@ -103,7 +103,7 @@ export default function TechStackClient({ initialTechStack }: TechStackClientPro
       <section className="relative pt-32 pb-16 overflow-hidden bg-grid-pattern border-b border-[color:var(--border-color)]">
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[550px] sm:w-[700px] h-[350px] sm:h-[450px] bg-gradient-to-tr from-brand-500/20 via-blue-600/15 to-indigo-600/20 rounded-full blur-[140px] pointer-events-none opacity-70 dark:opacity-100"></div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-6 text-center">
+        <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 2xl:px-16 relative z-10 space-y-6 text-center">
           
 
           <div className="space-y-4 max-w-3xl mx-auto">
@@ -148,7 +148,7 @@ export default function TechStackClient({ initialTechStack }: TechStackClientPro
       </section>
 
       {/* ======= INTERACTIVE FILTER & TECHNOLOGY CATALOG ======= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
+      <section className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 2xl:px-16 py-12 space-y-8">
         
         {/* Search & Category Filter Bar */}
         <div className="glass-card p-4 sm:p-5 rounded-3xl border border-[color:var(--border-color)] shadow-2xl space-y-4">
@@ -211,7 +211,7 @@ export default function TechStackClient({ initialTechStack }: TechStackClientPro
 
         {/* Tech Stack Grid */}
         {filteredTech.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-5">
             {filteredTech.map((tech) => (
               <div
                 key={tech.id}
@@ -375,7 +375,7 @@ export default function TechStackClient({ initialTechStack }: TechStackClientPro
       )}
 
       {/* ======= BOTTOM PROJECT CTA BANNER ======= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 pt-8">
+      <section className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 2xl:px-16 pb-20 pt-8">
         <div className="glass-card rounded-3xl p-8 sm:p-12 border border-brand-500/30 text-center space-y-6 relative overflow-hidden bg-gradient-to-r from-brand-500/10 via-blue-600/10 to-indigo-600/10 shadow-2xl">
           <div className="space-y-3 max-w-2xl mx-auto">
             <span className="text-xs font-bold text-brand-500 dark:text-brand-400 uppercase tracking-widest bg-brand-500/20 px-3.5 py-1.5 rounded-full border border-brand-500/30">

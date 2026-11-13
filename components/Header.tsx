@@ -175,7 +175,7 @@ export default function Header() {
       <div className={`hidden md:block transition-all duration-300 overflow-hidden ${
         isScrolled ? 'max-h-0 opacity-0 py-0 my-0 border-b-0 pointer-events-none' : 'max-h-10 opacity-100 py-1 mb-1.5 border-b border-white/[0.08]'
       }`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center text-xs text-gray-300">
+        <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 2xl:px-16 flex justify-between items-center text-xs text-gray-300">
           <div className="flex items-center space-x-6">
             <a href={`tel:${headerInfo.phone}`} className="flex items-center space-x-2 hover:text-brand-500 transition-colors">
               <Phone size={14} className="text-brand-500" />
@@ -203,7 +203,7 @@ export default function Header() {
       </div>
 
       {/* Main Navbar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+      <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 2xl:px-16 flex justify-between items-center">
         {/* Brand Logo */}
         <Link href="/" className="flex items-center space-x-3 group py-0.5">
           <div className="relative w-32 sm:w-44 md:w-52 h-9 sm:h-11 md:h-12 flex items-center transition-transform group-hover:scale-105">

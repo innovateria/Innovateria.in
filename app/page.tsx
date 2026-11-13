@@ -54,7 +54,7 @@ export default async function HomePage() {
         ></div>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,78,46,0.16),transparent_45%)]"></div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-16 relative z-10">
+        <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 2xl:px-16 pt-8 sm:pt-16 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             
             {/* Left Col: Hero Text & CTAs */}
@@ -147,7 +147,7 @@ export default async function HomePage() {
       </section>
 
       {/* ======= DYNAMIC SERVICES GRID ======= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 -mt-6 sm:-mt-10">
+      <section className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 2xl:px-16 space-y-8 -mt-6 sm:-mt-10">
         <div className="text-center max-w-3xl mx-auto space-y-3">
           <span className="text-xs font-bold text-brand-500 uppercase tracking-widest bg-brand-500/10 px-3.5 py-1.5 rounded-full border border-brand-500/20">
             Core Agency Offerings
@@ -160,7 +160,7 @@ export default async function HomePage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-6 gap-6">
           {services.slice(0, 6).map((s) => (
             <div key={s.id} className="glass-card glass-card-hover rounded-3xl p-6 border border-white/10 flex flex-col justify-between space-y-4 group">
               <div className="space-y-3">
@@ -197,7 +197,7 @@ export default async function HomePage() {
       </section>
 
       {/* ======= DYNAMIC TECH STACK (2 ROWS SHOWCASE) ======= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      <section className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 2xl:px-16 space-y-8">
         <div className="text-center max-w-2xl mx-auto space-y-2">
           <span className="text-xs font-bold text-brand-500 uppercase tracking-widest bg-brand-500/10 px-3.5 py-1.5 rounded-full border border-brand-500/20">
             Technology Ecosystem
@@ -237,12 +237,12 @@ export default async function HomePage() {
       </section>
 
       {/* ======= DYNAMIC FEATURED PROJECTS SHOWCASE CAROUSEL ======= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 2xl:px-16">
         <FeaturedProjectsCarousel projects={featuredProjects} />
       </section>
 
       {/* ======= CONTACT FORM SECTION ======= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+      <section className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 2xl:px-16 pt-6">
         <ContactForm />
       </section>
 
